@@ -1,0 +1,109 @@
+# CustomLobby Messages
+
+prefix: '&8[&6Lobby&8] &r'
+
+# General messages
+general:
+  no-permission: '&cYou don''t have permission to do this!'
+  player-only: '&cThis command can only be used by players!'
+  player-not-found: '&cPlayer &e{player} &cnot found!'
+  invalid-usage: '&cInvalid usage! Use &e{usage}'
+  reload-success: '&aPlugin successfully reloaded!'
+  reload-failed: '&cPlugin reload failed! Check console for errors.'
+
+# Spawn messages
+spawn:
+  teleported: '&aTeleported to spawn!'
+  set: '&aSpawn point set!'
+  teleporting: '&eTeleporting to spawn in &6{seconds} &eseconds...'
+
+# Fly messages
+fly:
+  enabled: '&aFly mode &2enabled&a!'
+  disabled: '&cFly mode &4disabled&c!'
+  enabled-other: '&aFly mode &2enabled &afor &e{player}&a!'
+  disabled-other: '&cFly mode &4disabled &cfor &e{player}&c!'
+  no-permission: '&cYou don''t have permission to fly!'
+
+# Vanish messages
+vanish:
+  enabled: '&aYou are now &2invisible&a!'
+  disabled: '&cYou are now &4visible&c!'
+  enabled-other: '&aVanished &e{player}&a!'
+  disabled-other: '&cUnvanished &e{player}&c!'
+
+# AFK messages
+afk:
+  now-afk: '&7You are now AFK.'
+  no-longer-afk: '&7You are no longer AFK.'
+  player-afk: '&7{player} &7is now AFK.'
+  player-back: '&7{player} &7is no longer AFK.'
+  kicked: '&cYou were kicked for being AFK too long.'
+
+# Double Jump messages
+double-jump:
+  no-permission: '&cYou don''t have permission to double jump!'
+
+# Announcement messages
+announce:
+  sent: '&aAnnouncement sent!'
+
+# Hologram messages
+hologram:
+  created: '&aHologram &e{name} &acreated!'
+  deleted: '&aHologram &e{name} &adeleted!'
+  not-found: '&cHologram &e{name} &cnot found!'
+  line-added: '&aLine added to hologram &e{name}&a!'
+  line-removed: '&aLine removed from hologram &e{name}&a!'
+  list-header: '&6Holograms:'
+  list-entry: '&7- &e{name} &7at &f{location}'
+  list-empty: '&7No holograms found.'
+
+# NPC messages
+npc:
+  created: '&aNPC &e{name} &acreated!'
+  deleted: '&aNPC &e{name} &adeleted!'
+  not-found: '&cNPC &e{name} &cnot found!'
+  list-header: '&6NPCs:'
+  list-entry: '&7- &e{name} &7at &f{location}'
+  list-empty: '&7No NPCs found.'
+
+# Parkour messages
+parkour:
+  started: '&aYou started the parkour &e{name}&a! &7Good luck!'
+  finished: '&aYou finished the parkour &e{name}&a in &6{time}&a! &7New best: &e{best}'
+  checkpoint: '&aCheckpoint reached! &7({current}/{total})'
+  reset: '&eYou have been reset to the last checkpoint.'
+  already-started: '&cYou are already on a parkour!'
+  not-started: '&cYou are not on a parkour!'
+  created: '&aParkour &e{name} &acreated!'
+  deleted: '&aParkour &e{name} &adeleted!'
+  not-found: '&cParkour &e{name} &cnot found!'
+  reward: '&aYou received &6{coins} &acoins for completing the parkour!'
+  new-best: '&6New best time: &e{time}&6!'
+  leaderboard-header: '&6Parkour Leaderboard - &e{name}'
+  leaderboard-entry: '&7{rank}. &e{player} &7- &f{time}'
+
+# Stats messages
+stats:
+  header: '&6Statistics for &e{player}'
+  joins: '&7Joins: &f{joins}'
+  playtime: '&7Playtime: &f{playtime}'
+  coins: '&7Coins: &6{coins}'
+  level: '&7Level: &b{level}'
+  parkour-best: '&7Best Parkour: &f{parkour} &7- &e{time}'
+
+# Visibility messages
+visibility:
+  show: '&aPlayers are now &2visible&a!'
+  hide: '&7Players are now &8hidden&7!'
+
+# Cosmetics messages
+cosmetics:
+  particle-selected: '&aParticle effect &e{effect} &aselected!'
+  particle-removed: '&7Particle effect removed!'
+  trail-selected: '&aTrail &e{trail} &aselected!'
+  trail-removed: '&7Trail removed!'
+  gadget-selected: '&aGadget &e{gadget} &aselected!'
+  gadget-removed: '&7Gadget removed!'
+  no-permission: '&cYou don''t have permission to use this cosmetic!'

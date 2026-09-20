@@ -1,0 +1,153 @@
+# ServerGUI Configuration
+
+# GUI Settings
+gui:
+  title: "&8&lServer Selector"
+  size: 27  # Must be a multiple of 9 (9, 18, 27, 36, 45, 54)
+
+# Selector Item Settings
+selector:
+  material: COMPASS
+  name: "&6&lServer Selector"
+  lore:
+    - "&7Click to view available servers"
+    - "&7Right-click to open the server selector"
+  slot: 4  # Inventory slot to place the item (0-8 for hotbar)
+
+# Give selector on every join, not just first join
+give-on-every-join: true
+
+# World-specific settings for giving selector
+# If enabled, selector will only be given when players join specific worlds
+# Leave worlds list empty [] to give in all worlds (default behavior)
+world-specific:
+  enabled: false
+  worlds:
+    - "world"
+    - "world_nether"
+    - "world_the_end"
+  # Example: Only give selector in lobby world
+  # enabled: true
+  # worlds:
+  #   - "lobby"
+
+# Prevent players from moving the selector item
+lock-selector-item: true
+
+# Auto-refresh settings (requires PlaceholderAPI)
+auto-refresh:
+  enabled: true
+  interval: 30  # Refresh interval in seconds
+
+# Decoration settings (fill empty slots)
+decoration:
+  enabled: true
+  # Simple alternating pattern (default)
+  alternate-colors: true
+  
+  # Advanced pattern system (set use-pattern to true to enable)
+  use-pattern: true
+  pattern:
+    - "111111111"  # First row
+    - "122222221"  # Second row
+    - "122222221"  # Third row
+  pattern-items:
+    "1":  # Border
+      material: LIGHT_BLUE_STAINED_GLASS_PANE
+      name: "&9&lâœ¦"
+    "2":  # Interior
+      material: GRAY_STAINED_GLASS_PANE
+      name: " "
+
+# GUI Items
+items:
+  survival:
+    slot: 10
+    material: GRASS_BLOCK
+    name: "&a&lSurvival Server"
+    lore:
+      - "&7Click to join the survival server!"
+      - "&7Players online: &f%bungee_survivalbw%"
+    command: "server:survivalbw"
+    
+  creative:
+    slot: 12
+    material: DIAMOND_BLOCK
+    name: "&b&lCreative Server"
+    lore:
+      - "&7Click to join the creative server!"
+      - "&7Players online: &f%bungee_creative%"
+    command: "server:creative"
+    
+  skyblock:
+    slot: 14
+    material: FEATHER
+    name: "&e&lSkyblock"
+    lore:
+      - "&7Click to join the skyblock server!"
+      - "&7Players online: &f%bungee_skyblock%"
+    command: "server:skyblock"
+    
+  minigames:
+    slot: 16
+    material: TNT
+    name: "&c&lMinigames"
+    lore:
+      - "&7Click to play minigames!"
+      - "&7Players online: &f%bungee_minigames%"
+    command: "server:minigames"
+    
+  website:
+    slot: 22
+    material: BOOK
+    name: "&d&lWebsite"
+    lore:
+      - "&7Click to get our website link!"
+      - "&7Current time: &f%server_time_HH:mm:ss%"
+    command: 'console:tellraw %player% {"text":"www.yourserver.com","color":"aqua","clickEvent":{"action":"open_url","value":"https://www.yourserver.com"}}'
+    
+  # Example of a player-specific item with player head
+  player_stats:
+    slot: 4
+    material: PLAYER_HEAD
+    skull-owner: "%player%"  # Use %player% to show the GUI opener's head, or any player name like "Notch"
+    name: "&f%player_name%&7's Stats"
+    lore:
+      - "&7Online: &f%server_online%"
+    command: "message:&7Here are your stats, &f%player_name%&7!"
+  
+  # Example of a static player head
+  admin_head:
+    slot: 8
+    material: PLAYER_HEAD
+    skull-owner: "Dream"  # Static player name
+    name: "&c&lAdmin Info"
+    lore:
+      - "&7Click for admin contact"
+    command: "message:&7Contact an admin on Discord!"
+  # Custom heads from minecraft-heads.com 
+  # HOW TO GET THE VALUE:
+  #   1. Go to https://minecraft-heads.com and find your head
+  #   2. Scroll down to "For Plugin Developers" -> copy the "Value" string
+  #   3. Paste it into skull-texture below
+  #
+  # Priority order: skull-texture > skull-url > skull-owner
+  
+  #custom_texture_head:
+   # slot: 11
+    #material: PLAYER_HEAD
+  #  skull-texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWJjMTIz"
+   # name: "&6&lCustom Head (texture value)"
+    #lore:
+     # - "&7Uses a base64 texture value from minecraft-heads.com"
+    #command: "none"
+  
+  # Alternatively: the direct texture URL from the "Minecraft URL" field
+  #custom_url_head:
+   # slot: 13
+    #material: PLAYER_HEAD
+ #   skull-url: "http://textures.minecraft.net/texture/abc123examplehash"
+  #  name: "&e&lCustom Head (URL)"
+   # lore:
+    #  - "&7Uses a direct texture URL"
+    #command: "none"

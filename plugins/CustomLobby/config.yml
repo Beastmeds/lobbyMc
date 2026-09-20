@@ -1,0 +1,336 @@
+# CustomLobby Configuration
+# Plugin by fernsehheft (https://fhplugins.com)
+
+# General settings
+general:
+  server-name: Fernsehhefts Server
+  lobby-world: world
+  language: en
+  debug: false
+  bungee-mode: false
+  velocity-mode: false
+  metrics: true
+
+# Spawn settings
+spawn:
+  world: world
+  x: 0.5
+  y: 64.0
+  z: 0.5
+  yaw: 0.0
+  pitch: 0.0
+  teleport-on-join: true
+  teleport-on-respawn: true
+  teleport-delay: 0
+
+# World Protection
+world-protection:
+  enabled: true
+  worlds:
+  - world
+  no-damage: true
+  no-hunger: true
+  no-build: true
+  no-break: true
+  no-drop: true
+  no-pickup: true
+  no-mob-damage: true
+  lock-inventory: true
+  no-pvp: true
+  no-fire: true
+  no-explosions: true
+  no-mob-spawning: true
+  lock-time: true
+  lock-time-value: 6000
+  lock-weather: true
+  keep-inventory: true
+  no-fall-damage: true
+
+# Scoreboard settings
+scoreboard:
+  enabled: true
+  title: '&6&lCUSTOM &e&lLOBBY'
+  title-animation:
+    enabled: true
+    frames:
+    - '&6&lCUSTOM &e&lLOBBY'
+    - '&e&lCUSTOM &6&lLOBBY'
+    - '&f&lCUSTOM &6&lLOBBY'
+    interval: 10
+  update-interval: 20
+  lines:
+  - '&7&m------------------'
+  - '&fServer: &e{server}'
+  - '&7'
+  - '&fPlayer: &e{player}'
+  - '&fRank: &e{rank}'
+  - '&7&m--'
+  - '&fOnline: &a{online}&7/&c{max}'
+  - '&fPing: &e{ping}ms'
+  - '&7&m--'
+  - '&fCoins: &6{coins}'
+  - '&fLevel: &b{level}'
+  - '&7&m------------------'
+  - '&efhplugins.com'
+
+# Tab List settings
+tablist:
+  enabled: true
+  header:
+  - '&6&lCUSTOM LOBBY'
+  - '&e&m                              '
+  - '&fWelcome, &e{player}&f!'
+  - '&7Server: &e{server}'
+  footer:
+  - '&7&m                              '
+  - '&fOnline: &a{online}&7/&c{max}'
+  - '&7Ping: &e{ping}ms'
+  - '&6&m                              '
+  - '&efhplugins.com'
+  update-interval: 40
+
+# Double Jump
+double-jump:
+  enabled: true
+  strength: 1.0
+  vertical-strength: 0.6
+  cooldown: 2
+  particle-effect: CLOUD
+  sound: ENTITY_CHICKEN_FLAP
+  require-permission: false
+
+# Fly settings
+fly:
+  enabled: true
+  default-fly-speed: 0.1
+  max-fly-speed: 1.0
+  give-on-join: false
+  require-permission: true
+
+# AFK System
+afk:
+  enabled: true
+  timeout: 300
+  kick-timeout: 600
+  kick-enabled: false
+  kick-reason: '&cYou have been kicked for being AFK too long.'
+  check-interval: 60
+  afk-title: '&7[AFK]'
+  move-cancel: true
+
+# Announcements
+# Supports clickable links with the syntax:  [Display Text](target)
+#
+# Targets:
+#   https://url.com          → opens URL in browser on click
+#   /command                 → suggests command in chat bar on click
+#   !/command                → runs command immediately on click
+#   Hover text :: target     → custom hover tooltip before the ::
+#
+# Examples:
+#   "&eVisit [&6our shop](https://store.example.com)&e for ranks!"
+#   "&7[&bJoin Discord](Click to join! :: https://discord.gg/example)"
+#   "&eType [&a/help](!/help) for all commands."
+#   "&7[&eClick here](/spawn :: &7Return to spawn!) to go back."
+announcements:
+  enabled: true
+  interval: 300
+  random: false
+  prefix: '&8[&6Announcement&8] &r'
+  messages:
+  - '&eWelcome to &6CustomLobby&e! Enjoy your stay!'
+  - |-
+    &eVisit our [&6&lShop &e★](https://store.customlobby.de :: &7Click to open the shop!
+    &eRanks, Cosmetics & more!) &efor cool perks!
+  - |-
+    &7Join our [&bDiscord](https://discord.gg/customlobby :: &bJoin the Discord server!
+    &7Chat, support & announcements.) ✔
+  - '&eFollow us on [&9Twitter / X](https://twitter.com/customlobby :: &9Open Twitter)
+    • [&aInstagram](https://instagram.com/customlobby :: &aOpen Instagram)'
+  - '&eNeed help? Use [&a/clhelp](!/clhelp :: &7Open command help) or visit [&bour
+    website](https://customlobby.de).'
+  - '&eHave fun and be kind to others!'
+
+# BossBar
+bossbar:
+  enabled: true
+  interval: 100
+  color: YELLOW
+  style: SOLID
+  messages:
+  - '&6Welcome to &eFernsehhefts &6Server!'
+  - '&eOnline Players: &6{online}'
+  - '&6Join our Discord!'
+  - '&eHave fun!'
+
+# Hotbar settings
+hotbar:
+  enabled: true
+  items:
+    '0':
+      material: COMPASS
+      name: '&6&lServer Navigator'
+      lore:
+      - '&7Click to open the'
+      - '&7server navigator!'
+      action: NAVIGATOR
+      slot: 0
+      permission: customlobby.navigator
+    '1':
+      material: CHEST
+      name: '&e&lCosmetics'
+      lore:
+      - '&7Click to open'
+      - '&7your cosmetics!'
+      action: COSMETICS
+      slot: 4
+      permission: customlobby.cosmetics
+    '2':
+      material: COMPARATOR
+      name: '&b&lSettings'
+      lore:
+      - '&7Click to open'
+      - '&7your settings!'
+      action: SETTINGS
+      slot: 8
+      permission: ''
+
+# Navigator / Server Selector
+navigator:
+  title: '&6&lServer Navigator'
+  rows: 3
+  servers:
+    survival:
+      slot: 11
+      material: GRASS_BLOCK
+      name: '&a&lSurvival'
+      lore:
+      - '&7Play classic survival!'
+      - ''
+      - '&fOnline: &a{online}'
+      - ''
+      - '&eClick to connect!'
+      server: survival
+      permission: ''
+    skyblock:
+      slot: 13
+      material: GRASS_BLOCK
+      name: '&b&lSkyBlock'
+      lore:
+      - '&7Play on your own island!'
+      - ''
+      - '&fOnline: &a{online}'
+      - ''
+      - '&eClick to connect!'
+      server: skyblock
+      permission: ''
+    minigames:
+      slot: 15
+      material: FIREWORK_ROCKET
+      name: '&e&lMini-Games'
+      lore:
+      - '&7Play fun mini-games!'
+      - ''
+      - '&fOnline: &a{online}'
+      - ''
+      - '&eClick to connect!'
+      server: minigames
+      permission: ''
+
+# Cosmetics
+cosmetics:
+  enabled: true
+  particles:
+    enabled: true
+    available:
+    - FLAME
+    - HEART
+    - VILLAGER_HAPPY
+    - ENCHANTMENT_TABLE
+    - CLOUD
+    - SNOW_SHOVEL
+    - CRIT
+    - MAGIC_CRIT
+    - REDSTONE
+    - NOTE
+  trails:
+    enabled: true
+    available:
+    - FLAME
+    - HEART
+    - VILLAGER_HAPPY
+    - ENCHANTMENT_TABLE
+    - CLOUD
+
+# Join/Quit Messages
+join-quit:
+  enabled: true
+  join:
+    message: '&8[&a+&8] &7{player}'
+    broadcast: true
+    title:
+      enabled: true
+      title: '&6Welcome back!'
+      subtitle: '&e{player}'
+      fade-in: 20
+      stay: 60
+      fade-out: 20
+  quit:
+    message: '&8[&c-&8] &7{player}'
+    broadcast: true
+
+# Visibility
+visibility:
+  default: true
+  hotbar-item:
+    enabled: true
+    slot: 7
+    show-material: LIME_DYE
+    show-name: '&a&lShow Players'
+    hide-material: GRAY_DYE
+    hide-name: '&7&lHide Players'
+    permission: customlobby.visibility
+
+# Database
+database:
+  type: sqlite
+  sqlite:
+    file: database.db
+  mysql:
+    host: localhost
+    port: 3306
+    database: customlobby
+    username: root
+    password: password
+    pool-size: 10
+    timeout: 30000
+
+# Holograms
+holograms:
+  enabled: true
+  update-interval: 40
+
+# NPCs
+npcs:
+  enabled: true
+
+# Parkour
+parkour:
+  enabled: true
+  checkpoint-block: EMERALD_BLOCK
+  start-block: GOLD_BLOCK
+  finish-block: DIAMOND_BLOCK
+  fall-reset: true
+  void-y: -64
+  max-time: 0
+  rewards:
+    coins: 100
+
+# Messages prefix
+prefix: '&8[&6Lobby&8] &r'
+
+# Update Checker
+update-checker:
+  enabled: true
+  notify-admins: true
+  notify-on-join: true
