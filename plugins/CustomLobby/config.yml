@@ -3,11 +3,11 @@
 
 # General settings
 general:
-  server-name: Fernsehhefts Server
+  server-name: BeastSMP Network
   lobby-world: world
-  language: en
+  language: de
   debug: false
-  bungee-mode: false
+  bungee-mode: true
   velocity-mode: false
   metrics: true
 
@@ -49,13 +49,13 @@ world-protection:
 # Scoreboard settings
 scoreboard:
   enabled: true
-  title: '&6&lCUSTOM &e&lLOBBY'
+  title: '&4&lBeastSMP Network'
   title-animation:
     enabled: true
     frames:
-    - '&6&lCUSTOM &e&lLOBBY'
-    - '&e&lCUSTOM &6&lLOBBY'
-    - '&f&lCUSTOM &6&lLOBBY'
+    - '&4&lBeastSMP Network'
+    - '&e&lBeastSMP Network'
+    - '&f&lBeastSMP Network'
     interval: 10
   update-interval: 20
   lines:
@@ -67,17 +67,14 @@ scoreboard:
   - '&7&m--'
   - '&fOnline: &a{online}&7/&c{max}'
   - '&fPing: &e{ping}ms'
-  - '&7&m--'
-  - '&fCoins: &6{coins}'
-  - '&fLevel: &b{level}'
   - '&7&m------------------'
-  - '&efhplugins.com'
+  - '&ebeastsmp.de'
 
 # Tab List settings
 tablist:
   enabled: true
   header:
-  - '&6&lCUSTOM LOBBY'
+  - '&4&lBeastSMP Network'
   - '&e&m                              '
   - '&fWelcome, &e{player}&f!'
   - '&7Server: &e{server}'
@@ -86,7 +83,7 @@ tablist:
   - '&fOnline: &a{online}&7/&c{max}'
   - '&7Ping: &e{ping}ms'
   - '&6&m                              '
-  - '&efhplugins.com'
+  - '&ebeastsmp.de'
   update-interval: 40
 
 # Double Jump
