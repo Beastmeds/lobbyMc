@@ -14,11 +14,11 @@ general:
 # Spawn settings
 spawn:
   world: world
-  x: 0.5
-  y: 64.0
-  z: 0.5
-  yaw: 0.0
-  pitch: 0.0
+  x: -139.91855815080723
+  y: -56.0
+  z: -25.980154437064236
+  yaw: -179.84991455078125
+  pitch: -1.8000316619873047
   teleport-on-join: true
   teleport-on-respawn: true
   teleport-delay: 0

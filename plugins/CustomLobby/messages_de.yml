@@ -1,0 +1,110 @@
+# CustomLobby Nachrichten (Deutsch)
+
+prefix: '&8[&6Lobby&8] &r'
+
+# Allgemeine Nachrichten
+general:
+  no-permission: '&cDu hast keine Berechtigung, das zu tun!'
+  player-only: '&cDieser Befehl kann nur von Spielern ausgeführt werden!'
+  player-not-found: '&cSpieler &e{player} &cwurde nicht gefunden!'
+  invalid-usage: '&cUngültige Verwendung! Benutze &e{usage}'
+  reload-success: '&aPlugin erfolgreich neu geladen!'
+  reload-failed: '&cPlugin-Reload fehlgeschlagen! Überprüfe die Konsole auf Fehler.'
+
+# Spawn-Nachrichten
+spawn:
+  teleported: '&aDu hast dich zum Spawn teleportiert!'
+  set: '&aSpawn-Punkt erfolgreich gesetzt!'
+  teleporting: '&eTeleportation zum Spawn in &6{seconds} &eSekunden...'
+
+# Fly-Nachrichten
+fly:
+  enabled: '&aFlugmodus &2aktiviert&a!'
+  disabled: '&cFlugmodus &4deaktiviert&c!'
+  enabled-other: '&aFlugmodus &2aktiviert &afür &e{player}&a!'
+  disabled-other: '&cFlugmodus &4deaktiviert &cfür &e{player}&c!'
+  no-permission: '&cDu hast keine Berechtigung zu fliegen!'
+
+# Vanish-Nachrichten
+vanish:
+  enabled: '&aDu bist nun &2unsichtbar&a!'
+  disabled: '&cDu bist nun &4sichtbar&c!'
+  enabled-other: '&a&e{player} &bist nun unsichtbar&a!'
+  disabled-other: '&c&e{player} &bist nun wieder sichtbar&c!'
+
+# AFK-Nachrichten
+afk:
+  now-afk: '&7Du bist jetzt AFK.'
+  no-longer-afk: '&7Du bist nicht mehr AFK.'
+  player-afk: '&7{player} &7ist jetzt AFK.'
+  player-back: '&7{player} &7ist nicht mehr AFK.'
+  kicked: '&cDu wurdest gekickt, weil du zu lange AFK warst.'
+
+# Double Jump Nachrichten
+double-jump:
+  no-permission: '&cDu hast keine Berechtigung für Double Jump!'
+
+# Ankündigungs-Nachrichten
+announce:
+  sent: '&aAnkündigung gesendet!'
+
+# Hologramm-Nachrichten
+hologram:
+  created: '&aHologramm &e{name} &aerstellt!'
+  deleted: '&aHologramm &e{name} &agelöscht!'
+  not-found: '&cHologramm &e{name} &cnicht gefunden!'
+  line-added: '&aZeile zum Hologramm &e{name} &ahinzugefügt!'
+  line-removed: '&aZeile vom Hologramm &e{name} &agelöscht!'
+  list-header: '&6Hologramme:'
+  list-entry: '&7- &e{name} &7bei &f{location}'
+  list-empty: '&7Keine Hologramme gefunden.'
+
+# NPC-Nachrichten
+npc:
+  created: '&aNPC &e{name} &aerstellt!'
+  deleted: '&aNPC &e{name} &agelöscht!'
+  not-found: '&cNPC &e{name} &cnicht gefunden!'
+  list-header: '&6NPCs:'
+  list-entry: '&7- &e{name} &7bei &f{location}'
+  list-empty: '&7Keine NPCs gefunden.'
+
+# Parkour-Nachrichten
+parkour:
+  started: '&aDu hast das Parkour &e{name} &agestartet! &7Viel Glück!'
+  finished: '&aDu hast das Parkour &e{name} &ain &6{time} &abeendet! &7Neuer Rekord:
+    &e{best}'
+  checkpoint: '&aKontrollpunkt erreicht! &7({current}/{total})'
+  reset: '&eDu wurdest zum letzten Kontrollpunkt zurückgesetzt.'
+  already-started: '&cDu bist bereits in einem Parkour!'
+  not-started: '&cDu bist in keinem Parkour!'
+  created: '&aParkour &e{name} &aerstellt!'
+  deleted: '&aParkour &e{name} &agelöscht!'
+  not-found: '&cParkour &e{name} &cnicht gefunden!'
+  reward: '&aDu hast &6{coins} &aMünzen für das Beenden des Parkours erhalten!'
+  new-best: '&6Neue Bestzeit: &e{time}&6!'
+  leaderboard-header: '&6Parkour-Bestenliste - &e{name}'
+  leaderboard-entry: '&7{rank}. &e{player} &7- &f{time}'
+
+# Stats-Nachrichten
+stats:
+  header: '&6Statistiken für &e{player}'
+  joins: '&7Beitritte: &f{joins}'
+  playtime: '&7Spielzeit: &f{playtime}'
+  coins: '&7Münzen: &6{coins}'
+  level: '&7Level: &b{level}'
+  parkour-best: '&7Bestes Parkour: &f{parkour} &7- &e{time}'
+
+# Sichtbarkeits-Nachrichten
+visibility:
+  show: '&aSpieler sind nun wieder &2sichtbar&a!'
+  hide: '&7Spieler sind nun &8ausgeblendet&7!'
+
+# Cosmetics-Nachrichten
+cosmetics:
+  particle-selected: '&aPartikeleffekt &e{effect} &aausgewählt!'
+  particle-removed: '&7Partikeleffekt entfernt!'
+  trail-selected: '&aSpur &e{trail} &aausgewählt!'
+  trail-removed: '&7Spur entfernt!'
+  gadget-selected: '&aGadget &e{gadget} &aausgewählt!'
+  gadget-removed: '&7Gadget entfernt!'
+  no-permission: '&cDu hast keine Berechtigung, dieses Kosmetikteil zu nutzen!'
