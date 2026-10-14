@@ -1,0 +1,76 @@
+beastsmp_panel:
+  images:
+    1:
+      name: purple_frame
+      x: -256
+      y: -175
+    2:
+      name: beastsmp_logo
+      x: -288
+      y: -208
+      scale: 0.8
+    3:
+      name: halloween_top
+      x: -256
+      y: -188
+  texts:
+    1:
+      name: beast_font
+      pattern: '<white>Geld: <#aafc6a>[papi:vault_eco_balance_formatted]'
+      x: -230
+      y: -78
+      scale: 0.65
+    2:
+      name: beast_font
+      pattern: '<white>Gems: <#aafc6a>0'
+      x: -230
+      y: -51
+      scale: 0.65
+    3:
+      name: beast_font
+      pattern: '<white>Stars: <#aafc6a>0'
+      x: -230
+      y: -24
+      scale: 0.65
+    4:
+      name: beast_font
+      pattern: '<white>Kills: <#aafc6a>[papi:statistic_player_kills]'
+      x: -230
+      y: 3
+      scale: 0.65
+    5:
+      name: beast_font
+      pattern: '<white>Tode: <#aafc6a>[papi:statistic_deaths]'
+      x: -230
+      y: 30
+      scale: 0.65
+    6:
+      name: beast_font
+      pattern: '<white>Clan: <#aafc6a>Keiner'
+      x: -230
+      y: 57
+      scale: 0.65
+    7:
+      name: beast_font
+      pattern: '<white>Ping: <#aafc6a>[papi:player_ping] ms'
+      x: -230
+      y: 84
+      scale: 0.65
+    8:
+      name: beast_font
+      pattern: '<white>Keyall: <#aafc6a>Bald'
+      x: -230
+      y: 111
+      scale: 0.65
+    9:
+      name: beast_font
+      pattern: '<white>Spielzeit: <#aafc6a>[papi:statistic_time_played]'
+      x: -230
+      y: 138
+      scale: 0.65
+    20:
+      name: beast_font
+      pattern: <#ff7777>MC.BEASTSMP.DE
+      x: -226
+      y: 146
+      scale: 0.65

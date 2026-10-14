@@ -1,0 +1,39 @@
+beastsmp_logo:
+  type: single
+  file: beastsmp_logo.png
+purple_frame:
+  type: single
+  file: purple_frame.png
+halloween_top:
+  type: single
+  file: halloween_top.png
+coin:
+  type: single
+  file: coin.png
+gem:
+  type: single
+  file: gem.png
+star:
+  type: single
+  file: star.png
+skull:
+  type: single
+  file: skull.png
+shield:
+  type: single
+  file: shield.png
+clock:
+  type: single
+  file: clock.png
+sword:
+  type: single
+  file: sword.png
+wifi:
+  type: single
+  file: wifi.png
+key:
+  type: single
+  file: key.png
+pumpkin:
+  type: single
+  file: pumpkin.png

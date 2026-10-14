@@ -1,0 +1,6 @@
+beastsmp_halloween:
+  layouts:
+    1:
+      name: beastsmp_panel
+      x: 100
+      y: 50
