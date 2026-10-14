@@ -16,7 +16,7 @@ beastsmp_panel:
   texts:
     1:
       name: beast_font
-      pattern: '<white>Geld: <#aafc6a>[papi:vault_eco_balance_formatted]'
+      pattern: '<white>Geld: <#aafc6a>—'
       x: -230
       y: -78
       scale: 0.65
@@ -72,5 +72,5 @@ beastsmp_panel:
       name: beast_font
       pattern: <#ff7777>MC.BEASTSMP.DE
       x: -226
-      y: 146
+      y: 166
       scale: 0.65
