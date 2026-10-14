@@ -274,3 +274,62 @@ java.lang.IllegalArgumentException: Collection is empty
 [17:36:05] [Craft Scheduler Thread - 10 - BetterHud/INFO]: [BetterHud] Current minecraft version: 1.21.11
 [17:36:05] [Craft Scheduler Thread - 10 - BetterHud/INFO]: [BetterHud] Unzip textures...
 [17:36:08] [Craft Scheduler Thread - 10 - BetterHud/INFO]:  [!] Reload successful! (2,495 ms)
+[17:37:31] [Server thread/INFO]:  [!] Trying to reload. please wait...
+[17:37:31] [Craft Scheduler Thread - 15 - BetterHud/WARN]: [BetterHud] Unable to load config.yml
+[17:37:31] [Craft Scheduler Thread - 15 - BetterHud/WARN]: [BetterHud] Reason: object
+[17:37:31] [Craft Scheduler Thread - 15 - BetterHud/INFO]: [BetterHud] Getting minecraft default version...
+[17:37:31] [Craft Scheduler Thread - 15 - BetterHud/INFO]: [BetterHud] Current minecraft version: 1.21.11
+[17:37:31] [Craft Scheduler Thread - 15 - BetterHud/INFO]: [BetterHud] Unzip textures...
+[17:37:33] [Craft Scheduler Thread - 15 - BetterHud/INFO]:  [!] Reload successful! (1,840 ms)
+[17:37:43] [Server thread/INFO]: Stopping server
+[17:37:43] [Server thread/INFO]: [BetterHud] Disabling BetterHud v2.0.0
+[17:37:43] [Server thread/INFO]: [BetterHud] Plugin disabled.
+[17:37:43] [Server thread/INFO]: [ServerSelector] Disabling ServerSelector v1.8
+[17:37:43] [Server thread/INFO]: [ServerSelector] ServerGUI has been disabled!
+[17:37:43] [Server thread/INFO]: [ViaBackwards] Disabling ViaBackwards v5.12.1-SNAPSHOT
+[17:37:43] [Server thread/INFO]: [CustomLobby] Disabling CustomLobby v1.0.0
+[17:37:43] [Server thread/INFO]: [CustomLobby] 
+[17:37:43] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
+[17:37:43] [Server thread/INFO]: [CustomLobby]   CustomLobby is shutting down...
+[17:37:43] [Server thread/INFO]: [CustomLobby] » Saving data & cleaning up...
+[17:37:43] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
+[17:37:43] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Shutdown initiated...
+[17:37:43] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Shutdown completed.
+[17:37:43] [Server thread/INFO]: [CustomLobby] ✔ CustomLobby disabled cleanly.
+[17:37:43] [Server thread/INFO]: [PlaceholderAPI] Disabling PlaceholderAPI v2.12.3
+[17:37:43] [Server thread/INFO]: [ViaVersion] Disabling ViaVersion v5.12.1-SNAPSHOT
+[17:37:43] [Server thread/INFO]: [ViaVersion] ViaVersion has been disabled; uninjected the platform and shut down the scheduler.
+[17:37:43] [Server thread/INFO]: [floodgate] Disabling floodgate v2.2.5-SNAPSHOT (b141-81b65cc)
+[17:37:43] [Server thread/INFO]: Saving players
+[17:37:43] [Server thread/INFO]: XylofonHarfe195 lost connection: Server closed
+[17:37:43] [Server thread/INFO]: XylofonHarfe195 left the game
+[17:37:44] [Server thread/INFO]: Saving worlds
+[17:37:44] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[17:37:44] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world'
+[17:37:44] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world'
+[17:37:44] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Saved 4761 block chunks, 4761 entity chunks, 0 poi chunks in world 'world' in 2.87s
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world'
+[17:37:46] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_nether'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_nether'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_nether'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_nether' in 0.00s
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_nether'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_nether'
+[17:37:46] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_the_end'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_the_end'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_the_end'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_the_end' in 0.00s
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_the_end'
+[17:37:46] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_the_end'
+[17:37:46] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[17:37:46] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[17:37:46] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[17:37:46] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[17:37:46] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
+[17:37:46] [Server thread/INFO]: All RegionFile I/O tasks to complete
+[17:37:46] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
+[17:37:46] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...
