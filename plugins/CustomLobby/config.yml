@@ -48,7 +48,7 @@ world-protection:
 
 # Scoreboard settings
 scoreboard:
-  enabled: true
+  enabled: false
   title: '&4&lBeastSMP Network'
   title-animation:
     enabled: true
