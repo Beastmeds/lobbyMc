@@ -1,0 +1,6 @@
+beast_halloween_panel:
+  type: single
+  file: beast_halloween_panel.png
+beast_halloween_header:
+  type: single
+  file: beast_halloween_header.png
