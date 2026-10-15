@@ -15,11 +15,12 @@ disable-to-bedrock-player: true
 build-folder-location: BetterHud/build
 pack-type: zip
 enable-protection: false
-enable-self-host: false
+enable-self-host: true
 force-update: false
-self-host-ip: '*'
+self-host-ip: 82.165.71.206
 self-host-port: 8163
-merge-other-folders: []
+merge-other-folders:
+- BetterHud/beastsmp-base.zip
 loading-head: random
 default-hud:
 - beastsmp_halloween
