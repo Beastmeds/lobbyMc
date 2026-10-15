@@ -1,11 +1,14 @@
-BeastSMP graphical /beast menu
+BeastSMP illustrated lobby menus
 
-The main menu uses a dedicated bitmap font, invisible item models and native inventory click slots.
-Textures reuse the existing HUD artwork. Inventory placement is fixed to the vanilla 5-row chest layout,
-so Minecraft GUI scaling applies to artwork and click targets together.
+All five menus use the same seasonal artwork system: home, servers, events, effects and designs.
+The original HUD logos are combined with generated portal/palette/chest/orb artwork from menu-motifs.png.
+A six-row inventory provides native click targets. Each background is rendered at double GUI resolution,
+split into four 256px bitmap font tiles (logical height 128), with explicit negative-space advances.
+The decorative header extends 20 GUI pixels above the inventory. Player slots retain vanilla coordinates.
 
-Regenerate from the repository root:
+Regenerate from the repository root (Pillow required):
 python3 beasthud-src/menu-art/build_menu_art.py .
 
-Requires Pillow. Updates plugins/BetterHud/beastsmp-base.zip. Rebuild/reload BetterHUD afterwards.
-The inventory title uses beastsmp:lobby_menu, U+E000 negative eight pixel space and U+E001..E003 artwork.
+Then reload/rebuild BetterHUD. Output is merged through plugins/BetterHud/beastsmp-base.zip.
+Bitmap font: beastsmp:lobby_menu. Blank click-target item model: beastsmp:menu_blank.
+Keep the three/four-card layouts in BeastLobbyFeatures.java synchronized with the artwork.

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /** Lobby-only, per-player atmosphere, themed menus and BungeeCord navigation. */
 public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabCompleter, PluginMessageListener {
     enum Effect { AUTO, WINTER, HALLOWEEN, AUS }
-    enum Kind { HOME, SERVERS, EVENTS, EFFECTS }
+    enum Kind { HOME, SERVERS, EVENTS, EFFECTS, DESIGNS }
     static final class Menu implements InventoryHolder {
         final Kind kind;
         final Map<Integer,Runnable> actions = new HashMap<>();
@@ -120,53 +120,54 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         ItemStack item=new ItemStack(material);ItemMeta meta=item.getItemMeta();meta.displayName(Component.text(name,color));
         meta.lore(Arrays.stream(lore).map(line->Component.text(line,NamedTextColor.GRAY)).toList());item.setItemMeta(meta);return item;
     }
-    private Material border(Player p){return switch(theme(p)){case HALLOWEEN->Material.PURPLE_STAINED_GLASS_PANE;case WEIHNACHTEN->Material.LIGHT_BLUE_STAINED_GLASS_PANE;case STANDARD->Material.BLUE_STAINED_GLASS_PANE;};}
-    void decorate(Player p,Inventory inv,String heading){
-        for(int slot=0;slot<45;slot++){
-            boolean edge=slot<9||slot>=36||slot%9==0||slot%9==8;
-            inv.setItem(slot,item(edge?border(p):Material.BLACK_STAINED_GLASS_PANE," ",NamedTextColor.DARK_GRAY));
-        }
-        inv.setItem(4,item(theme(p).icon,"BEASTSMP · "+heading,theme(p).color,"Design: "+theme(p).label));
-        inv.setItem(36,item(Material.ARROW,"Zurück zum Beast-Menü",NamedTextColor.WHITE));
-        inv.setItem(40,item(Material.BARRIER,"Schließen",NamedTextColor.RED));
-        inv.setItem(44,item(Material.SNOWBALL,"Lobby-Effekte",theme(p).color,"Aktiv: "+effectName(effective(p)),"Klicken zum Einstellen"));
-    }
-    private Menu newMenu(Player p,Kind kind,String heading){
-        Menu m=new Menu(kind);m.inventory=Bukkit.createInventory(m,45,Component.text("BeastSMP | "+heading,theme(p).color));decorate(p,m.inventory,heading);
-        m.actions.put(36,()->openHome(p));m.actions.put(40,p::closeInventory);m.actions.put(44,()->openEffects(p));return m;
-    }
-    private void put(Menu m,int slot,ItemStack item,Runnable action){m.inventory.setItem(slot,item);m.actions.put(slot,action);}
     private ItemStack invisible(ItemStack stack,boolean tooltip){
         ItemMeta meta=stack.getItemMeta();meta.setItemModel(new NamespacedKey("beastsmp","menu_blank"));
         if(!tooltip)meta.setHideTooltip(true);stack.setItemMeta(meta);return stack;
     }
-    private void card(Menu m,int[] slots,ItemStack stack,Runnable action){
-        for(int slot:slots)put(m,slot,invisible(stack.clone(),true),action);
+    private Component menuTitle(Player p,Kind kind){
+        int season=switch(theme(p)){case HALLOWEEN->0;case STANDARD->1;case WEIHNACHTEN->2;};
+        int c=0xe100+season*20+kind.ordinal()*4;
+        String glyph="\ue000"+(char)c+"\ue010"+(char)(c+1)+"\ue011"+(char)(c+2)+"\ue010"+(char)(c+3);
+        return Component.text(glyph,NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:lobby_menu"));
     }
-    void openHome(Player p){
-        Menu m=new Menu(Kind.HOME);
-        String glyph=switch(theme(p)){case HALLOWEEN->"\ue001";case STANDARD->"\ue002";case WEIHNACHTEN->"\ue003";};
-        Component title=Component.text("\ue000"+glyph,NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:lobby_menu"));
-        m.inventory=Bukkit.createInventory(m,45,title);
+    private Menu newMenu(Player p,Kind kind,String heading){
+        Menu m=new Menu(kind);m.inventory=Bukkit.createInventory(m,54,menuTitle(p,kind));
         ItemStack filler=invisible(item(Material.PAPER," ",NamedTextColor.WHITE),false);
-        for(int slot=0;slot<45;slot++)m.inventory.setItem(slot,filler.clone());
-        card(m,new int[]{10,11,12,19,20,21},item(Material.PAPER,"Serverauswahl",theme(p).color,"Wähle dein Ziel im BeastSMP-Netzwerk","Mit aktuellem Online-Status"),()->openServers(p));
-        card(m,new int[]{14,15,16,23,24,25},item(Material.PAPER,"Dein Design",theme(p).color,"Halloween · Standard · Weihnachten","Aktuell: "+theme(p).label),()->plugin.menu(p));
-        card(m,new int[]{28,29,30,37,38,39},item(Material.PAPER,"Events",theme(p).color,"Kürbissuche und saisonale Aktionen","Dein Fortschritt bleibt gespeichert"),()->openEvents(p));
-        card(m,new int[]{32,33,34,41,42,43},item(Material.PAPER,"Atmosphäre",theme(p).color,"Schnee, Partikelnebel oder Ruhe","Aktiv: "+effectName(effective(p))),()->openEffects(p));
-        put(m,40,invisible(item(Material.PAPER,"Schließen",NamedTextColor.RED),true),()->p.closeInventory());
+        for(int slot=0;slot<54;slot++)m.inventory.setItem(slot,filler.clone());
+        put(m,45,invisible(item(Material.PAPER,"Zurück zum Beast-Menü",NamedTextColor.WHITE),true),()->openHome(p));
+        put(m,49,invisible(item(Material.PAPER,"Schließen",NamedTextColor.RED),true),()->p.closeInventory());
+        put(m,53,invisible(item(Material.PAPER,"Lobby-Effekte",theme(p).color,"Aktiv: "+effectName(effective(p))),true),()->openEffects(p));
+        return m;
+    }
+    private void put(Menu m,int slot,ItemStack item,Runnable action){m.inventory.setItem(slot,item);m.actions.put(slot,action);}
+    private void card(Menu m,int[] slots,ItemStack stack,Runnable action){for(int slot:slots)put(m,slot,invisible(stack.clone(),true),action);}
+    private int[] four(int card){
+        int row=card/2==0?1:3,col=card%2==0?0:5;int[] result=new int[8];int i=0;
+        for(int r=row;r<row+2;r++)for(int c=col;c<col+4;c++)result[i++]=r*9+c;return result;
+    }
+    private int[] three(int card){int[] result=new int[12];int i=0;for(int r=1;r<=4;r++)for(int c=card*3;c<card*3+3;c++)result[i++]=r*9+c;return result;}
+    void openHome(Player p){
+        Menu m=newMenu(p,Kind.HOME,"Lobby-Menü");
+        card(m,four(0),item(Material.PAPER,"Serverauswahl",theme(p).color,"Wähle dein Ziel im BeastSMP-Netzwerk","Mit aktuellem Online-Status"),()->openServers(p));
+        card(m,four(1),item(Material.PAPER,"Dein Design",theme(p).color,"Halloween · Standard · Weihnachten","Aktuell: "+theme(p).label),()->openDesigns(p));
+        card(m,four(2),item(Material.PAPER,"Events",theme(p).color,"Kürbissuche und saisonale Aktionen","Dein Fortschritt bleibt gespeichert"),()->openEvents(p));
+        card(m,four(3),item(Material.PAPER,"Atmosphäre",theme(p).color,"Schnee, Partikelnebel oder Ruhe","Aktiv: "+effectName(effective(p))),()->openEffects(p));
+        p.openInventory(m.inventory);
+    }
+    void openDesigns(Player p){
+        Menu m=newMenu(p,Kind.DESIGNS,"Designs");int i=0;
+        for(BeastHudPlugin.Theme t:BeastHudPlugin.Theme.values())card(m,three(i++),item(Material.PAPER,t.label,t.color,theme(p)==t?"Aktuell ausgewählt":"Klicken zum Auswählen","Dein Design wird gespeichert"),()->{plugin.choose(p,t);openDesigns(p);});
         p.openInventory(m.inventory);
     }
     void openServers(Player p){requestCounts();Menu m=newMenu(p,Kind.SERVERS,"Serverauswahl");fillServers(p,m);p.openInventory(m.inventory);}
     private void fillServers(Player p,Menu m){
-        int[] slots={20,22,24};int i=0;
+        int i=0;
         for(Destination d:destinations){
             boolean lobby=d.name.equals("Lobby");Boolean online=reachable.get(d.name);
             String status=lobby?"Du bist bereits hier":online==null?"Status wird geprüft":online?"Online":"Derzeit offline";
             NamedTextColor color=lobby?theme(p).color:Boolean.TRUE.equals(online)?NamedTextColor.GREEN:NamedTextColor.GRAY;
-            Material icon=lobby||Boolean.TRUE.equals(online)?d.icon:Material.GRAY_DYE;
             String players=counts.containsKey(d.name)?"Spieler: "+counts.get(d.name):"Spielerzahl wird abgefragt";
-            put(m,slots[i++],item(icon,d.label,color,status,players,lobby?"Deine Lobby":Boolean.TRUE.equals(online)?"Klicken zum Verbinden":"Aktuell nicht erreichbar"),()->connect(p,d));
+            card(m,three(i++),item(Material.PAPER,d.label,color,status,players,lobby?"Deine Lobby":Boolean.TRUE.equals(online)?"Klicken zum Verbinden":"Aktuell nicht erreichbar"),()->connect(p,d));
         }
     }
     private void connect(Player p,Destination destination){
@@ -176,18 +177,17 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     }
     void openEvents(Player p){
         Menu m=newMenu(p,Kind.EVENTS,"Events");int found=plugin.profile(p.getUniqueId()).found.size(),total=plugin.getConfig().getInt("quest-count",10);
-        put(m,20,item(Material.JACK_O_LANTERN,"Halloween · Kürbissuche",NamedTextColor.GOLD,"Dein Fortschritt: "+found+" / "+total,"Finde die Kürbisse rund um den Spawn","Klicken: Halloween aktivieren und Hilfe anzeigen"),()->{p.closeInventory();plugin.choose(p,BeastHudPlugin.Theme.HALLOWEEN);plugin.questInfo(p);});
-        put(m,22,item(Material.PAINTING,"Saisonale Designs",theme(p).color,"Wähle deinen persönlichen Beast-Stil"),()->plugin.menu(p));
-        put(m,24,item(Material.SNOW_BLOCK,"Weihnachtsstimmung",NamedTextColor.AQUA,"Weihnachts-Design und Schneefall einschalten","Ein persönlicher Effekt nur für dich"),()->{p.closeInventory();plugin.choose(p,BeastHudPlugin.Theme.WEIHNACHTEN);setEffect(p,Effect.WINTER);});
+        card(m,three(0),item(Material.PAPER,"Halloween · Kürbissuche",NamedTextColor.GOLD,"Dein Fortschritt: "+found+" / "+total,"Finde die Kürbisse rund um den Spawn","Klicken: Halloween aktivieren und Hilfe anzeigen"),()->{p.closeInventory();plugin.choose(p,BeastHudPlugin.Theme.HALLOWEEN);plugin.questInfo(p);});
+        card(m,three(1),item(Material.PAPER,"Saisonale Designs",theme(p).color,"Wähle deinen persönlichen Beast-Stil"),()->openDesigns(p));
+        card(m,three(2),item(Material.PAPER,"Weihnachtsstimmung",NamedTextColor.AQUA,"Weihnachts-Design und Schneefall einschalten","Ein persönlicher Effekt nur für dich"),()->{plugin.choose(p,BeastHudPlugin.Theme.WEIHNACHTEN);setEffect(p,Effect.WINTER);openEvents(p);});
         p.openInventory(m.inventory);
     }
     void openEffects(Player p){
         Menu m=newMenu(p,Kind.EFFECTS,"Lobby-Effekte");
-        put(m,19,item(Material.NETHER_STAR,"Automatisch",theme(p).color,"Folgt deinem ausgewählten Design","Halloween: Nebel · Weihnachten: Schnee","Standard: keine Partikel"),()->{setEffect(p,Effect.AUTO);openEffects(p);});
-        put(m,21,item(Material.SNOWBALL,"Schneefall",NamedTextColor.AQUA,"Sanfte Schneeflocken um dich herum","Nur für dich sichtbar"),()->{setEffect(p,Effect.WINTER);openEffects(p);});
-        put(m,23,item(Material.SOUL_CAMPFIRE,"Halloween-Nebel",NamedTextColor.LIGHT_PURPLE,"Bodennaher Partikelnebel, Asche und Magie","Nur für dich sichtbar"),()->{setEffect(p,Effect.HALLOWEEN);openEffects(p);});
-        put(m,25,item(Material.REDSTONE_TORCH,"Effekte ausschalten",NamedTextColor.RED,"Alle zusätzlichen Lobby-Partikel aus","Weniger Partikel für mehr Ruhe"),()->{setEffect(p,Effect.AUS);openEffects(p);});
-        m.inventory.setItem(31,item(Material.PAPER,"Deine Einstellung",theme(p).color,"Gewählt: "+effectName(preference(p)),"Aktiv: "+effectName(effective(p)),globalEnabled?"Lobby-Effekte sind freigeschaltet":"Serverweit momentan deaktiviert"));
+        card(m,four(0),item(Material.PAPER,"Automatisch",theme(p).color,"Folgt deinem ausgewählten Design","Gewählt: "+effectName(preference(p)),"Aktiv: "+effectName(effective(p))),()->{setEffect(p,Effect.AUTO);openEffects(p);});
+        card(m,four(1),item(Material.PAPER,"Schneefall",NamedTextColor.AQUA,"Sanfte Schneeflocken um dich herum","Nur für dich sichtbar"),()->{setEffect(p,Effect.WINTER);openEffects(p);});
+        card(m,four(2),item(Material.PAPER,"Halloween-Nebel",NamedTextColor.LIGHT_PURPLE,"Bodennaher Partikelnebel, Asche und Magie","Nur für dich sichtbar"),()->{setEffect(p,Effect.HALLOWEEN);openEffects(p);});
+        card(m,four(3),item(Material.PAPER,"Effekte ausschalten",NamedTextColor.RED,"Alle zusätzlichen Lobby-Partikel aus",globalEnabled?"Effekte sind serverweit freigeschaltet":"Effekte sind serverweit ausgeschaltet"),()->{setEffect(p,Effect.AUS);openEffects(p);});
         p.openInventory(m.inventory);
     }
     void refreshHotbar(Player p){giveHotbar(p);}

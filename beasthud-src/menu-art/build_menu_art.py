@@ -17,53 +17,72 @@ def text(d,s,cx,y,color):
 def sprite(im,name,box):
  src=Image.open(assets/name).convert('RGBA');src=src.crop(src.getbbox());src.thumbnail((box[2],box[3]),Image.Resampling.NEAREST)
  im.alpha_composite(src,(box[0]+(box[2]-src.width)//2,box[1]+(box[3]-src.height)//2))
-providers=[{'type':'space','advances':{'\ue000':-8}}]
-for idx,(theme,accent,light,header) in enumerate([
- ('halloween','#a72cdd','#f5b041','beast_halloween_header.png'),
- ('standard','#29a7ef','#9ff3ff','beast_standard_header.png'),
- ('winter','#75dce9','#edffff','beast_winter_header.png')]):
- im=Image.new('RGBA',(256,256));d=ImageDraw.Draw(im)
- # One inventory-sized background, drawn through a title glyph. The player's slots remain usable.
- d.rectangle((0,0,175,203),fill='#0b0d19');d.rectangle((1,1,174,202),outline=accent,width=2);d.rectangle((4,4,171,109),fill='#141526',outline='#34324d')
- d.line((7,109,168,109),fill=light)
- # Native inventory coordinates: main storage y126,144,162, hotbar y184.
- d.rectangle((4,113,171,200),fill='#b0b8ca')
- for y in [126,144,162,184]:
-  for x in range(8,169,18):
-   d.rectangle((x-1,y-1,x+16,y+16),fill='#536277');d.line((x-1,y-1,x+16,y-1),fill='#334254');d.line((x-1,y-1,x-1,y+16),fill='#334254');d.line((x,y+16,x+16,y+16),fill='#d4deeb')
- sprite(im,header,(38,0,100,28));text(d,'LOBBY MENU',88,30,light)
- for x,y,label,icon in [(23,37,'SERVER','compass/n.png'),(95,37,'DESIGN','gem.png'),(23,73,'EVENTS','pumpkin.png'),(95,73,'EFFEKTE','beast_snowflake.png' if theme=='winter' else 'star.png')]:
-  d.rectangle((x-1,y-1,x+58,y+27),fill='#080b14',outline='#080b14');d.rectangle((x,y,x+57,y+26),fill='#22243b',outline=accent);d.line((x+2,y+1,x+55,y+1),fill=light)
-  sprite(im,icon,(x+20,y+3,18,13))
-  if label=='SERVER':
-   d.rectangle((x+20,y+3,x+37,y+15),fill='#22243b');d.ellipse((x+23,y+3,x+35,y+15),fill='#39495a',outline=light);d.polygon([(x+29,y+4),(x+26,y+10),(x+29,y+9)],fill='#ff626c');d.polygon([(x+29,y+14),(x+32,y+8),(x+29,y+9)],fill='#d5f7ff')
-  text(d,label,x+29,y+19,'#ffffff')
- # Close is a narrow button between the bottom cards, matching slot 40.
- d.rectangle((81,91,94,104),fill='#2a172c',outline=accent);text(d,'X',88,95,'#ffd8e1')
- if theme=='halloween':
-  sprite(im,'pumpkin.png',(7,6,23,22));sprite(im,'pumpkin.png',(146,6,23,22));sprite(im,'beast_bat_0.png',(6,29,17,10));sprite(im,'beast_bat_2.png',(154,29,17,10))
- elif theme=='winter':
-  for x in [10,22,154,166]:
-   d.polygon([(x-3,5),(x+3,5),(x,16 if x%2 else 21)],fill=light)
-  sprite(im,'beast_snowflake.png',(8,23,13,13));sprite(im,'beast_snowflake.png',(155,23,13,13))
- else:
-  sprite(im,'gem.png',(9,8,20,20));sprite(im,'gem.png',(147,8,20,20));d.line((9,30,28,30),fill=accent);d.line((147,30,166,30),fill=accent)
- path=out/f'{theme}.png';im.save(path)
- providers.append({'type':'bitmap','file':f'beastsmp:font/menu_{theme}.png','ascent':13,'height':256,'chars':[chr(0xe001+idx)]})
-font=json.dumps({'providers':providers},ensure_ascii=False,indent=2).encode()
+providers=[{'type':'space','advances':{'\ue000':-8,'\ue010':-1,'\ue011':-257}}]
+updates={}
+atlas=Image.open(Path(__file__).parent/'menu-motifs.png').convert('RGBA')
+def paste_hd(im,src,box):
+ src=src.copy();ratio=min(box[2]*2/src.width,box[3]*2/src.height);src=src.resize((max(1,round(src.width*ratio)),max(1,round(src.height*ratio))),Image.Resampling.LANCZOS)
+ im.alpha_composite(src,(box[0]*2+(box[2]*2-src.width)//2,box[1]*2+(box[3]*2-src.height)//2))
+def motif(row,col):
+ return atlas.crop((col*384,row*1024//3,(col+1)*384,(row+1)*1024//3))
+def logo(theme):
+ f={'halloween':'beast_halloween_header.png','standard':'beast_standard_header.png','winter':'beast_winter_header.png'}[theme]
+ im=Image.open(assets/f).convert('RGBA');return im.crop(im.getbbox())
+for season,(theme,accent,light) in enumerate([('halloween','#a72cdd','#f5b041'),('standard','#29a7ef','#9ff3ff'),('winter','#75dce9','#edffff')]):
+ for kind,heading in enumerate(['LOBBY','SERVER','EVENTS','EFFEKTE','DESIGNS']):
+  base=Image.new('RGBA',(256,256));d=ImageDraw.Draw(base)
+  d.rectangle((0,0,175,221),fill='#090c16');d.rectangle((1,1,174,220),outline=accent,width=2);d.rectangle((4,4,171,129),fill='#111323',outline='#37344c')
+  d.line((7,130,168,130),fill=light)
+  # The player inventory retains its usual coordinates after a six-row menu.
+  d.rectangle((4,131,171,218),fill='#b0b8ca')
+  for y in [144,162,180,202]:
+   for x in range(8,169,18):
+    d.rectangle((x-1,y-1,x+16,y+16),fill='#536277');d.line((x-1,y-1,x+16,y-1),fill='#334254');d.line((x-1,y-1,x-1,y+16),fill='#334254');d.line((x,y+16,x+16,y+16),fill='#d4deeb')
+  # Illustrated cards: generous image area, restrained frame, captions with native pixel lettering.
+  layouts=[]
+  if kind in [0,3]:
+   labels=['SERVER','DESIGNS','EVENTS','EFFEKTE'] if kind==0 else ['AUTO','SCHNEE','NEBEL','AUS']
+   for i,label in enumerate(labels):
+    x=8 if i%2==0 else 98;y=38 if i<2 else 74;w=70;h=32
+    d.rectangle((x-1,y-1,x+w,y+h),fill='#050710');d.rectangle((x,y,x+w-1,y+h-1),fill='#1a1b31',outline=accent);d.line((x+2,y+1,x+w-3,y+1),fill=light)
+    text(d,label,x+49,y+14,'#ffffff');layouts.append((i,(x+2,y+2,30,28)))
+  else:
+   labels={1:['BEASTSMP','SMP','LOBBY'],2:['KUERBISSE','DESIGNS','WINTER'],4:['HALLOWEEN','STANDARD','WINTER']}[kind]
+   for i,label in enumerate(labels):
+    x=8+i*55;y=40;w=50;h=66
+    d.rectangle((x-1,y-1,x+w,y+h),fill='#050710');d.rectangle((x,y,x+w-1,y+h-1),fill='#1a1b31',outline=accent);d.line((x+2,y+1,x+w-3,y+1),fill=light)
+    text(d,label,x+25,94,'#ffffff');layouts.append((i,(x+2,44,w-4,47)))
+  # Footer controls occupy their own final row.
+  d.rectangle((7,110,24,127),fill='#222039',outline=accent);d.line([(18,114),(12,119),(18,124)],fill=light,width=2);d.line((12,119,21,119),fill=light)
+  d.rectangle((151,110,168,127),fill='#222039',outline=accent);text(d,'E',160,117,light)
+  text(d,heading,88,112,light);text(d,'X',88,122,'#ffc6d7')
+  shifted=Image.new('RGBA',(256,256));shifted.alpha_composite(base,(0,20));q=ImageDraw.Draw(shifted);q.rectangle((0,0,175,23),fill='#090c16');q.rectangle((1,1,174,24),outline=accent,width=2);q.rectangle((4,4,171,25),fill='#111323');q.rectangle((3,22,172,25),fill='#111323');im=shifted.resize((512,512),Image.Resampling.NEAREST)
+  paste_hd(im,logo(theme),(10,0,156,54))
+  for i,box in layouts:
+   box=(box[0],box[1]+20,box[2],box[3])
+   if kind==0:src=motif(season,i)
+   elif kind==1:src=motif(season,0)
+   elif kind==2:src=motif(0,2) if i==0 else motif(season,1) if i==1 else motif(2,2)
+   elif kind==4:src=motif([0,1,2][i],0)
+   else:src=motif(season,3) if i==0 else motif(2,3) if i==1 else motif(0,3) if i==2 else motif(1,3)
+   paste_hd(im,src,box)
+   if kind==4:paste_hd(im,logo(['halloween','standard','winter'][i]),(box[0],101,box[2],12))
+   if kind==3 and i==3:
+    q=ImageDraw.Draw(im);x,y,w,h=box;q.line((2*x+10,2*y+5,2*(x+w)-10,2*(y+h)-5),fill='#f26d88',width=4)
+  name=f'{theme}_{kind}';im.crop((0,0,352,484)).save(out/f'{name}_preview.png')
+  for tile in range(4):
+   tx=tile%2;ty=tile//2;part=im.crop((tx*256,ty*256,(tx+1)*256,(ty+1)*256));part.putpixel((255,255),(1,1,1,1))
+   path=f'assets/beastsmp/textures/font/menu_{name}_{tile}.png';buf=io.BytesIO();part.save(buf,format='PNG');updates[path]=buf.getvalue()
+   providers.append({'type':'bitmap','file':f'beastsmp:font/menu_{name}_{tile}.png','height':128,'ascent':33-ty*128,'chars':[chr(0xe100+season*20+kind*4+tile)]})
+updates['assets/beastsmp/font/lobby_menu.json']=json.dumps({'providers':providers},ensure_ascii=False,indent=2).encode()
 blank=Image.new('RGBA',(16,16));buf=io.BytesIO();blank.save(buf,format='PNG')
-updates={'assets/beastsmp/font/lobby_menu.json':font,
- 'assets/beastsmp/textures/item/menu_blank.png':buf.getvalue(),
- 'assets/beastsmp/models/item/menu_blank.json':json.dumps({'parent':'minecraft:item/generated','textures':{'layer0':'beastsmp:item/menu_blank'}}).encode(),
- 'assets/beastsmp/items/menu_blank.json':json.dumps({'model':{'type':'minecraft:model','model':'beastsmp:item/menu_blank'}}).encode()}
-for theme in ['halloween','standard','winter']:updates[f'assets/beastsmp/textures/font/menu_{theme}.png']=(out/f'{theme}.png').read_bytes()
+updates.update({'assets/beastsmp/textures/item/menu_blank.png':buf.getvalue(),'assets/beastsmp/models/item/menu_blank.json':json.dumps({'parent':'minecraft:item/generated','textures':{'layer0':'beastsmp:item/menu_blank'}}).encode(),'assets/beastsmp/items/menu_blank.json':json.dumps({'model':{'type':'minecraft:model','model':'beastsmp:item/menu_blank'}}).encode()})
 pack=repo/'plugins/BetterHud/beastsmp-base.zip';temp=pack.with_suffix('.new.zip')
 with zipfile.ZipFile(pack) as old,zipfile.ZipFile(temp,'w',zipfile.ZIP_DEFLATED) as new:
  for info in old.infolist():
-  if info.filename not in updates:new.writestr(info,old.read(info.filename))
+  if info.filename not in updates and (not info.filename.startswith('assets/beastsmp/textures/font/menu_') or info.filename.endswith('/menu_logo.png')):new.writestr(info,old.read(info.filename))
  for name,data in updates.items():new.writestr(name,data)
 temp.replace(pack)
-preview=Image.new('RGB',(176*3*3,204*3),'#080b14')
-for i,t in enumerate(['halloween','standard','winter']):preview.paste(Image.open(out/f'{t}.png').crop((0,0,176,204)).resize((528,612),Image.Resampling.NEAREST),(i*528,0))
-preview.save(out/'preview.png')
-print('Updated base pack:',pack)
+preview=Image.new('RGB',(352*5,484),'#080b14')
+for i in range(5):preview.paste(Image.open(out/f'halloween_{i}_preview.png'),(352*i,0))
+preview.save(out/'preview_all.png');print('Updated illustrated menu pack',pack)

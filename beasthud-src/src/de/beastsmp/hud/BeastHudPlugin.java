@@ -142,27 +142,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     @EventHandler public void quit(PlayerQuitEvent e){
         BossBar b=bars.remove(e.getPlayer().getUniqueId());if(b!=null)b.removeAll();savePlayers();
     }
-    void menu(Player p){
-        DesignMenu holder=new DesignMenu();holder.inventory=Bukkit.createInventory(holder,45,Component.text("BeastSMP | Designs",profile(p.getUniqueId()).theme.color));
-        lobbyFeatures.decorate(p,holder.inventory,"Designs");
-        int[] slots={20,22,24};int i=0;
-        for(Theme t:Theme.values()){
-            ItemStack item=new ItemStack(t.icon);ItemMeta meta=item.getItemMeta();meta.displayName(Component.text(t.label,t.color));
-            meta.lore(List.of(Component.text(profile(p.getUniqueId()).theme==t?"Aktuell ausgewählt":"Klicken zum Auswählen",NamedTextColor.GRAY),Component.text("Wird für dich gespeichert",NamedTextColor.DARK_GRAY)));
-            item.setItemMeta(meta);holder.inventory.setItem(slots[i++],item);
-        }
-        p.openInventory(holder.inventory);
-    }
-    @EventHandler(priority=EventPriority.HIGHEST) public void click(InventoryClickEvent e){
-        if(!(e.getView().getTopInventory().getHolder() instanceof DesignMenu))return;e.setCancelled(true);
-        if(!(e.getWhoClicked() instanceof Player p))return;
-        Theme t=switch(e.getRawSlot()){case 20->Theme.HALLOWEEN;case 22->Theme.STANDARD;case 24->Theme.WEIHNACHTEN;default->null;};
-        if(e.getRawSlot()==36)getServer().getScheduler().runTask(this,()->lobbyFeatures.openHome(p));
-        if(e.getRawSlot()==40)getServer().getScheduler().runTask(this,()->p.closeInventory());
-        if(e.getRawSlot()==44)getServer().getScheduler().runTask(this,()->lobbyFeatures.openEffects(p));
-        if(t!=null)getServer().getScheduler().runTask(this,()->{if(p.isOnline()){p.closeInventory();choose(p,t);}});
-    }
-    @EventHandler public void drag(InventoryDragEvent e){if(e.getView().getTopInventory().getHolder() instanceof DesignMenu)e.setCancelled(true);}
+    void menu(Player p){lobbyFeatures.openDesigns(p);}
     void choose(Player p,Theme t){profile(p.getUniqueId()).theme=t;savePlayers();apply(p,false);lobbyFeatures.refreshHotbar(p);showEffect(p);p.sendMessage(Component.text("Design gewählt: "+t.label,t.color));p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.4f,1.2f);}
     private void updateVisibility(Player player){
         Profile profile=profile(player.getUniqueId());
