@@ -136,12 +136,25 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         m.actions.put(36,()->openHome(p));m.actions.put(40,p::closeInventory);m.actions.put(44,()->openEffects(p));return m;
     }
     private void put(Menu m,int slot,ItemStack item,Runnable action){m.inventory.setItem(slot,item);m.actions.put(slot,action);}
+    private ItemStack invisible(ItemStack stack,boolean tooltip){
+        ItemMeta meta=stack.getItemMeta();meta.setItemModel(new NamespacedKey("beastsmp","menu_blank"));
+        if(!tooltip)meta.setHideTooltip(true);stack.setItemMeta(meta);return stack;
+    }
+    private void card(Menu m,int[] slots,ItemStack stack,Runnable action){
+        for(int slot:slots)put(m,slot,invisible(stack.clone(),true),action);
+    }
     void openHome(Player p){
-        Menu m=newMenu(p,Kind.HOME,"Lobby-Menü");
-        put(m,20,item(Material.COMPASS,"Serverauswahl",theme(p).color,"Wähle dein Ziel im BeastSMP-Netzwerk","Mit aktuellem Online-Status"),()->openServers(p));
-        put(m,22,item(Material.NETHER_STAR,"Dein Design",theme(p).color,"Halloween · Standard · Weihnachten","Aktuell: "+theme(p).label),()->plugin.menu(p));
-        put(m,24,item(Material.JACK_O_LANTERN,"Events",theme(p).color,"Kürbissuche und saisonale Aktionen","Dein Fortschritt bleibt gespeichert"),()->openEvents(p));
-        put(m,31,item(Material.SNOWBALL,"Atmosphäre",theme(p).color,"Schnee, Partikelnebel oder Ruhe","Aktiv: "+effectName(effective(p))),()->openEffects(p));
+        Menu m=new Menu(Kind.HOME);
+        String glyph=switch(theme(p)){case HALLOWEEN->"\ue001";case STANDARD->"\ue002";case WEIHNACHTEN->"\ue003";};
+        Component title=Component.text("\ue000"+glyph,NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:lobby_menu"));
+        m.inventory=Bukkit.createInventory(m,45,title);
+        ItemStack filler=invisible(item(Material.PAPER," ",NamedTextColor.WHITE),false);
+        for(int slot=0;slot<45;slot++)m.inventory.setItem(slot,filler.clone());
+        card(m,new int[]{10,11,12,19,20,21},item(Material.PAPER,"Serverauswahl",theme(p).color,"Wähle dein Ziel im BeastSMP-Netzwerk","Mit aktuellem Online-Status"),()->openServers(p));
+        card(m,new int[]{14,15,16,23,24,25},item(Material.PAPER,"Dein Design",theme(p).color,"Halloween · Standard · Weihnachten","Aktuell: "+theme(p).label),()->plugin.menu(p));
+        card(m,new int[]{28,29,30,37,38,39},item(Material.PAPER,"Events",theme(p).color,"Kürbissuche und saisonale Aktionen","Dein Fortschritt bleibt gespeichert"),()->openEvents(p));
+        card(m,new int[]{32,33,34,41,42,43},item(Material.PAPER,"Atmosphäre",theme(p).color,"Schnee, Partikelnebel oder Ruhe","Aktiv: "+effectName(effective(p))),()->openEffects(p));
+        put(m,40,invisible(item(Material.PAPER,"Schließen",NamedTextColor.RED),true),()->p.closeInventory());
         p.openInventory(m.inventory);
     }
     void openServers(Player p){requestCounts();Menu m=newMenu(p,Kind.SERVERS,"Serverauswahl");fillServers(p,m);p.openInventory(m.inventory);}
