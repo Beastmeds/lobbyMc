@@ -1,0 +1,9 @@
+beast_bossbar_halloween:
+  type: single
+  file: beast_bossbar_halloween.png
+beast_bossbar_winter:
+  type: single
+  file: beast_bossbar_winter.png
+beast_bossbar_standard:
+  type: single
+  file: beast_bossbar_standard.png

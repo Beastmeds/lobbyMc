@@ -1,0 +1,54 @@
+beast_bossbar_halloween:
+  offset: left
+  images:
+    1:
+      name: beast_bossbar_halloween
+      x: -124
+      y: 7
+      layer: 50
+  texts:
+    1:
+      name: beast_font
+      pattern: <white><bold>BeastSMP
+      x: 0
+      y: 23
+      scale: 0.5
+      align: center
+      outline: true
+      layer: 51
+beast_bossbar_winter:
+  offset: left
+  images:
+    1:
+      name: beast_bossbar_winter
+      x: -124
+      y: 7
+      layer: 50
+  texts:
+    1:
+      name: beast_font
+      pattern: <white><bold>BeastSMP
+      x: 0
+      y: 19
+      scale: 0.5
+      align: center
+      outline: true
+      layer: 51
+beast_bossbar_standard:
+  offset: left
+  images:
+    1:
+      name: beast_bossbar_standard
+      x: -124
+      y: 7
+      layer: 50
+  texts:
+    1:
+      name: beast_font
+      pattern: <white><bold>BeastSMP
+      x: 0
+      y: 22
+      scale: 0.5
+      align: center
+      outline: true
+      layer: 51

@@ -2,29 +2,29 @@ default_compass:
   type: circle
   default: true
   file:
-    n: 
+    n:
       name: "compass/n.png"
-    s: 
+    s:
       name: "compass/s.png"
-    w: 
+    w:
       name: "compass/w.png"
-    e: 
+    e:
       name: "compass/e.png"
-    nw: 
+    nw:
       name: "compass/nw.png"
       y: 2
-    ne: 
+    ne:
       name: "compass/ne.png"
       y: 2
-    sw: 
+    sw:
       name: "compass/sw.png"
       y: 2
-    se: 
+    se:
       name: "compass/se.png"
       y: 2
-    chain: 
+    chain:
       name: "compass/chain.png"
-    point: 
+    point:
       name: "compass/point.png"
       y: -8
   scale: 0.75
@@ -36,5 +36,5 @@ default_compass:
     y: 0
   pixel:
     x: 0
-    y: 20
+    y: 48
   apply-opacity: true

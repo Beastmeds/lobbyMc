@@ -113,7 +113,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         }
         hp.setHudEnabled(true);hp.save();
         BossBar old=bars.remove(p.getUniqueId());if(old!=null)old.removeAll();
-        BossBar bar=Bukkit.createBossBar("BeastSMP",data.theme.bar,BarStyle.SOLID);bar.setProgress(1.0);bar.addPlayer(p);bars.put(p.getUniqueId(),bar);
+        BossBar bar=Bukkit.createBossBar("BeastSMP",data.theme.bar,BarStyle.SOLID);bar.setProgress(1.0);bar.setVisible(false);bar.addPlayer(p);bars.put(p.getUniqueId(),bar);
         data.nextEffect=System.currentTimeMillis()+ThreadLocalRandom.current().nextLong(18000,30001);
         updateVisibility(p);
         if(welcome)greet(p);

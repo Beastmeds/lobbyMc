@@ -10,7 +10,7 @@ Requires BetterHud 2.2.0-SNAPSHOT-449 and PlaceholderAPI.
 - `/kuerbisse` explains the ten-pumpkin quest and shows progress.
 - Pumpkins are visible in the Halloween design. Click each once to collect it; collected pumpkins disappear only for that player. Completion triggers a title, sound and particles.
 - A personal greeting and themed overlay play on join. Bats, snowflakes or neutral sparkles pass over the logo every 25–45 seconds.
-- The full boss bar is decorative branding and is always titled `BeastSMP`.
+- The top nameplate is decorative branding and is always titled `BeastSMP`. Its frame switches with the selected theme. BetterHUD draws the seasonal frame and title; the legacy Bukkit bar stays hidden.
 
 ## Administration
 
