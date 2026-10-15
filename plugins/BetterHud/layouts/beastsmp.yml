@@ -10,7 +10,7 @@ beastsmp_panel:
       name: beast_halloween_header
       x: -160
       y: -132
-      layer: 12
+      layer: 11
     3:
       name: coin
       x: -146

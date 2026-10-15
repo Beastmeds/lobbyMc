@@ -45,6 +45,10 @@ vec4 calculateFinalColor(vec4 color) {
     return color;
 }
 
+layout(location = 5) in vec2 beastLocalPosition;
+layout(location = 6) in float beastEffect;
+layout(location = 7) in float beastClock;
+
 void main() {
 #ifdef IS_GRAYSCALE
     vec4 texColor = texture(Sampler0, texCoord0).rrrr;
@@ -53,6 +57,24 @@ void main() {
 #endif
 
     vec4 color = texColor * vertexColor * ColorModulator;
+
+    // Animate only the BeastSMP background and header; text and other HUDs stay unchanged.
+    if (beastEffect > 0.5 && beastEffect < 1.5) {
+        if (texColor.b > 0.3 && texColor.r > 0.2 && texColor.g < 0.55 && texColor.b > texColor.r * 1.05) {
+            float pulse = 0.5 + 0.5 * sin(beastClock * 1.05);
+            color.rgb *= 0.65 + 0.65 * pulse;
+        }
+        if (beastLocalPosition.y > 78.0 && texColor.r > 0.8 && texColor.g > 0.25 && texColor.g < 0.85 && texColor.b < 0.35) {
+            float flicker = 0.5 + 0.3 * sin(beastClock * 8.0 + beastLocalPosition.x) + 0.2 * sin(beastClock * 13.0);
+            color.rgb *= 0.75 + 0.65 * flicker;
+        }
+    } else if (beastEffect > 1.5) {
+        bool pumpkin = beastLocalPosition.x < -126.0 || beastLocalPosition.x > -35.0;
+        if (pumpkin && texColor.r > 0.45 && texColor.g > 0.15 && texColor.b < 0.45) {
+            float glow = 0.5 + 0.5 * sin(beastClock * 1.6 + (beastLocalPosition.x > -35.0 ? 0.7 : 0.0));
+            color.rgb *= 0.50 + 0.85 * glow;
+        }
+    }
 
     #GenerateOtherMainMethod
 
