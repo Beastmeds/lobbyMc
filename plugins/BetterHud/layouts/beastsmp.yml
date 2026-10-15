@@ -1,79 +1,92 @@
 beastsmp_panel:
+  offset: left
+  x: 60
   images:
     1:
       name: purple_frame
       scale: 0.5
-      layer: -2
+      layer: 10
       x: -134
       y: -88
     2:
       name: beastsmp_logo
+      layer: 12
       x: -150
       y: -104
       scale: 0.4
     3:
       name: halloween_top
       scale: 0.5
-      layer: 1
+      layer: 11
       x: -134
       y: -94
   texts:
     1:
       name: beast_font
+      layer: 12
       pattern: '<white>Geld: <#aafc6a>—'
       x: -121
       y: -39
       scale: 0.325
     2:
       name: beast_font
+      layer: 12
       pattern: '<white>Gems: <#aafc6a>0'
       x: -121
       y: -26
       scale: 0.325
     3:
       name: beast_font
+      layer: 12
       pattern: '<white>Stars: <#aafc6a>0'
       x: -121
       y: -12
       scale: 0.325
     4:
       name: beast_font
+      layer: 12
       pattern: '<white>Kills: <#aafc6a>[papi:statistic_player_kills]'
       x: -121
       y: 2
       scale: 0.325
     5:
       name: beast_font
+      layer: 12
       pattern: '<white>Tode: <#aafc6a>[papi:statistic_deaths]'
       x: -121
       y: 15
       scale: 0.325
     6:
       name: beast_font
+      layer: 12
       pattern: '<white>Clan: <#aafc6a>Keiner'
       x: -121
       y: 28
       scale: 0.325
     7:
       name: beast_font
+      layer: 12
       pattern: '<white>Ping: <#aafc6a>[papi:player_ping] ms'
       x: -121
       y: 42
       scale: 0.325
     8:
       name: beast_font
+      layer: 12
       pattern: '<white>Keyall: <#aafc6a>Bald'
       x: -121
       y: 56
       scale: 0.325
     9:
       name: beast_font
+      layer: 12
       pattern: '<white>Spielzeit: <#aafc6a>[papi:statistic_time_played]'
       x: -121
       y: 69
       scale: 0.325
     20:
       name: beast_font
+      layer: 12
       pattern: <#ff7777>MC.BEASTSMP.DE
       x: -119
       y: 83
