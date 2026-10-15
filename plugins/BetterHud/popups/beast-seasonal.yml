@@ -1,0 +1,30 @@
+beast_bats:
+  duration: 80
+  unique: true
+  frame-type: local
+  layouts:
+    1:
+      name: beast_bat_motion
+      gui:
+        x: 100
+        y: 50
+beast_snow:
+  duration: 80
+  unique: true
+  frame-type: local
+  layouts:
+    1:
+      name: beast_snow_motion
+      gui:
+        x: 100
+        y: 50
+beast_sparkles:
+  duration: 80
+  unique: true
+  frame-type: local
+  layouts:
+    1:
+      name: beast_sparkle_motion
+      gui:
+        x: 100
+        y: 50

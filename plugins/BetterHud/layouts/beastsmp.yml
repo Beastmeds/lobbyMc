@@ -54,7 +54,7 @@ beastsmp_panel:
       scale: 0.3
       layer: 12
     10:
-      name: key
+      name: pumpkin
       x: -146
       y: 28
       scale: 0.3
@@ -68,78 +68,436 @@ beastsmp_panel:
   texts:
     1:
       name: beast_font
-      pattern: '<white>Geld <#55ff22>—'
+      pattern: <white>Geld <#55ff22>—
       x: -131
       y: -63
       scale: 0.5
       layer: 12
     2:
       name: beast_font
-      pattern: '<white>Gems <#ff35e5>0'
+      pattern: <white>Gems <#ff35e5>0
       x: -131
       y: -50
       scale: 0.5
       layer: 12
     3:
       name: beast_font
-      pattern: '<white>Stars <yellow>0'
+      pattern: <white>Stars <yellow>0
       x: -131
       y: -37
       scale: 0.5
       layer: 12
     4:
       name: beast_font
-      pattern: '<white>Kills <gold>[papi:statistic_player_kills]'
+      pattern: <white>Kills <gold>[papi:statistic_player_kills]
       x: -131
       y: -24
       scale: 0.5
       layer: 12
     5:
       name: beast_font
-      pattern: '<white>Tode <red>[papi:statistic_deaths]'
+      pattern: <white>Tode <red>[papi:statistic_deaths]
       x: -131
       y: -11
       scale: 0.5
       layer: 12
     6:
       name: beast_font
-      pattern: '<white>Clan <yellow>Keiner'
+      pattern: <white>Clan <yellow>Keiner
       x: -131
       y: 2
       scale: 0.5
       layer: 12
     7:
       name: beast_font
-      pattern: '<white>Ping <#ff35e5>[papi:player_ping]ms'
+      pattern: <white>Ping <#ff35e5>[papi:player_ping]ms
       x: -131
       y: 15
       scale: 0.5
       layer: 12
     8:
       name: beast_font
-      pattern: '<white>Keyall <aqua>Bald'
+      pattern: <white>Kürbisse <gold>[papi:beast_quest_progress]
       x: -131
       y: 28
       scale: 0.5
       layer: 12
     9:
       name: beast_font
-      pattern: '<white>Spielzeit <#35f222>[papi:statistic_time_played]'
+      pattern: <white>Spielzeit <#35f222>[papi:statistic_time_played]
       x: -131
       y: 41
       scale: 0.5
       layer: 12
     20:
       name: beast_font
-      pattern: '<#ff5555>MC.BEASTSMP.DE'
+      pattern: <#ff5555>MC.BEASTSMP.DE
       x: -143
       y: 66
       scale: 0.5
       layer: 12
     21:
       name: beast_font
-      pattern: '<#55ff22>[papi:bungee_total]<white> / <#55ff22>1000'
+      pattern: <#55ff22>[papi:bungee_total]<white> / <#55ff22>1000
       x: -143
       y: 79
       scale: 0.5
       layer: 12
+beastsmp_standard_panel:
+  offset: left
+  images:
+    1:
+      name: beast_standard_panel
+      x: -156
+      y: -90
+      layer: 20
+    2:
+      name: beast_standard_header
+      x: -160
+      y: -132
+      layer: 21
+    3:
+      name: coin
+      x: -146
+      y: -63
+      scale: 0.3
+      layer: 12
+    4:
+      name: gem
+      x: -146
+      y: -50
+      scale: 0.3
+      layer: 12
+    5:
+      name: star
+      x: -146
+      y: -37
+      scale: 0.3
+      layer: 12
+    6:
+      name: sword
+      x: -146
+      y: -24
+      scale: 0.3
+      layer: 12
+    7:
+      name: skull
+      x: -146
+      y: -11
+      scale: 0.3
+      layer: 12
+    8:
+      name: shield
+      x: -146
+      y: 2
+      scale: 0.3
+      layer: 12
+    9:
+      name: wifi
+      x: -146
+      y: 15
+      scale: 0.3
+      layer: 12
+    10:
+      name: pumpkin
+      x: -146
+      y: 28
+      scale: 0.3
+      layer: 12
+    11:
+      name: clock
+      x: -146
+      y: 41
+      scale: 0.3
+      layer: 12
+  texts:
+    1:
+      name: beast_font
+      pattern: <white>Geld <#55ff22>—
+      x: -131
+      y: -63
+      scale: 0.5
+      layer: 12
+    2:
+      name: beast_font
+      pattern: <white>Gems <#ff35e5>0
+      x: -131
+      y: -50
+      scale: 0.5
+      layer: 12
+    3:
+      name: beast_font
+      pattern: <white>Stars <yellow>0
+      x: -131
+      y: -37
+      scale: 0.5
+      layer: 12
+    4:
+      name: beast_font
+      pattern: <white>Kills <gold>[papi:statistic_player_kills]
+      x: -131
+      y: -24
+      scale: 0.5
+      layer: 12
+    5:
+      name: beast_font
+      pattern: <white>Tode <red>[papi:statistic_deaths]
+      x: -131
+      y: -11
+      scale: 0.5
+      layer: 12
+    6:
+      name: beast_font
+      pattern: <white>Clan <yellow>Keiner
+      x: -131
+      y: 2
+      scale: 0.5
+      layer: 12
+    7:
+      name: beast_font
+      pattern: <white>Ping <#ff35e5>[papi:player_ping]ms
+      x: -131
+      y: 15
+      scale: 0.5
+      layer: 12
+    8:
+      name: beast_font
+      pattern: <white>Kürbisse <gold>[papi:beast_quest_progress]
+      x: -131
+      y: 28
+      scale: 0.5
+      layer: 12
+    9:
+      name: beast_font
+      pattern: <white>Spielzeit <#35f222>[papi:statistic_time_played]
+      x: -131
+      y: 41
+      scale: 0.5
+      layer: 12
+    20:
+      name: beast_font
+      pattern: <#ff5555>MC.BEASTSMP.DE
+      x: -143
+      y: 66
+      scale: 0.5
+      layer: 12
+    21:
+      name: beast_font
+      pattern: <#55ff22>[papi:bungee_total]<white> / <#55ff22>1000
+      x: -143
+      y: 79
+      scale: 0.5
+      layer: 12
+beastsmp_winter_panel:
+  offset: left
+  images:
+    1:
+      name: beast_winter_panel
+      x: -156
+      y: -90
+      layer: 30
+    2:
+      name: beast_winter_header
+      x: -160
+      y: -132
+      layer: 31
+    3:
+      name: coin
+      x: -146
+      y: -63
+      scale: 0.3
+      layer: 12
+    4:
+      name: gem
+      x: -146
+      y: -50
+      scale: 0.3
+      layer: 12
+    5:
+      name: star
+      x: -146
+      y: -37
+      scale: 0.3
+      layer: 12
+    6:
+      name: sword
+      x: -146
+      y: -24
+      scale: 0.3
+      layer: 12
+    7:
+      name: skull
+      x: -146
+      y: -11
+      scale: 0.3
+      layer: 12
+    8:
+      name: shield
+      x: -146
+      y: 2
+      scale: 0.3
+      layer: 12
+    9:
+      name: wifi
+      x: -146
+      y: 15
+      scale: 0.3
+      layer: 12
+    10:
+      name: pumpkin
+      x: -146
+      y: 28
+      scale: 0.3
+      layer: 12
+    11:
+      name: clock
+      x: -146
+      y: 41
+      scale: 0.3
+      layer: 12
+  texts:
+    1:
+      name: beast_font
+      pattern: <white>Geld <#55ff22>—
+      x: -131
+      y: -63
+      scale: 0.5
+      layer: 12
+    2:
+      name: beast_font
+      pattern: <white>Gems <#ff35e5>0
+      x: -131
+      y: -50
+      scale: 0.5
+      layer: 12
+    3:
+      name: beast_font
+      pattern: <white>Stars <yellow>0
+      x: -131
+      y: -37
+      scale: 0.5
+      layer: 12
+    4:
+      name: beast_font
+      pattern: <white>Kills <gold>[papi:statistic_player_kills]
+      x: -131
+      y: -24
+      scale: 0.5
+      layer: 12
+    5:
+      name: beast_font
+      pattern: <white>Tode <red>[papi:statistic_deaths]
+      x: -131
+      y: -11
+      scale: 0.5
+      layer: 12
+    6:
+      name: beast_font
+      pattern: <white>Clan <yellow>Keiner
+      x: -131
+      y: 2
+      scale: 0.5
+      layer: 12
+    7:
+      name: beast_font
+      pattern: <white>Ping <#ff35e5>[papi:player_ping]ms
+      x: -131
+      y: 15
+      scale: 0.5
+      layer: 12
+    8:
+      name: beast_font
+      pattern: <white>Kürbisse <gold>[papi:beast_quest_progress]
+      x: -131
+      y: 28
+      scale: 0.5
+      layer: 12
+    9:
+      name: beast_font
+      pattern: <white>Spielzeit <#35f222>[papi:statistic_time_played]
+      x: -131
+      y: 41
+      scale: 0.5
+      layer: 12
+    20:
+      name: beast_font
+      pattern: <#ff5555>MC.BEASTSMP.DE
+      x: -143
+      y: 66
+      scale: 0.5
+      layer: 12
+    21:
+      name: beast_font
+      pattern: <#55ff22>[papi:bungee_total]<white> / <#55ff22>1000
+      x: -143
+      y: 79
+      scale: 0.5
+      layer: 12
+beast_bat_motion:
+  offset: left
+  images:
+    1:
+      name: beast_bat
+      x: -170
+      y: -145
+      layer: 40
+      scale: 0.7
+  animations:
+    type: loop
+    duration: 80
+    x-equation: 2*t
+    y-equation: 5*sin(t*0.18)
+beast_snow_motion:
+  offset: left
+  images:
+    1:
+      name: beast_snowflake
+      x: -138
+      y: -160
+      layer: 40
+      scale: 0.7
+    2:
+      name: beast_snowflake
+      x: -78
+      y: -150
+      layer: 40
+      scale: 0.55
+    3:
+      name: beast_snowflake
+      x: -25
+      y: -164
+      layer: 40
+      scale: 0.7
+  animations:
+    type: loop
+    duration: 80
+    x-equation: 3*sin(t*0.12)
+    y-equation: 0.65*t
+    opacity-equation: min(1,(80-t)/20)
+beast_sparkle_motion:
+  offset: left
+  images:
+    1:
+      name: beast_sparkle
+      x: -138
+      y: -160
+      layer: 40
+      scale: 0.7
+    2:
+      name: beast_sparkle
+      x: -78
+      y: -150
+      layer: 40
+      scale: 0.55
+    3:
+      name: beast_sparkle
+      x: -25
+      y: -164
+      layer: 40
+      scale: 0.7
+  animations:
+    type: loop
+    duration: 80
+    x-equation: 3*sin(t*0.12)
+    y-equation: 0.65*t
+    opacity-equation: min(1,(80-t)/20)

@@ -22,8 +22,7 @@ self-host-port: 8163
 merge-other-folders:
 - BetterHud/beastsmp-base.zip
 loading-head: random
-default-hud:
-- beastsmp_halloween
+default-hud: []
 default-popup: []
 default-compass: []
 load-minecraft-default-textures: false

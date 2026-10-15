@@ -1,0 +1,25 @@
+beast_standard_panel:
+  type: single
+  file: beast_standard_panel.png
+beast_standard_header:
+  type: single
+  file: beast_standard_header.png
+beast_winter_panel:
+  type: single
+  file: beast_winter_panel.png
+beast_winter_header:
+  type: single
+  file: beast_winter_header.png
+beast_bat:
+  type: sequence
+  files:
+  - beast_bat_0.png:4
+  - beast_bat_1.png:4
+  - beast_bat_2.png:4
+  - beast_bat_3.png:4
+beast_snowflake:
+  type: single
+  file: beast_snowflake.png
+beast_sparkle:
+  type: single
+  file: beast_sparkle.png

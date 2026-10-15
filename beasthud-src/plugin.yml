@@ -1,0 +1,20 @@
+name: BeastHudThemes
+version: 1.0.0
+main: de.beastsmp.hud.BeastHudPlugin
+api-version: '1.21'
+depend: [BetterHud, PlaceholderAPI]
+author: BeastSMP
+description: Personal HUD designs, seasonal greetings and the lobby pumpkin hunt.
+commands:
+  design:
+    description: Wähle dein BeastSMP-Design
+    aliases: [huddesign, designs]
+  kuerbisse:
+    description: Fortschritt und Hilfe zur Halloween-Kürbissuche
+    aliases: [pumpkins, kuerbissuche]
+  beasthud:
+    description: BeastHUD administration
+    permission: beasthud.admin
+permissions:
+  beasthud.admin:
+    default: op

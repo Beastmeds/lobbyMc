@@ -3,4 +3,16 @@ beastsmp_halloween:
     1:
       name: beastsmp_panel
       x: 100
-      y: 56
+      y: 50
+beastsmp_standard:
+  layouts:
+    1:
+      name: beastsmp_standard_panel
+      x: 100
+      y: 50
+beastsmp_weihnachten:
+  layouts:
+    1:
+      name: beastsmp_winter_panel
+      x: 100
+      y: 50

@@ -113,7 +113,7 @@ void main() {
 
             // BeastSMP sidebar: scale to the available GUI viewport, keeping its right anchor.
             // Restrict this to the sidebar anchor so compasses and other HUDs keep their size.
-            if (abs(xGui - ui.x) < 0.5 && abs(yGui - ui.y * 0.56) < 0.5) {
+            if (abs(xGui - ui.x) < 0.5 && abs(yGui - ui.y * 0.50) < 0.5) {
                 beastLocalPosition = pos.xy;
                 beastEffect = abs(layer - 10.0) < 0.1 ? 1.0 : (abs(layer - 11.0) < 0.1 ? 2.0 : 0.0);
                 float beastViewportScale = 0.85 * min(1.0, min(ui.x / 768.0, ui.y / 432.0));
