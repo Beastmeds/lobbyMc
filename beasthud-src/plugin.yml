@@ -15,6 +15,20 @@ commands:
   beasthud:
     description: BeastHUD administration
     permission: beasthud.admin
+  beast:
+    description: BeastSMP Lobby-Menü
+    aliases: [menu, lobbymenu]
+  serverauswahl:
+    description: BeastSMP Serverauswahl
+    aliases: [servers, navigator]
+  events:
+    description: BeastSMP Events
+  effekte:
+    description: Persönliche Lobby-Effekte
+    aliases: [effects]
+  lobbyeffekte:
+    description: Lobby-Effekte serverweit verwalten
+    permission: beasthud.admin
 permissions:
   beasthud.admin:
     default: op

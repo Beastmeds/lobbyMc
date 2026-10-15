@@ -45,3 +45,6 @@ pumpkins:
     x: -139.85
     y: -55.95
     z: 4.15
+effects:
+  enabled: true
+  mode: auto

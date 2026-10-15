@@ -4,3 +4,6 @@ spawn:
   x: -139.91855815080723
   y: -56.0
   z: -25.980154437064236
+effects:
+  enabled: true
+  mode: auto

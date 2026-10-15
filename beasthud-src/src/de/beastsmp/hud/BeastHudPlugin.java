@@ -59,6 +59,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     private YamlConfiguration storage;
     private PlaceholderExpansion expansion;
     private int questTotal=10;
+    private BeastLobbyFeatures lobbyFeatures;
 
     @Override public void onEnable(){
         saveDefaultConfig(); questTotal=getConfig().getInt("quest-count",10);
@@ -77,6 +78,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
                 return switch(param.toLowerCase(Locale.ROOT)){case "quest_progress"->p.found.size()+" / "+questTotal;case "quest_found"->""+p.found.size();case "quest_total"->""+questTotal;case "design"->p.theme.label;default->null;};
             }
         };expansion.register();
+        lobbyFeatures=new BeastLobbyFeatures(this);lobbyFeatures.enable();
         getServer().getScheduler().runTaskLater(this,()->{
             createQuest();for(Player p:Bukkit.getOnlinePlayers())apply(p,false);
         },40L);
@@ -90,6 +92,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         getLogger().info("Three HUD designs, personal greetings and a "+questTotal+"-pumpkin quest enabled.");
     }
     @Override public void onDisable(){
+        if(lobbyFeatures!=null)lobbyFeatures.disable();
         savePlayers();bars.values().forEach(BossBar::removeAll);bars.clear();
         for(Pumpkin p:pumpkins){p.display.remove();p.hitbox.remove();}pumpkins.clear();
         if(expansion!=null)expansion.unregister();
@@ -139,9 +142,10 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     @EventHandler public void quit(PlayerQuitEvent e){
         BossBar b=bars.remove(e.getPlayer().getUniqueId());if(b!=null)b.removeAll();savePlayers();
     }
-    private void menu(Player p){
-        DesignMenu holder=new DesignMenu();holder.inventory=Bukkit.createInventory(holder,27,Component.text("BeastSMP · Dein Design",NamedTextColor.DARK_PURPLE));
-        int[] slots={11,13,15};int i=0;
+    void menu(Player p){
+        DesignMenu holder=new DesignMenu();holder.inventory=Bukkit.createInventory(holder,45,Component.text("BeastSMP | Designs",profile(p.getUniqueId()).theme.color));
+        lobbyFeatures.decorate(p,holder.inventory,"Designs");
+        int[] slots={20,22,24};int i=0;
         for(Theme t:Theme.values()){
             ItemStack item=new ItemStack(t.icon);ItemMeta meta=item.getItemMeta();meta.displayName(Component.text(t.label,t.color));
             meta.lore(List.of(Component.text(profile(p.getUniqueId()).theme==t?"Aktuell ausgewählt":"Klicken zum Auswählen",NamedTextColor.GRAY),Component.text("Wird für dich gespeichert",NamedTextColor.DARK_GRAY)));
@@ -152,11 +156,14 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     @EventHandler(priority=EventPriority.HIGHEST) public void click(InventoryClickEvent e){
         if(!(e.getView().getTopInventory().getHolder() instanceof DesignMenu))return;e.setCancelled(true);
         if(!(e.getWhoClicked() instanceof Player p))return;
-        Theme t=switch(e.getRawSlot()){case 11->Theme.HALLOWEEN;case 13->Theme.STANDARD;case 15->Theme.WEIHNACHTEN;default->null;};
+        Theme t=switch(e.getRawSlot()){case 20->Theme.HALLOWEEN;case 22->Theme.STANDARD;case 24->Theme.WEIHNACHTEN;default->null;};
+        if(e.getRawSlot()==36)getServer().getScheduler().runTask(this,()->lobbyFeatures.openHome(p));
+        if(e.getRawSlot()==40)getServer().getScheduler().runTask(this,()->p.closeInventory());
+        if(e.getRawSlot()==44)getServer().getScheduler().runTask(this,()->lobbyFeatures.openEffects(p));
         if(t!=null)getServer().getScheduler().runTask(this,()->{if(p.isOnline()){p.closeInventory();choose(p,t);}});
     }
     @EventHandler public void drag(InventoryDragEvent e){if(e.getView().getTopInventory().getHolder() instanceof DesignMenu)e.setCancelled(true);}
-    private void choose(Player p,Theme t){profile(p.getUniqueId()).theme=t;savePlayers();apply(p,false);showEffect(p);p.sendMessage(Component.text("Design gewählt: "+t.label,t.color));p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.4f,1.2f);}
+    void choose(Player p,Theme t){profile(p.getUniqueId()).theme=t;savePlayers();apply(p,false);lobbyFeatures.refreshHotbar(p);showEffect(p);p.sendMessage(Component.text("Design gewählt: "+t.label,t.color));p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.4f,1.2f);}
     private void updateVisibility(Player player){
         Profile profile=profile(player.getUniqueId());
         for(Pumpkin p:pumpkins){boolean show=profile.theme==Theme.HALLOWEEN&&!profile.found.contains(p.id);
@@ -214,7 +221,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void interact(PlayerInteractEntityEvent e){if(e.getRightClicked().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);collect(e.getPlayer(),e.getRightClicked());}}
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void interactAt(PlayerInteractAtEntityEvent e){if(e.getRightClicked().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);collect(e.getPlayer(),e.getRightClicked());}}
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void attack(EntityDamageByEntityEvent e){if(e.getEntity().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);if(e.getDamager() instanceof Player p)collect(p,e.getEntity());}}
-    private void questInfo(Player p){Profile data=profile(p.getUniqueId());p.sendMessage(Component.text("Halloween-Kürbissuche: "+data.found.size()+" / "+questTotal,NamedTextColor.GOLD));p.sendMessage(Component.text("Suche die leuchtenden Kürbisse rund um den Lobby-Spawn und klicke sie an. Jeder zählt nur einmal. Aktiviere dafür das Halloween-Design mit /design halloween.",NamedTextColor.GRAY));}
+    void questInfo(Player p){Profile data=profile(p.getUniqueId());p.sendMessage(Component.text("Halloween-Kürbissuche: "+data.found.size()+" / "+questTotal,NamedTextColor.GOLD));p.sendMessage(Component.text("Suche die leuchtenden Kürbisse rund um den Lobby-Spawn und klicke sie an. Jeder zählt nur einmal. Aktiviere dafür das Halloween-Design mit /design halloween.",NamedTextColor.GRAY));}
     @Override public boolean onCommand(CommandSender sender,Command command,String label,String[] args){
         if(command.getName().equals("beasthud")){
             if(!(sender instanceof ConsoleCommandSender)&&!sender.hasPermission("beasthud.admin")){sender.sendMessage("Nutze /design oder /kuerbisse.");return true;}
