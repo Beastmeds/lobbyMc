@@ -100,6 +100,12 @@ void main() {
                 vertexColor = vec4(r, g, b, vertexColor.w);
             }
 
+            // BeastSMP sidebar: scale to the available GUI viewport, keeping its right anchor.
+            // Restrict this to the sidebar anchor so compasses and other HUDs keep their size.
+            if (abs(xGui - ui.x) < 0.5 && abs(yGui - ui.y * 0.56) < 0.5) {
+                float beastViewportScale = min(1.0, min(ui.x / 768.0, ui.y / 432.0));
+                pos.xy *= beastViewportScale;
+            }
             pos.x += xGui;
             pos.y += yGui;
             pos.z += layer;
