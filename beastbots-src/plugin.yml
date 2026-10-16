@@ -3,10 +3,11 @@ version: 1.0.0
 main: de.beastsmp.bots.BeastBots
 api-version: '1.21'
 depend: [FakePlayer-CE]
+softdepend: [CustomLobby]
 loadbefore: [BeastHudThemes]
 commands:
   beastbots:
-    description: Verwalte die simulierten Lobby-Spieler
+    description: Manage the simulated lobby players
     permission: beastbots.admin
 permissions:
   beastbots.admin:

@@ -60,3 +60,7 @@ Stop the Lobby with owner approval. Remove the newly installed BeastBots, FakePl
 jars from `plugins/` and move their new data directories aside. Extract the backup into `/root/lobbyMc`
 to restore BeastHudThemes code/jar/config. Restart using the existing start script. The Bungee configuration
 is unchanged; no proxy restart is needed.
+
+## Current limits and AFK handling
+
+The configured cap is now 40, with a pool of 40 names and skin sources. The current amount remains ten. Managed bots receive only `customlobby.afk.exempt`; existing AFK state is cleared during configuration. Real-player AFK detection remains enabled.

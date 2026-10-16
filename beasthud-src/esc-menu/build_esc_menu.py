@@ -28,7 +28,7 @@ for theme,accent,fill,highlight in [('halloween','#9c45ce','#252039','#f0aaff'),
   part=header.crop((tile*256,0,(tile+1)*256,128));part.putpixel((255,127),(1,1,1,1));skin[f'assets/beastsmp/textures/font/esc_logo_{tile}.png']=png(part)
  source=root/('farewell-art.png' if theme=='halloween' else f'farewell-{theme}.png')
  art=Image.open(source).convert('RGBA');art=art.crop(art.getbbox());ratio=min(512/art.width,172/art.height);art=art.resize((round(art.width*ratio),round(art.height*ratio)),Image.Resampling.NEAREST)
- for lang,label,line1,line2 in [('de_de','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP'),('en_us','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP')]:
+ for lang,label,line1,line2 in [('de_de','Bis bald!','DANKE FUERS SPIELEN!','BIS BALD AUF BEASTSMP'),('en_us','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP')]:
   base=Image.new('RGBA',(256,128));text(base,label,128,6,'white');text(base,line1,140,51,'#f4eaff');text(base,line2,140,63,'#f4eaff');text(base,'MC.BEASTSMP.DE',140,75,'#f5b041' if theme=='halloween' else '#9eefff')
   letters=base.resize((512,256),Image.Resampling.NEAREST);im=Image.new('RGBA',(512,256));im.alpha_composite(art,((512-art.width)//2,50));im.alpha_composite(letters)
   for tile in range(2):
@@ -54,7 +54,7 @@ with zipfile.ZipFile(pack) as old:
   for i in range(2):font['providers'].append({'type':'bitmap','file':f'beastsmp:font/esc_farewell_{lang}_{i}.png','height':128,'ascent':13,'chars':[chr(0xf802+offset+i)]})
  updates['assets/minecraft/font/default.json']=json.dumps(font,ensure_ascii=False,indent=2).encode()
  for lang in ['de_de','en_us']:
-  offset=0 if lang=='de_de' else 2
+  offset=2
   key=f'assets/minecraft/lang/{lang}.json';data=json.loads(old.read(key));data.update({'menu.game':'\uf800\uf812\uf801','menu.returnToGame':'Continue playing on BeastSMP','menu.disconnect':'\uf810'+chr(0xf802+offset)+'\uf812'+chr(0xf803+offset)+'\uf811','gui.advancements':'Advancements','gui.stats':'Statistics','menu.options':'Options ...','menu.returnToMenu':'Leave'})
   updates[key]=json.dumps(data,ensure_ascii=False,indent=2).encode()
  with zipfile.ZipFile(temp,'w',zipfile.ZIP_DEFLATED) as new:
@@ -63,3 +63,16 @@ with zipfile.ZipFile(pack) as old:
   for key,value in updates.items():new.writestr(key,value)
 temp.replace(pack)
 print('Three HD ESC themes built; 512px farewell source, 256px displayed width')
+
+langdir=a.repo/'plugins/BeastHudThemes/languages';langdir.mkdir(exist_ok=True)
+with zipfile.ZipFile(pack) as base:
+ for language in ['en','de']:
+  with zipfile.ZipFile(langdir/f'{language}.zip','w',zipfile.ZIP_DEFLATED) as overlay:
+   menu=langdir/f'{language}-menu.zip'
+   with zipfile.ZipFile(menu) as z:
+    for name in z.namelist():overlay.writestr(name,z.read(name))
+   for locale in ['en_us','de_de']:
+    key=f'assets/minecraft/lang/{locale}.json';data=json.loads(base.read(key))
+    if language=='de':data.update({'menu.returnToGame':'Auf BeastSMP weiterspielen','menu.options':'Optionen ...','menu.returnToMenu':'Verlassen','gui.advancements':'Fortschritte','gui.stats':'Statistiken','menu.disconnect':'\uf810\uf802\uf812\uf803\uf811'})
+    overlay.writestr(key,json.dumps(data,ensure_ascii=False,indent=2).encode())
+print('English and German menu/ESC language overlays built.')

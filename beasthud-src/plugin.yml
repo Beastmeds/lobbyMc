@@ -6,6 +6,8 @@ depend: [BetterHud, PlaceholderAPI]
 author: BeastSMP
 description: Personal HUD designs, seasonal greetings and the lobby pumpkin hunt.
 commands:
+  settings:
+    description: Personal BeastSMP language settings
   design:
     description: Choose your BeastSMP design
     aliases: [huddesign, designs]

@@ -41,3 +41,9 @@ BetterHUD resource definitions are versioned under `plugins/BetterHud/`. `/hud r
 Hotbar: compass (0) opens servers, nether star (4) opens the main menu, comparator (8) opens effects. Atmosphere packets are sent only to each player in the lobby world within 128 blocks horizontally of the spawn. Snow emits at most 28 particles/second/player; Halloween emits at most 24. It does not change world weather, apply blindness, or place blocks. Global defaults are in config.yml under effects; personal effect preferences are not committed.
 
 Server availability uses bounded asynchronous TCP checks every 20 seconds. Player counts and transfers use BungeeCord plugin messaging. The current proxy destinations are configured in BeastLobbyFeatures.java.
+
+## Personal language
+
+`/settings` opens a themed English/German selector. `/settings en` and `/settings de` also work. English is the default; the choice is stored per UUID. HUD labels, custom menu art, tooltips, greetings, quest messages and ESC artwork follow the selection. Third-party plugin messages and client-owned interface language retain their own settings. The full required pack updates when changing language.
+
+For menu generation, run `menu-art/build_menu_art.py` with `--language en --overlay plugins/BeastHudThemes/languages/en-menu.zip`, then with `de` and `de-menu.zip`. Run `esc-menu/build_esc_menu.py` afterward to produce the final language overlays.

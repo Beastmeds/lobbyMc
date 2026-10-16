@@ -20,7 +20,7 @@ final class BeastThemePacks implements Listener {
     private final BeastHudPlugin plugin;
     private final Map<UUID,String> sent=new HashMap<>();
     private final Map<UUID,Long> pending=new HashMap<>();
-    private volatile Map<BeastHudPlugin.Theme,Pack> current=Map.of();
+    private volatile Map<String,Pack> current=Map.of();
     private volatile Map<String,Pack> hosted=Map.of();
     private HttpServer server;
     private ExecutorService executor;
@@ -53,7 +53,7 @@ final class BeastThemePacks implements Listener {
     void disable(){closed=true;if(server!=null)server.stop(0);if(executor!=null)executor.shutdownNow();sent.clear();pending.clear();packIds.clear();}
     void forget(Player p){sent.remove(p.getUniqueId());pending.remove(p.getUniqueId());packIds.remove(p.getUniqueId());}
     void send(Player p){
-        if(!p.isOnline()||BeastHudPlugin.isSimulated(p))return;Pack pack=current.get(plugin.profile(p.getUniqueId()).theme);if(pack==null)return;
+        if(!p.isOnline()||BeastHudPlugin.isSimulated(p))return;Pack pack=current.get(plugin.profile(p.getUniqueId()).theme.name()+"_"+plugin.language(p));if(pack==null)return;
         if(pack.hash.equals(sent.get(p.getUniqueId())))return;
         sent.put(p.getUniqueId(),pack.hash);
         long ticket=System.nanoTime();pending.put(p.getUniqueId(),ticket);
@@ -76,12 +76,15 @@ final class BeastThemePacks implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(plugin,()->{
             try{
                 Path base=plugin.getDataFolder().toPath().resolveSibling("BetterHud").resolve("build.zip");
-                Map<BeastHudPlugin.Theme,Pack> packs=new EnumMap<>(BeastHudPlugin.Theme.class);
+                Map<String,Pack> packs=new HashMap<>();
                 for(BeastHudPlugin.Theme theme:BeastHudPlugin.Theme.values()){
                     String key=switch(theme){case HALLOWEEN->"halloween";case STANDARD->"standard";case WEIHNACHTEN->"winter";};
                     Path skin=plugin.getDataFolder().toPath().resolve("esc-themes").resolve(key+".zip");
-                    byte[] bytes=merge(base,skin);byte[] digest=MessageDigest.getInstance("SHA-1").digest(bytes);
-                    packs.put(theme,new Pack(HexFormat.of().formatHex(digest),digest,bytes));
+                    for(String language:List.of("en","de")){
+                        Path overlay=plugin.getDataFolder().toPath().resolve("languages").resolve(language+".zip");
+                        byte[] bytes=merge(base,skin,overlay);byte[] digest=MessageDigest.getInstance("SHA-1").digest(bytes);
+                        packs.put(theme.name()+"_"+language,new Pack(HexFormat.of().formatHex(digest),digest,bytes));
+                    }
                 }
                 if(closed)return;
                 Map<String,Pack> routes=new HashMap<>();current.values().forEach(p->routes.put("/"+p.hash+".zip",p));packs.values().forEach(p->routes.put("/"+p.hash+".zip",p));
@@ -98,9 +101,9 @@ final class BeastThemePacks implements Listener {
             }
         });
     }
-    private static byte[] merge(Path base,Path skin)throws IOException{
+    private static byte[] merge(Path... paths)throws IOException{
         Map<String,byte[]> entries=new LinkedHashMap<>();
-        for(Path path:List.of(base,skin))try(ZipFile zip=new ZipFile(path.toFile())){
+        for(Path path:paths)try(ZipFile zip=new ZipFile(path.toFile())){
             for(Enumeration<? extends ZipEntry> e=zip.entries();e.hasMoreElements();){ZipEntry item=e.nextElement();if(!item.isDirectory())try(InputStream in=zip.getInputStream(item)){entries.put(item.getName(),in.readAllBytes());}}
         }
         ByteArrayOutputStream bytes=new ByteArrayOutputStream();try(ZipOutputStream zip=new ZipOutputStream(bytes)){

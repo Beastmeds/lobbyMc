@@ -14,10 +14,40 @@ bots:
   - FrostKian
   - MiloQuartz
   - RiverRune
+  - AshenBrook
+  - EchoWren
+  - IvyCrest
+  - JadeFable
+  - KaiWillow
+  - LeoSummit
+  - LunaMoss
+  - MiraWoods
+  - OakPiper
+  - ReedAtlas
+  - RubyDawn
+  - SageRidge
+  - TheoCove
+  - ValeArcher
+  - WrenCobalt
+  - ZaneMeadow
+  - AuraStone
+  - BramFern
+  - CleoBirch
+  - DuneHollow
+  - EzraGlade
+  - FayeCedar
+  - GlenAmber
+  - HazelRune
+  - IndieLake
+  - JunoMaple
+  - KoaRaven
+  - LyraVale
+  - MossNolan
+  - OpalSkye
 tab:
   enabled: true
 performance:
-  max-active-players: 10
+  max-active-players: 40
   player-view-distance: 2
 spawn:
   world: world
@@ -36,3 +66,34 @@ skins:
   FrostKian: MHF_Alex
   MiloQuartz: MHF_Steve
   RiverRune: MHF_Alex
+
+  AshenBrook: MHF_Steve
+  EchoWren: MHF_Alex
+  IvyCrest: MHF_Steve
+  JadeFable: MHF_Alex
+  KaiWillow: MHF_Steve
+  LeoSummit: MHF_Alex
+  LunaMoss: MHF_Steve
+  MiraWoods: MHF_Alex
+  OakPiper: MHF_Steve
+  ReedAtlas: MHF_Alex
+  RubyDawn: MHF_Steve
+  SageRidge: MHF_Alex
+  TheoCove: MHF_Steve
+  ValeArcher: MHF_Alex
+  WrenCobalt: MHF_Steve
+  ZaneMeadow: MHF_Alex
+  AuraStone: MHF_Steve
+  BramFern: MHF_Alex
+  CleoBirch: MHF_Steve
+  DuneHollow: MHF_Alex
+  EzraGlade: MHF_Steve
+  FayeCedar: MHF_Alex
+  GlenAmber: MHF_Steve
+  HazelRune: MHF_Alex
+  IndieLake: MHF_Steve
+  JunoMaple: MHF_Alex
+  KoaRaven: MHF_Steve
+  LyraVale: MHF_Alex
+  MossNolan: MHF_Steve
+  OpalSkye: MHF_Alex

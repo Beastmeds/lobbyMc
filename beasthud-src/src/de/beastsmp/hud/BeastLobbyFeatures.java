@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /** Lobby-only, per-player atmosphere, themed menus and BungeeCord navigation. */
 public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabCompleter, PluginMessageListener {
     enum Effect { AUTO, WINTER, HALLOWEEN, AUS }
-    enum Kind { HOME, SERVERS, EVENTS, EFFECTS, DESIGNS }
+    enum Kind { HOME, SERVERS, EVENTS, EFFECTS, DESIGNS, SETTINGS }
     static final class Menu implements InventoryHolder {
         final Kind kind;
         final Map<Integer,Runnable> actions = new HashMap<>();
@@ -54,7 +54,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         for(String key:data.getKeys(false))try{preferences.put(UUID.fromString(key),Effect.valueOf(data.getString(key,"AUTO")));}catch(IllegalArgumentException ignored){}
         globalEnabled=plugin.getConfig().getBoolean("effects.enabled",true);
         globalMode=parse(plugin.getConfig().getString("effects.mode","auto"));if(globalMode==null)globalMode=Effect.AUTO;
-        for(String command:List.of("beast","serverauswahl","events","effekte","lobbyeffekte")){
+        for(String command:List.of("settings","beast","serverauswahl","events","effekte","lobbyeffekte")){
             PluginCommand c=Objects.requireNonNull(plugin.getCommand(command));c.setExecutor(this);c.setTabCompleter(this);
         }
         plugin.getServer().getPluginManager().registerEvents(this,plugin);
@@ -90,8 +90,8 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     private String effectName(Effect e){return switch(e){case AUTO->"Automatic";case WINTER->"Snowfall";case HALLOWEEN->"Halloween fog";case AUS->"Off";};}
     private void setEffect(Player p,Effect effect){
         preferences.put(p.getUniqueId(),effect);savePreferences();
-        p.sendMessage(Component.text("Lobby effects: "+effectName(effect)+(effect==Effect.AUTO?" → "+effectName(effective(p)):""),theme(p).color));
-        if(!globalEnabled&&effect!=Effect.AUS)p.sendMessage(Component.text("Lobby effects are currently disabled server-wide.",NamedTextColor.GRAY));
+        p.sendMessage(plugin.component(p,"Lobby effects: "+effectName(effect)+(effect==Effect.AUTO?" → "+effectName(effective(p)):""),theme(p).color));
+        if(!globalEnabled&&effect!=Effect.AUS)p.sendMessage(plugin.component(p,"Lobby effects are currently disabled server-wide.",NamedTextColor.GRAY));
         p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.25f,1.1f);
     }
     private void savePreferences(){
@@ -117,9 +117,9 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     @EventHandler public void join(PlayerJoinEvent event){
         plugin.getServer().getScheduler().runTaskLater(plugin,()->{if(event.getPlayer().isOnline()){giveHotbar(event.getPlayer());requestCounts();}},90L);
     }
-    private ItemStack item(Material material,String name,NamedTextColor color,String... lore){
-        ItemStack item=new ItemStack(material);ItemMeta meta=item.getItemMeta();meta.displayName(Component.text(name,color));
-        meta.lore(Arrays.stream(lore).map(line->Component.text(line,NamedTextColor.GRAY)).toList());item.setItemMeta(meta);return item;
+    private ItemStack item(Player p,Material material,String name,NamedTextColor color,String... lore){
+        ItemStack item=new ItemStack(material);ItemMeta meta=item.getItemMeta();meta.displayName(plugin.component(p,name,color));
+        meta.lore(Arrays.stream(lore).map(line->plugin.component(p,line,NamedTextColor.GRAY)).toList());item.setItemMeta(meta);return item;
     }
     private ItemStack invisible(ItemStack stack,boolean tooltip){
         ItemMeta meta=stack.getItemMeta();meta.setItemModel(new NamespacedKey("beastsmp","menu_blank"));
@@ -127,17 +127,17 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     }
     private Component menuTitle(Player p,Kind kind){
         int season=switch(theme(p)){case HALLOWEEN->0;case STANDARD->1;case WEIHNACHTEN->2;};
-        int c=0xe100+season*20+kind.ordinal()*4;
+        int c=0xe100+season*24+kind.ordinal()*4;
         String glyph="\ue000"+(char)c+"\ue010"+(char)(c+1)+"\ue011"+(char)(c+2)+"\ue010"+(char)(c+3);
-        return Component.text(glyph,NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:lobby_menu"));
+        return plugin.component(p,glyph,NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:lobby_menu"));
     }
     private Menu newMenu(Player p,Kind kind,String heading){
         Menu m=new Menu(kind);m.inventory=Bukkit.createInventory(m,54,menuTitle(p,kind));
-        ItemStack filler=invisible(item(Material.PAPER," ",NamedTextColor.WHITE),false);
+        ItemStack filler=invisible(item(p,Material.PAPER," ",NamedTextColor.WHITE),false);
         for(int slot=0;slot<54;slot++)m.inventory.setItem(slot,filler.clone());
-        put(m,45,invisible(item(Material.PAPER,"Back to the Beast menu",NamedTextColor.WHITE),true),()->openHome(p));
-        put(m,49,invisible(item(Material.PAPER,"Close",NamedTextColor.RED),true),()->p.closeInventory());
-        put(m,53,invisible(item(Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),true),()->openEffects(p));
+        put(m,45,invisible(item(p,Material.PAPER,"Back to the Beast menu",NamedTextColor.WHITE),true),()->openHome(p));
+        put(m,49,invisible(item(p,Material.PAPER,"Close",NamedTextColor.RED),true),()->p.closeInventory());
+        put(m,53,invisible(item(p,Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),true),()->openEffects(p));
         return m;
     }
     private void put(Menu m,int slot,ItemStack item,Runnable action){m.inventory.setItem(slot,item);m.actions.put(slot,action);}
@@ -147,17 +147,24 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         for(int r=row;r<row+2;r++)for(int c=col;c<col+4;c++)result[i++]=r*9+c;return result;
     }
     private int[] three(int card){int[] result=new int[12];int i=0;for(int r=1;r<=4;r++)for(int c=card*3;c<card*3+3;c++)result[i++]=r*9+c;return result;}
+    void openSettings(Player p){
+        Menu m=newMenu(p,Kind.SETTINGS,"Settings");
+        card(m,three(0),item(p,Material.PAPER,"English",NamedTextColor.AQUA,plugin.language(p).equals("en")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"en");openSettings(p);});
+        card(m,three(1),item(p,Material.PAPER,"German",NamedTextColor.GOLD,plugin.language(p).equals("de")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"de");openSettings(p);});
+        card(m,three(2),item(p,Material.PAPER,"Back to lobby",NamedTextColor.WHITE),()->openHome(p));
+        p.openInventory(m.inventory);
+    }
     void openHome(Player p){
         Menu m=newMenu(p,Kind.HOME,"Lobby menu");
-        card(m,four(0),item(Material.PAPER,"Server selection",theme(p).color,"Choose your destination on BeastSMP","With live server status"),()->openServers(p));
-        card(m,four(1),item(Material.PAPER,"Your design",theme(p).color,"Halloween · Standard · Christmas","Current: "+theme(p).label),()->openDesigns(p));
-        card(m,four(2),item(Material.PAPER,"Events",theme(p).color,"Pumpkin hunt and seasonal events","Your progress is saved"),()->openEvents(p));
-        card(m,four(3),item(Material.PAPER,"Atmosphere",theme(p).color,"Snow, particle fog or quiet","Active: "+effectName(effective(p))),()->openEffects(p));
+        card(m,four(0),item(p,Material.PAPER,"Server selection",theme(p).color,"Choose your destination on BeastSMP","With live server status"),()->openServers(p));
+        card(m,four(1),item(p,Material.PAPER,"Your design",theme(p).color,"Halloween · Standard · Christmas","Current: "+theme(p).label),()->openDesigns(p));
+        card(m,four(2),item(p,Material.PAPER,"Events",theme(p).color,"Pumpkin hunt and seasonal events","Your progress is saved"),()->openEvents(p));
+        card(m,four(3),item(p,Material.PAPER,"Atmosphere",theme(p).color,"Snow, particle fog or quiet","Active: "+effectName(effective(p))),()->openEffects(p));
         p.openInventory(m.inventory);
     }
     void openDesigns(Player p){
         Menu m=newMenu(p,Kind.DESIGNS,"Designs");int i=0;
-        for(BeastHudPlugin.Theme t:BeastHudPlugin.Theme.values())card(m,three(i++),item(Material.PAPER,t.label,t.color,theme(p)==t?"Currently selected":"Click to select","Your design is saved"),()->{plugin.choose(p,t);openDesigns(p);});
+        for(BeastHudPlugin.Theme t:BeastHudPlugin.Theme.values())card(m,three(i++),item(p,Material.PAPER,t.label,t.color,theme(p)==t?"Currently selected":"Click to select","Your design is saved"),()->{plugin.choose(p,t);openDesigns(p);});
         p.openInventory(m.inventory);
     }
     void openServers(Player p){requestCounts();Menu m=newMenu(p,Kind.SERVERS,"Server selection");fillServers(p,m);p.openInventory(m.inventory);}
@@ -168,27 +175,27 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
             String status=lobby?"You are already here":online==null?"Checking status":online?"Online":"Currently offline";
             NamedTextColor color=lobby?theme(p).color:Boolean.TRUE.equals(online)?NamedTextColor.GREEN:NamedTextColor.GRAY;
             String players=counts.containsKey(d.name)?"Players: "+counts.get(d.name):"Fetching player count";
-            card(m,three(i++),item(Material.PAPER,d.label,color,status,players,lobby?"Your lobby":Boolean.TRUE.equals(online)?"Click to connect":"Currently unavailable"),()->connect(p,d));
+            card(m,three(i++),item(p,Material.PAPER,d.label,color,status,players,lobby?"Your lobby":Boolean.TRUE.equals(online)?"Click to connect":"Currently unavailable"),()->connect(p,d));
         }
     }
     private void connect(Player p,Destination destination){
-        if(destination.name.equals("Lobby")){p.sendMessage(Component.text("You are already in the lobby.",theme(p).color));return;}
-        if(!Boolean.TRUE.equals(reachable.get(destination.name))){p.sendMessage(Component.text(destination.label+" is currently unavailable.",NamedTextColor.RED));p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BASS,.3f,.8f);return;}
-        p.closeInventory();p.sendMessage(Component.text("Connecting to "+destination.label+" …",theme(p).color));send(p,"Connect",destination.name);
+        if(destination.name.equals("Lobby")){p.sendMessage(plugin.component(p,"You are already in the lobby.",theme(p).color));return;}
+        if(!Boolean.TRUE.equals(reachable.get(destination.name))){p.sendMessage(plugin.component(p,destination.label+" is currently unavailable.",NamedTextColor.RED));p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BASS,.3f,.8f);return;}
+        p.closeInventory();p.sendMessage(plugin.component(p,"Connecting to "+destination.label+" …",theme(p).color));send(p,"Connect",destination.name);
     }
     void openEvents(Player p){
         Menu m=newMenu(p,Kind.EVENTS,"Events");int found=plugin.profile(p.getUniqueId()).found.size(),total=plugin.getConfig().getInt("quest-count",10);
-        card(m,three(0),item(Material.PAPER,"Halloween · Pumpkin hunt",NamedTextColor.GOLD,"Your progress: "+found+" / "+total,"Find pumpkins around the spawn","Click to enable Halloween and show help"),()->{p.closeInventory();plugin.choose(p,BeastHudPlugin.Theme.HALLOWEEN);plugin.questInfo(p);});
-        card(m,three(1),item(Material.PAPER,"Seasonal designs",theme(p).color,"Choose your personal Beast style"),()->openDesigns(p));
-        card(m,three(2),item(Material.PAPER,"Christmas spirit",NamedTextColor.AQUA,"Enable the Christmas design and snowfall","A personal effect just for you"),()->{plugin.choose(p,BeastHudPlugin.Theme.WEIHNACHTEN);setEffect(p,Effect.WINTER);openEvents(p);});
+        card(m,three(0),item(p,Material.PAPER,"Halloween · Pumpkin hunt",NamedTextColor.GOLD,"Your progress: "+found+" / "+total,"Find pumpkins around the spawn","Click to enable Halloween and show help"),()->{p.closeInventory();plugin.choose(p,BeastHudPlugin.Theme.HALLOWEEN);plugin.questInfo(p);});
+        card(m,three(1),item(p,Material.PAPER,"Seasonal designs",theme(p).color,"Choose your personal Beast style"),()->openDesigns(p));
+        card(m,three(2),item(p,Material.PAPER,"Christmas spirit",NamedTextColor.AQUA,"Enable the Christmas design and snowfall","A personal effect just for you"),()->{plugin.choose(p,BeastHudPlugin.Theme.WEIHNACHTEN);setEffect(p,Effect.WINTER);openEvents(p);});
         p.openInventory(m.inventory);
     }
     void openEffects(Player p){
         Menu m=newMenu(p,Kind.EFFECTS,"Lobby effects");
-        card(m,four(0),item(Material.PAPER,"Automatic",theme(p).color,"Follows your selected design","Selected: "+effectName(preference(p)),"Active: "+effectName(effective(p))),()->{setEffect(p,Effect.AUTO);openEffects(p);});
-        card(m,four(1),item(Material.PAPER,"Snowfall",NamedTextColor.AQUA,"Gentle snowflakes around you","Only visible to you"),()->{setEffect(p,Effect.WINTER);openEffects(p);});
-        card(m,four(2),item(Material.PAPER,"Halloween fog",NamedTextColor.LIGHT_PURPLE,"Low particle fog, ash and magic","Only visible to you"),()->{setEffect(p,Effect.HALLOWEEN);openEffects(p);});
-        card(m,four(3),item(Material.PAPER,"Disable effects",NamedTextColor.RED,"Disable all extra lobby particles",globalEnabled?"Effects are enabled server-wide":"Effects are disabled server-wide"),()->{setEffect(p,Effect.AUS);openEffects(p);});
+        card(m,four(0),item(p,Material.PAPER,"Automatic",theme(p).color,"Follows your selected design","Selected: "+effectName(preference(p)),"Active: "+effectName(effective(p))),()->{setEffect(p,Effect.AUTO);openEffects(p);});
+        card(m,four(1),item(p,Material.PAPER,"Snowfall",NamedTextColor.AQUA,"Gentle snowflakes around you","Only visible to you"),()->{setEffect(p,Effect.WINTER);openEffects(p);});
+        card(m,four(2),item(p,Material.PAPER,"Halloween fog",NamedTextColor.LIGHT_PURPLE,"Low particle fog, ash and magic","Only visible to you"),()->{setEffect(p,Effect.HALLOWEEN);openEffects(p);});
+        card(m,four(3),item(p,Material.PAPER,"Disable effects",NamedTextColor.RED,"Disable all extra lobby particles",globalEnabled?"Effects are enabled server-wide":"Effects are disabled server-wide"),()->{setEffect(p,Effect.AUS);openEffects(p);});
         p.openInventory(m.inventory);
     }
     void refreshHotbar(Player p){giveHotbar(p);}
@@ -196,7 +203,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         if(BeastHudPlugin.isSimulated(p))return;
         if(!p.getWorld().getName().equals(plugin.getConfig().getString("world","world")))return;
         for(Object[] spec:List.of(new Object[]{0,Material.COMPASS,"Server selection","servers"},new Object[]{4,Material.NETHER_STAR,"BeastSMP · Lobby menu","home"},new Object[]{8,Material.COMPARATOR,"Lobby effects","effects"})){
-            ItemStack stack=item((Material)spec[1],(String)spec[2],theme(p).color,"Right-click to open");ItemMeta meta=stack.getItemMeta();meta.getPersistentDataContainer().set(menuKey,PersistentDataType.STRING,(String)spec[3]);stack.setItemMeta(meta);p.getInventory().setItem((Integer)spec[0],stack);
+            ItemStack stack=item(p,(Material)spec[1],(String)spec[2],theme(p).color,"Right-click to open");ItemMeta meta=stack.getItemMeta();meta.getPersistentDataContainer().set(menuKey,PersistentDataType.STRING,(String)spec[3]);stack.setItemMeta(meta);p.getInventory().setItem((Integer)spec[0],stack);
         }
     }
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void hotbar(PlayerInteractEvent e){
@@ -248,14 +255,16 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         }
         if(!(sender instanceof Player p)){sender.sendMessage("Use this command in-game.");return true;}
         switch(command.getName()){
+            case "settings"->{if(args.length>0&&Set.of("en","de","english","german","deutsch").contains(args[0].toLowerCase(Locale.ROOT)))plugin.chooseLanguage(p,Set.of("de","german","deutsch").contains(args[0].toLowerCase(Locale.ROOT))?"de":"en");else openSettings(p);}
             case "beast"->openHome(p);
             case "serverauswahl"->openServers(p);
             case "events"->openEvents(p);
-            case "effekte"->{if(args.length==0){openEffects(p);return true;}if(args[0].equalsIgnoreCase("status")){p.sendMessage(Component.text("Effects: "+effectName(preference(p))+" · Active: "+effectName(effective(p)),theme(p).color));return true;}Effect mode=parse(args[0]);if(mode==null)p.sendMessage(Component.text("/effects on|off|auto|winter|halloween",NamedTextColor.GRAY));else setEffect(p,mode);}
+            case "effekte"->{if(args.length==0){openEffects(p);return true;}if(args[0].equalsIgnoreCase("status")){p.sendMessage(plugin.component(p,"Effects: "+effectName(preference(p))+" · Active: "+effectName(effective(p)),theme(p).color));return true;}Effect mode=parse(args[0]);if(mode==null)p.sendMessage(plugin.component(p,"/effects on|off|auto|winter|halloween",NamedTextColor.GRAY));else setEffect(p,mode);}
         }
         return true;
     }
     @Override public List<String> onTabComplete(CommandSender sender,Command c,String label,String[] args){
+        if(c.getName().equals("settings")&&args.length==1)return List.of("en","de");
         if((c.getName().equals("effekte")||c.getName().equals("lobbyeffekte"))&&args.length==1)return List.of("on","off","auto","winter","halloween","status").stream().filter(s->s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();return List.of();
     }
 }

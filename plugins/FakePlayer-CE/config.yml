@@ -1,8 +1,8 @@
 version: 25
 i18n:
   locale: en
-server-limit: 10
-player-limit: 10
+server-limit: 40
+player-limit: 40
 detect-ip: false
 name-template: ''
 name-prefix: ''

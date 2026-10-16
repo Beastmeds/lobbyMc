@@ -5,6 +5,8 @@ import io.github.hello09x.fakeplayer.core.manager.FakeplayerManager;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.gson.JsonParser;
 import java.net.URI;
+import org.bukkit.permissions.PermissionAttachment;
+import com.fernsehheft.customlobby.CustomLobby;
 import java.nio.file.*;
 import com.google.gson.Gson;
 import java.net.http.*;
@@ -31,6 +33,7 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
     private final Set<UUID> managed=new HashSet<>();
     private final Set<String> reserved=new HashSet<>();
     private boolean closing;
+    private final Map<UUID,PermissionAttachment> afkExemptions=new HashMap<>();
     public void onEnable(){
         saveDefaultConfig();manager=Main.getInjector().getInstance(FakeplayerManager.class);
         Objects.requireNonNull(getCommand("beastbots")).setExecutor(this);getCommand("beastbots").setTabCompleter(this);
@@ -60,9 +63,12 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
     private boolean safeRemove(String name,String reason){
         Player p=manager.get(name);if(p==null||!manager.isFake(p))return false;
         // CE's kick+cleanup path removes Paper 1.21.11 players twice; cleanup alone unregisters once.
-        manager.cleanup(p);managed.remove(p.getUniqueId());return true;
+        manager.cleanup(p);managed.remove(p.getUniqueId());afkExemptions.remove(p.getUniqueId());return true;
     }
-    private void mark(Player p){p.setViewDistance(Math.max(2,Math.min(4,getConfig().getInt("performance.player-view-distance",2))));p.setSendViewDistance(Math.max(2,Math.min(4,getConfig().getInt("performance.player-view-distance",2))));p.setSimulationDistance(2);p.setMetadata("beastbot",new FixedMetadataValue(this,true));p.setMetadata("NPC",new FixedMetadataValue(this,true));managed.add(p.getUniqueId());}
+    private void mark(Player p){
+        afkExemptions.computeIfAbsent(p.getUniqueId(),id->{PermissionAttachment a=p.addAttachment(this);a.setPermission("customlobby.afk.exempt",true);return a;});
+        if(Bukkit.getPluginManager().isPluginEnabled("CustomLobby"))CustomLobby.getInstance().getAfkManager().setAFK(p,false);
+        p.setViewDistance(Math.max(2,Math.min(4,getConfig().getInt("performance.player-view-distance",2))));p.setSendViewDistance(Math.max(2,Math.min(4,getConfig().getInt("performance.player-view-distance",2))));p.setSimulationDistance(2);p.setMetadata("beastbot",new FixedMetadataValue(this,true));p.setMetadata("NPC",new FixedMetadataValue(this,true));managed.add(p.getUniqueId());}
     private void configure(Player p){
         mark(p);p.setPersistent(false);p.setInvulnerable(true);p.setCollidable(false);p.setCanPickupItems(false);p.setInvisible(getConfig().getBoolean("bots.invisible",true));p.setGravity(false);p.setAllowFlight(true);p.setFlying(true);p.setGameMode(GameMode.ADVENTURE);p.getInventory().clear();
         p.playerListName(Component.text(p.getName()));
@@ -151,7 +157,7 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
         switch(sub){
             case "on","off","toggle"->{boolean enabled=sub.equals("toggle")?!getConfig().getBoolean("enabled",true):sub.equals("on");getConfig().set("enabled",enabled);saveConfig();updateDesired();reconcile();publishPresence();sender.sendMessage("BeastBots "+(enabled?"enabled (players appear over the next few seconds).":"disabled."));}
             case "help"->sender.sendMessage("/beastbots on | off | toggle | add <Name> | remove <Name> | setamount <0-"+maximum()+"> | list | reload | status");
-            case "status"->{sender.sendMessage("BeastBots: simulated="+ours().size()+" desired="+desired.size()+" real backend players="+Bukkit.getOnlinePlayers().stream().filter(p->!manager.isFake(p)).count()+" invisible="+getConfig().getBoolean("bots.invisible",true));for(Player p:ours())sender.sendMessage(p.getName()+" UUID="+p.getUniqueId()+" online="+p.isOnline()+" invisible="+p.isInvisible()+" op="+p.isOp()+" view="+p.getViewDistance()+" simulation="+p.getSimulationDistance()+" skin="+p.getPlayerProfile().getProperties().stream().anyMatch(v->v.getName().equals("textures")));}
+            case "status"->{sender.sendMessage("BeastBots: simulated="+ours().size()+" desired="+desired.size()+" real backend players="+Bukkit.getOnlinePlayers().stream().filter(p->!manager.isFake(p)).count()+" invisible="+getConfig().getBoolean("bots.invisible",true));for(Player p:ours())sender.sendMessage(p.getName()+" UUID="+p.getUniqueId()+" online="+p.isOnline()+" invisible="+p.isInvisible()+" op="+p.isOp()+" view="+p.getViewDistance()+" simulation="+p.getSimulationDistance()+" afkExempt="+p.hasPermission("customlobby.afk.exempt")+" skin="+p.getPlayerProfile().getProperties().stream().anyMatch(v->v.getName().equals("textures")));}
             case "list"->sender.sendMessage("Simulated players: "+String.join(", ",ours().stream().map(Player::getName).toList()));
             case "reload"->{reloadConfig();reserved.clear();updateDesired();for(Player p:ours())configure(p);reconcile();sender.sendMessage("BeastBots configuration reloaded.");}
             case "setamount"->{try{int value=Integer.parseInt(args[1]);if(value<0||value>maximum())throw new IllegalArgumentException();getConfig().set("bots.amount",value);saveConfig();updateDesired();reconcile();sender.sendMessage("Simulated players: "+value);}catch(Exception error){sender.sendMessage("/beastbots setamount <0-"+maximum()+">");}}

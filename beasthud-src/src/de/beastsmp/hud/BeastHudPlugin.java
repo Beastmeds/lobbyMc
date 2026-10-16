@@ -43,6 +43,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     }
     static final class Profile {
         volatile Theme theme=Theme.HALLOWEEN;
+        volatile String language="en";
         final Set<Integer> found=ConcurrentHashMap.newKeySet();
         volatile long nextEffect=0;
     }
@@ -68,6 +69,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         storageFile=new File(getDataFolder(),"players.yml");storage=YamlConfiguration.loadConfiguration(storageFile);
         if(storage.isConfigurationSection("players"))for(String key:storage.getConfigurationSection("players").getKeys(false))try{
             Profile p=new Profile();Theme t=Theme.parse(storage.getString("players."+key+".theme","halloween"));if(t!=null)p.theme=t;
+            p.language=storage.getString("players."+key+".language","en").equals("de")?"de":"en";
             p.found.addAll(storage.getIntegerList("players."+key+".found"));profiles.put(UUID.fromString(key),p);
         }catch(IllegalArgumentException ex){getLogger().warning("Invalid saved player id: "+key);}
         getServer().getPluginManager().registerEvents(this,this);
@@ -76,6 +78,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
             public String getIdentifier(){return "beast";} public String getAuthor(){return "BeastSMP";} public String getVersion(){return "1.0.0";} public boolean persist(){return true;}
             public String onRequest(OfflinePlayer player,String param){
                 if(player==null)return "";Profile p=profile(player.getUniqueId());
+                if(param.startsWith("label_")){String label=switch(param.substring(6)){case "money"->"Money";case "deaths"->"Deaths";case "none"->"None";case "playtime"->"Playtime";case "pumpkins"->"Pumpkins";default->"";};return BeastLanguage.translate(label,p.language);}
                 return switch(param.toLowerCase(Locale.ROOT)){case "quest_progress"->p.found.size()+" / "+questTotal;case "quest_found"->""+p.found.size();case "quest_total"->""+questTotal;case "design"->p.theme.label;default->null;};
             }
         };expansion.register();
@@ -102,9 +105,17 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         if(expansion!=null)expansion.unregister();
     }
     Profile profile(UUID id){return profiles.computeIfAbsent(id,k->new Profile());}
+    String language(Player p){return profile(p.getUniqueId()).language;}
+    String text(Player p,String value){return BeastLanguage.translate(value,language(p));}
+    Component component(Player p,String value,NamedTextColor color){return Component.text(text(p,value),color);}
+    void chooseLanguage(Player p,String language){
+        profile(p.getUniqueId()).language=language.equals("de")?"de":"en";savePlayers();
+        apply(p,false);lobbyFeatures.refreshHotbar(p);
+        p.sendMessage(component(p,"Language saved.",NamedTextColor.GREEN));
+    }
     private void savePlayers(){
         for(var entry:profiles.entrySet()){
-            String path="players."+entry.getKey();storage.set(path+".theme",entry.getValue().theme.name().toLowerCase(Locale.ROOT));
+            String path="players."+entry.getKey();storage.set(path+".language",entry.getValue().language);storage.set(path+".theme",entry.getValue().theme.name().toLowerCase(Locale.ROOT));
             storage.set(path+".found",entry.getValue().found.stream().sorted().toList());
         }
         try{storage.save(storageFile);}catch(IOException ex){getLogger().log(java.util.logging.Level.SEVERE,"Could not save HUD profiles",ex);}
@@ -137,9 +148,9 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     private void greet(Player p){
         if(isSimulated(p))return;
         Theme t=profile(p.getUniqueId()).theme;
-        p.showTitle(Title.title(Component.text("Welcome back",t.color),Component.text(p.getName()+"!",NamedTextColor.WHITE),Title.Times.times(Duration.ofMillis(400),Duration.ofSeconds(3),Duration.ofMillis(700))));
-        p.sendMessage(Component.text("Welcome back, "+p.getName()+"!",t.color));
-        p.sendMessage(Component.text("Your design: "+t.label+" · Change with /design",NamedTextColor.GRAY));
+        p.showTitle(Title.title(component(p,"Welcome back",t.color),component(p,p.getName()+"!",NamedTextColor.WHITE),Title.Times.times(Duration.ofMillis(400),Duration.ofSeconds(3),Duration.ofMillis(700))));
+        p.sendMessage(component(p,"Welcome back, "+p.getName()+"!",t.color));
+        p.sendMessage(component(p,"Your design: "+t.label+" · Change with /design",NamedTextColor.GRAY));
         showEffect(p);
         p.playSound(p.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_CHIME,.35f,1.2f);
     }
@@ -154,7 +165,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         BossBar b=bars.remove(e.getPlayer().getUniqueId());if(b!=null)b.removeAll();savePlayers();
     }
     void menu(Player p){lobbyFeatures.openDesigns(p);}
-    void choose(Player p,Theme t){profile(p.getUniqueId()).theme=t;savePlayers();apply(p,false);lobbyFeatures.refreshHotbar(p);showEffect(p);p.sendMessage(Component.text("Selected design: "+t.label,t.color));p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.4f,1.2f);}
+    void choose(Player p,Theme t){profile(p.getUniqueId()).theme=t;savePlayers();apply(p,false);lobbyFeatures.refreshHotbar(p);showEffect(p);p.sendMessage(component(p,"Selected design: "+t.label,t.color));p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.4f,1.2f);}
     private void updateVisibility(Player player){
         Profile profile=profile(player.getUniqueId());
         for(Pumpkin p:pumpkins){boolean show=profile.theme==Theme.HALLOWEEN&&!profile.found.contains(p.id);
@@ -198,14 +209,14 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     }
     private void collect(Player p,Entity e){
         Integer id=e.getPersistentDataContainer().get(questKey,PersistentDataType.INTEGER);if(id==null)return;
-        if(profile(p.getUniqueId()).theme!=Theme.HALLOWEEN){p.sendMessage(Component.text("Select /design halloween for the pumpkin hunt",NamedTextColor.GOLD));return;}
+        if(profile(p.getUniqueId()).theme!=Theme.HALLOWEEN){p.sendMessage(component(p,"Select /design halloween for the pumpkin hunt",NamedTextColor.GOLD));return;}
         if(p.getWorld()!=e.getWorld()||p.getLocation().distanceSquared(e.getLocation())>36)return;
         Profile profile=profile(p.getUniqueId());if(!profile.found.add(id))return;
         savePlayers();updateVisibility(p);
-        p.sendMessage(Component.text("Pumpkin found! "+profile.found.size()+" / "+questTotal,NamedTextColor.GOLD));
+        p.sendMessage(component(p,"Pumpkin found! "+profile.found.size()+" / "+questTotal,NamedTextColor.GOLD));
         p.playSound(p.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,.7f,1.2f);showEffect(p);
         if(profile.found.size()>=questTotal){
-            p.showTitle(Title.title(Component.text("All pumpkins found!",NamedTextColor.GOLD),Component.text("Halloween quest completed",NamedTextColor.LIGHT_PURPLE)));
+            p.showTitle(Title.title(component(p,"All pumpkins found!",NamedTextColor.GOLD),component(p,"Halloween quest completed",NamedTextColor.LIGHT_PURPLE)));
             p.playSound(p.getLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,.5f,1.1f);
             p.spawnParticle(Particle.TOTEM_OF_UNDYING,p.getLocation().add(0,1,0),35,.6,.7,.6,.02);
         }
@@ -213,7 +224,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void interact(PlayerInteractEntityEvent e){if(e.getRightClicked().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);collect(e.getPlayer(),e.getRightClicked());}}
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void interactAt(PlayerInteractAtEntityEvent e){if(e.getRightClicked().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);collect(e.getPlayer(),e.getRightClicked());}}
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void attack(EntityDamageByEntityEvent e){if(e.getEntity().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);if(e.getDamager() instanceof Player p)collect(p,e.getEntity());}}
-    void questInfo(Player p){Profile data=profile(p.getUniqueId());p.sendMessage(Component.text("Halloween pumpkin hunt: "+data.found.size()+" / "+questTotal,NamedTextColor.GOLD));p.sendMessage(Component.text("Find and click the glowing pumpkins around the lobby spawn. Each counts once. Enable the Halloween design with /design halloween.",NamedTextColor.GRAY));}
+    void questInfo(Player p){Profile data=profile(p.getUniqueId());p.sendMessage(component(p,"Halloween pumpkin hunt: "+data.found.size()+" / "+questTotal,NamedTextColor.GOLD));p.sendMessage(component(p,"Find and click the glowing pumpkins around the lobby spawn. Each counts once. Enable the Halloween design with /design halloween.",NamedTextColor.GRAY));}
     @Override public boolean onCommand(CommandSender sender,Command command,String label,String[] args){
         if(command.getName().equals("beasthud")){
             if(!(sender instanceof ConsoleCommandSender)&&!sender.hasPermission("beasthud.admin")){sender.sendMessage("Use /design or /pumpkins.");return true;}
@@ -230,7 +241,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         if(!(sender instanceof Player p)){sender.sendMessage("Only players can open the design menu.");return true;}
         if(command.getName().equals("kuerbisse")){questInfo(p);return true;}
         if(args.length==0){menu(p);return true;}
-        Theme theme=Theme.parse(args[0]);if(theme==null)p.sendMessage(Component.text("Designs: halloween, standard, christmas",NamedTextColor.GRAY));else choose(p,theme);return true;
+        Theme theme=Theme.parse(args[0]);if(theme==null)p.sendMessage(component(p,"Designs: halloween, standard, christmas",NamedTextColor.GRAY));else choose(p,theme);return true;
     }
     @Override public List<String> onTabComplete(CommandSender sender,Command c,String alias,String[] args){if(c.getName().equals("design")&&args.length==1)return List.of("halloween","standard","christmas").stream().filter(s->s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();return List.of();}
 }
