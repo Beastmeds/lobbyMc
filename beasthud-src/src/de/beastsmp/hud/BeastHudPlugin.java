@@ -36,10 +36,10 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     enum Theme {
         HALLOWEEN("Halloween", "beastsmp_halloween", "beast_bats", Material.JACK_O_LANTERN, NamedTextColor.LIGHT_PURPLE, BarColor.PURPLE),
         STANDARD("Standard", "beastsmp_standard", "beast_sparkles", Material.NETHER_STAR, NamedTextColor.AQUA, BarColor.BLUE),
-        WEIHNACHTEN("Weihnachten", "beastsmp_weihnachten", "beast_snow", Material.SNOWBALL, NamedTextColor.WHITE, BarColor.WHITE);
+        WEIHNACHTEN("Christmas", "beastsmp_weihnachten", "beast_snow", Material.SNOWBALL, NamedTextColor.WHITE, BarColor.WHITE);
         final String label,hud,effect; final Material icon; final NamedTextColor color; final BarColor bar;
         Theme(String l,String h,String e,Material i,NamedTextColor c,BarColor b){label=l;hud=h;effect=e;icon=i;color=c;bar=b;}
-        static Theme parse(String s){for(Theme t:values())if(t.name().equalsIgnoreCase(s)||t.label.equalsIgnoreCase(s))return t; if(s.equalsIgnoreCase("weihnacht")||s.equalsIgnoreCase("winter"))return WEIHNACHTEN;return null;}
+        static Theme parse(String s){for(Theme t:values())if(t.name().equalsIgnoreCase(s)||t.label.equalsIgnoreCase(s))return t; if(s.equalsIgnoreCase("helloween"))return HALLOWEEN; if(s.equalsIgnoreCase("weihnacht")||s.equalsIgnoreCase("winter"))return WEIHNACHTEN;return null;}
     }
     static final class Profile {
         volatile Theme theme=Theme.HALLOWEEN;
@@ -137,9 +137,9 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     private void greet(Player p){
         if(isSimulated(p))return;
         Theme t=profile(p.getUniqueId()).theme;
-        p.showTitle(Title.title(Component.text("Willkommen zurück",t.color),Component.text(p.getName()+"!",NamedTextColor.WHITE),Title.Times.times(Duration.ofMillis(400),Duration.ofSeconds(3),Duration.ofMillis(700))));
-        p.sendMessage(Component.text("Willkommen zurück, "+p.getName()+"!",t.color));
-        p.sendMessage(Component.text("Dein Design: "+t.label+" · Wechseln mit /design",NamedTextColor.GRAY));
+        p.showTitle(Title.title(Component.text("Welcome back",t.color),Component.text(p.getName()+"!",NamedTextColor.WHITE),Title.Times.times(Duration.ofMillis(400),Duration.ofSeconds(3),Duration.ofMillis(700))));
+        p.sendMessage(Component.text("Welcome back, "+p.getName()+"!",t.color));
+        p.sendMessage(Component.text("Your design: "+t.label+" · Change with /design",NamedTextColor.GRAY));
         showEffect(p);
         p.playSound(p.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_CHIME,.35f,1.2f);
     }
@@ -154,7 +154,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         BossBar b=bars.remove(e.getPlayer().getUniqueId());if(b!=null)b.removeAll();savePlayers();
     }
     void menu(Player p){lobbyFeatures.openDesigns(p);}
-    void choose(Player p,Theme t){profile(p.getUniqueId()).theme=t;savePlayers();apply(p,false);lobbyFeatures.refreshHotbar(p);showEffect(p);p.sendMessage(Component.text("Design gewählt: "+t.label,t.color));p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.4f,1.2f);}
+    void choose(Player p,Theme t){profile(p.getUniqueId()).theme=t;savePlayers();apply(p,false);lobbyFeatures.refreshHotbar(p);showEffect(p);p.sendMessage(Component.text("Selected design: "+t.label,t.color));p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.4f,1.2f);}
     private void updateVisibility(Player player){
         Profile profile=profile(player.getUniqueId());
         for(Pumpkin p:pumpkins){boolean show=profile.theme==Theme.HALLOWEEN&&!profile.found.contains(p.id);
@@ -186,25 +186,26 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
                 getConfig().set(path+".x",loc.getX());getConfig().set(path+".y",loc.getY());getConfig().set(path+".z",loc.getZ());}
             final int qid=id;
             BlockDisplay display=w.spawn(loc,BlockDisplay.class,d->{
+                d.setVisibleByDefault(false);
                 Directional block=(Directional)Material.JACK_O_LANTERN.createBlockData();double dx=cx-loc.getX(),dz=cz-loc.getZ();block.setFacing(Math.abs(dx)>Math.abs(dz)?(dx>0?BlockFace.EAST:BlockFace.WEST):(dz>0?BlockFace.SOUTH:BlockFace.NORTH));d.setBlock(block);
                 d.setTransformation(new Transformation(new Vector3f(),new Quaternionf(),new Vector3f(.65f),new Quaternionf()));
                 d.setBrightness(new Display.Brightness(15,15));d.setViewRange(.5f);d.setPersistent(false);d.getPersistentDataContainer().set(questKey,PersistentDataType.INTEGER,qid);
             });
-            Interaction hitbox=w.spawn(loc.clone().add(.325,0,.325),Interaction.class,e->{e.setInteractionWidth(.9f);e.setInteractionHeight(.9f);e.setResponsive(true);e.setPersistent(false);e.getPersistentDataContainer().set(questKey,PersistentDataType.INTEGER,qid);});
+            Interaction hitbox=w.spawn(loc.clone().add(.325,0,.325),Interaction.class,e->{e.setVisibleByDefault(false);e.setInteractionWidth(.9f);e.setInteractionHeight(.9f);e.setResponsive(true);e.setPersistent(false);e.getPersistentDataContainer().set(questKey,PersistentDataType.INTEGER,qid);});
             pumpkins.add(new Pumpkin(id,display,hitbox));getLogger().info("Pumpkin "+id+" at "+loc.getX()+","+loc.getY()+","+loc.getZ());
         }
         saveConfig();getLogger().info("Quest ready: "+pumpkins.size()+" / "+questTotal+" pumpkins, no world blocks changed.");
     }
     private void collect(Player p,Entity e){
         Integer id=e.getPersistentDataContainer().get(questKey,PersistentDataType.INTEGER);if(id==null)return;
-        if(profile(p.getUniqueId()).theme!=Theme.HALLOWEEN){p.sendMessage(Component.text("Wähle für die Kürbis-Suche /design halloween",NamedTextColor.GOLD));return;}
+        if(profile(p.getUniqueId()).theme!=Theme.HALLOWEEN){p.sendMessage(Component.text("Select /design halloween for the pumpkin hunt",NamedTextColor.GOLD));return;}
         if(p.getWorld()!=e.getWorld()||p.getLocation().distanceSquared(e.getLocation())>36)return;
         Profile profile=profile(p.getUniqueId());if(!profile.found.add(id))return;
         savePlayers();updateVisibility(p);
-        p.sendMessage(Component.text("Kürbis gefunden! "+profile.found.size()+" / "+questTotal,NamedTextColor.GOLD));
+        p.sendMessage(Component.text("Pumpkin found! "+profile.found.size()+" / "+questTotal,NamedTextColor.GOLD));
         p.playSound(p.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,.7f,1.2f);showEffect(p);
         if(profile.found.size()>=questTotal){
-            p.showTitle(Title.title(Component.text("Alle Kürbisse gefunden!",NamedTextColor.GOLD),Component.text("Halloween-Quest abgeschlossen",NamedTextColor.LIGHT_PURPLE)));
+            p.showTitle(Title.title(Component.text("All pumpkins found!",NamedTextColor.GOLD),Component.text("Halloween quest completed",NamedTextColor.LIGHT_PURPLE)));
             p.playSound(p.getLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,.5f,1.1f);
             p.spawnParticle(Particle.TOTEM_OF_UNDYING,p.getLocation().add(0,1,0),35,.6,.7,.6,.02);
         }
@@ -212,10 +213,10 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void interact(PlayerInteractEntityEvent e){if(e.getRightClicked().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);collect(e.getPlayer(),e.getRightClicked());}}
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void interactAt(PlayerInteractAtEntityEvent e){if(e.getRightClicked().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);collect(e.getPlayer(),e.getRightClicked());}}
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void attack(EntityDamageByEntityEvent e){if(e.getEntity().getPersistentDataContainer().has(questKey,PersistentDataType.INTEGER)){e.setCancelled(true);if(e.getDamager() instanceof Player p)collect(p,e.getEntity());}}
-    void questInfo(Player p){Profile data=profile(p.getUniqueId());p.sendMessage(Component.text("Halloween-Kürbissuche: "+data.found.size()+" / "+questTotal,NamedTextColor.GOLD));p.sendMessage(Component.text("Suche die leuchtenden Kürbisse rund um den Lobby-Spawn und klicke sie an. Jeder zählt nur einmal. Aktiviere dafür das Halloween-Design mit /design halloween.",NamedTextColor.GRAY));}
+    void questInfo(Player p){Profile data=profile(p.getUniqueId());p.sendMessage(Component.text("Halloween pumpkin hunt: "+data.found.size()+" / "+questTotal,NamedTextColor.GOLD));p.sendMessage(Component.text("Find and click the glowing pumpkins around the lobby spawn. Each counts once. Enable the Halloween design with /design halloween.",NamedTextColor.GRAY));}
     @Override public boolean onCommand(CommandSender sender,Command command,String label,String[] args){
         if(command.getName().equals("beasthud")){
-            if(!(sender instanceof ConsoleCommandSender)&&!sender.hasPermission("beasthud.admin")){sender.sendMessage("Nutze /design oder /kuerbisse.");return true;}
+            if(!(sender instanceof ConsoleCommandSender)&&!sender.hasPermission("beasthud.admin")){sender.sendMessage("Use /design or /pumpkins.");return true;}
             if(args.length>=2&&args[0].equalsIgnoreCase("preview")){
                 Player p=Bukkit.getPlayerExact(args[1]);if(p==null){sender.sendMessage("Player offline");return true;}
                 if(args.length>=3){Theme t=Theme.parse(args[2]);if(t==null){sender.sendMessage("Unknown design");return true;}choose(p,t);}greet(p);sender.sendMessage("Preview shown to "+p.getName());return true;
@@ -229,7 +230,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         if(!(sender instanceof Player p)){sender.sendMessage("Only players can open the design menu.");return true;}
         if(command.getName().equals("kuerbisse")){questInfo(p);return true;}
         if(args.length==0){menu(p);return true;}
-        Theme theme=Theme.parse(args[0]);if(theme==null)p.sendMessage(Component.text("Designs: halloween, standard, weihnachten",NamedTextColor.GRAY));else choose(p,theme);return true;
+        Theme theme=Theme.parse(args[0]);if(theme==null)p.sendMessage(Component.text("Designs: halloween, standard, christmas",NamedTextColor.GRAY));else choose(p,theme);return true;
     }
-    @Override public List<String> onTabComplete(CommandSender sender,Command c,String alias,String[] args){if(c.getName().equals("design")&&args.length==1)return List.of("halloween","standard","weihnachten").stream().filter(s->s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();return List.of();}
+    @Override public List<String> onTabComplete(CommandSender sender,Command c,String alias,String[] args){if(c.getName().equals("design")&&args.length==1)return List.of("halloween","standard","christmas").stream().filter(s->s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();return List.of();}
 }

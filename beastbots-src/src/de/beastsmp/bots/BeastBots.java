@@ -5,6 +5,8 @@ import io.github.hello09x.fakeplayer.core.manager.FakeplayerManager;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.gson.JsonParser;
 import java.net.URI;
+import java.nio.file.*;
+import com.google.gson.Gson;
 import java.net.http.*;
 import java.time.Duration;
 import net.kyori.adventure.text.Component;
@@ -34,9 +36,19 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
         Objects.requireNonNull(getCommand("beastbots")).setExecutor(this);getCommand("beastbots").setTabCompleter(this);
         Bukkit.getPluginManager().registerEvents(this,this);updateDesired();
         Bukkit.getScheduler().runTaskTimer(this,this::reconcile,60L,20L);
+        Bukkit.getScheduler().runTaskTimer(this,this::publishPresence,1L,20L);
         getLogger().info("BeastBots enabled; configured="+desired.size()+" invisible="+getConfig().getBoolean("bots.invisible",true));
     }
-    public void onDisable(){closing=true;if(manager!=null)for(Player p:ours())safeRemove(p.getName(),"BeastBots shutdown");}
+    public void onDisable(){closing=true;if(manager!=null)for(Player p:ours())safeRemove(p.getName(),"BeastBots shutdown");publishPresence();}
+    private void publishPresence(){
+        try{
+            var players=closing?List.<Player>of():ours();
+            var data=Map.of("updated",System.currentTimeMillis(),"players",players.stream().map(p->Map.of("name",p.getName(),"uuid",p.getUniqueId().toString())).toList());
+            Path file=getDataFolder().toPath().resolve("presence.json"),tmp=file.resolveSibling("presence.tmp");
+            Files.writeString(tmp,new Gson().toJson(data));
+            try{Files.move(tmp,file,StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);}catch(AtomicMoveNotSupportedException e){Files.move(tmp,file,StandardCopyOption.REPLACE_EXISTING);}
+        }catch(Exception e){getLogger().warning("Could not publish presence: "+e.getMessage());}
+    }
     private int maximum(){return Math.max(0,Math.min(40,getConfig().getInt("performance.max-active-players",10)));}
     private List<String> names(){return getConfig().getStringList("bots.names").stream().filter(n->n.matches("[A-Za-z0-9_]{3,16}")).distinct().toList();}
     private void updateDesired(){
@@ -134,18 +146,19 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
         if(e.getResult()==PlayerLoginEvent.Result.KICK_FULL&&Bukkit.getOnlinePlayers().stream().filter(p->!manager.isFake(p)).count()<Bukkit.getMaxPlayers())e.allow();
     }
     public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args){
-        if(!sender.hasPermission("beastbots.admin")){sender.sendMessage("Keine Berechtigung.");return true;}
+        if(!sender.hasPermission("beastbots.admin")){sender.sendMessage("No permission.");return true;}
         String sub=args.length==0?"help":args[0].toLowerCase(Locale.ROOT);
         switch(sub){
-            case "help"->sender.sendMessage("/beastbots add <Name> | remove <Name> | setamount <0-"+maximum()+"> | list | reload | status");
-            case "status"->{sender.sendMessage("BeastBots: simuliert="+ours().size()+" gewünscht="+desired.size()+" echte Backend-Spieler="+Bukkit.getOnlinePlayers().stream().filter(p->!manager.isFake(p)).count()+" unsichtbar="+getConfig().getBoolean("bots.invisible",true));for(Player p:ours())sender.sendMessage(p.getName()+" UUID="+p.getUniqueId()+" online="+p.isOnline()+" invisible="+p.isInvisible()+" op="+p.isOp()+" view="+p.getViewDistance()+" simulation="+p.getSimulationDistance()+" skin="+p.getPlayerProfile().getProperties().stream().anyMatch(v->v.getName().equals("textures")));}
-            case "list"->sender.sendMessage("Simulierte Spieler: "+String.join(", ",ours().stream().map(Player::getName).toList()));
-            case "reload"->{reloadConfig();reserved.clear();updateDesired();for(Player p:ours())configure(p);reconcile();sender.sendMessage("BeastBots-Konfiguration neu geladen.");}
-            case "setamount"->{try{int value=Integer.parseInt(args[1]);if(value<0||value>maximum())throw new IllegalArgumentException();getConfig().set("bots.amount",value);saveConfig();updateDesired();reconcile();sender.sendMessage("Simulierte Spieler: "+value);}catch(Exception error){sender.sendMessage("/beastbots setamount <0-"+maximum()+">");}}
-            case "add"->{if(args.length!=2||!args[1].matches("[A-Za-z0-9_]{3,16}")){sender.sendMessage("/beastbots add <Name mit 3-16 Zeichen>");break;}List<String> list=new ArrayList<>(names());if(list.stream().anyMatch(n->n.equalsIgnoreCase(args[1]))){sender.sendMessage("Name bereits konfiguriert.");break;}if(desired.size()>=maximum()){sender.sendMessage("Maximale Anzahl erreicht.");break;}list.add(Math.min(desired.size(),list.size()),args[1]);getConfig().set("bots.names",list);getConfig().set("bots.amount",Math.min(maximum(),desired.size()+1));saveConfig();updateDesired();reconcile();sender.sendMessage("Hinzugefügt: "+args[1]);}
-            case "remove"->{if(args.length!=2){sender.sendMessage("/beastbots remove <Name>");break;}List<String> list=new ArrayList<>(names());if(!list.removeIf(n->n.equalsIgnoreCase(args[1]))){sender.sendMessage("Name nicht gefunden.");break;}getConfig().set("bots.names",list);getConfig().set("bots.amount",Math.min(Math.max(0,desired.size()-(desired.contains(args[1].toLowerCase(Locale.ROOT))?1:0)),list.size()));saveConfig();updateDesired();reconcile();sender.sendMessage("Entfernt: "+args[1]);}
+            case "on","off","toggle"->{boolean enabled=sub.equals("toggle")?!getConfig().getBoolean("enabled",true):sub.equals("on");getConfig().set("enabled",enabled);saveConfig();updateDesired();reconcile();publishPresence();sender.sendMessage("BeastBots "+(enabled?"enabled (players appear over the next few seconds).":"disabled."));}
+            case "help"->sender.sendMessage("/beastbots on | off | toggle | add <Name> | remove <Name> | setamount <0-"+maximum()+"> | list | reload | status");
+            case "status"->{sender.sendMessage("BeastBots: simulated="+ours().size()+" desired="+desired.size()+" real backend players="+Bukkit.getOnlinePlayers().stream().filter(p->!manager.isFake(p)).count()+" invisible="+getConfig().getBoolean("bots.invisible",true));for(Player p:ours())sender.sendMessage(p.getName()+" UUID="+p.getUniqueId()+" online="+p.isOnline()+" invisible="+p.isInvisible()+" op="+p.isOp()+" view="+p.getViewDistance()+" simulation="+p.getSimulationDistance()+" skin="+p.getPlayerProfile().getProperties().stream().anyMatch(v->v.getName().equals("textures")));}
+            case "list"->sender.sendMessage("Simulated players: "+String.join(", ",ours().stream().map(Player::getName).toList()));
+            case "reload"->{reloadConfig();reserved.clear();updateDesired();for(Player p:ours())configure(p);reconcile();sender.sendMessage("BeastBots configuration reloaded.");}
+            case "setamount"->{try{int value=Integer.parseInt(args[1]);if(value<0||value>maximum())throw new IllegalArgumentException();getConfig().set("bots.amount",value);saveConfig();updateDesired();reconcile();sender.sendMessage("Simulated players: "+value);}catch(Exception error){sender.sendMessage("/beastbots setamount <0-"+maximum()+">");}}
+            case "add"->{if(args.length!=2||!args[1].matches("[A-Za-z0-9_]{3,16}")){sender.sendMessage("/beastbots add <name with 3-16 characters>");break;}List<String> list=new ArrayList<>(names());if(list.stream().anyMatch(n->n.equalsIgnoreCase(args[1]))){sender.sendMessage("Name is already configured.");break;}if(desired.size()>=maximum()){sender.sendMessage("Maximum count reached.");break;}list.add(Math.min(desired.size(),list.size()),args[1]);getConfig().set("bots.names",list);getConfig().set("bots.amount",Math.min(maximum(),desired.size()+1));saveConfig();updateDesired();reconcile();sender.sendMessage("Added: "+args[1]);}
+            case "remove"->{if(args.length!=2){sender.sendMessage("/beastbots remove <Name>");break;}List<String> list=new ArrayList<>(names());if(!list.removeIf(n->n.equalsIgnoreCase(args[1]))){sender.sendMessage("Name not found.");break;}getConfig().set("bots.names",list);getConfig().set("bots.amount",Math.min(Math.max(0,desired.size()-(desired.contains(args[1].toLowerCase(Locale.ROOT))?1:0)),list.size()));saveConfig();updateDesired();reconcile();sender.sendMessage("Removed: "+args[1]);}
             default->sender.sendMessage("/beastbots help");
         }return true;
     }
-    public List<String> onTabComplete(CommandSender s,Command c,String a,String[] args){if(!s.hasPermission("beastbots.admin"))return List.of();if(args.length==1)return List.of("help","add","remove","setamount","list","reload","status").stream().filter(n->n.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();if(args.length==2&&args[0].equalsIgnoreCase("remove"))return names();return List.of();}
+    public List<String> onTabComplete(CommandSender s,Command c,String a,String[] args){if(!s.hasPermission("beastbots.admin"))return List.of();if(args.length==1)return List.of("on","off","toggle","help","add","remove","setamount","list","reload","status").stream().filter(n->n.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();if(args.length==2&&args[0].equalsIgnoreCase("remove"))return names();return List.of();}
 }

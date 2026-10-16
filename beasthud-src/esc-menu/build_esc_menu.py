@@ -28,7 +28,7 @@ for theme,accent,fill,highlight in [('halloween','#9c45ce','#252039','#f0aaff'),
   part=header.crop((tile*256,0,(tile+1)*256,128));part.putpixel((255,127),(1,1,1,1));skin[f'assets/beastsmp/textures/font/esc_logo_{tile}.png']=png(part)
  source=root/('farewell-art.png' if theme=='halloween' else f'farewell-{theme}.png')
  art=Image.open(source).convert('RGBA');art=art.crop(art.getbbox());ratio=min(512/art.width,172/art.height);art=art.resize((round(art.width*ratio),round(art.height*ratio)),Image.Resampling.NEAREST)
- for lang,label,line1,line2 in [('de_de','Bis bald!','DANKE FUERS SPIELEN!','BIS BALD AUF BEASTSMP'),('en_us','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP')]:
+ for lang,label,line1,line2 in [('de_de','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP'),('en_us','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP')]:
   base=Image.new('RGBA',(256,128));text(base,label,128,6,'white');text(base,line1,140,51,'#f4eaff');text(base,line2,140,63,'#f4eaff');text(base,'MC.BEASTSMP.DE',140,75,'#f5b041' if theme=='halloween' else '#9eefff')
   letters=base.resize((512,256),Image.Resampling.NEAREST);im=Image.new('RGBA',(512,256));im.alpha_composite(art,((512-art.width)//2,50));im.alpha_composite(letters)
   for tile in range(2):
@@ -55,7 +55,7 @@ with zipfile.ZipFile(pack) as old:
  updates['assets/minecraft/font/default.json']=json.dumps(font,ensure_ascii=False,indent=2).encode()
  for lang in ['de_de','en_us']:
   offset=0 if lang=='de_de' else 2
-  key=f'assets/minecraft/lang/{lang}.json';data=json.loads(old.read(key));data.update({'menu.game':'\uf800\uf812\uf801','menu.returnToGame':'Auf BeastSMP weiterspielen' if lang=='de_de' else 'Continue playing on BeastSMP','menu.disconnect':'\uf810'+chr(0xf802+offset)+'\uf812'+chr(0xf803+offset)+'\uf811','menu.options':'Optionen ...' if lang=='de_de' else 'Options ...','menu.returnToMenu':'Verlassen' if lang=='de_de' else 'Leave'})
+  key=f'assets/minecraft/lang/{lang}.json';data=json.loads(old.read(key));data.update({'menu.game':'\uf800\uf812\uf801','menu.returnToGame':'Continue playing on BeastSMP','menu.disconnect':'\uf810'+chr(0xf802+offset)+'\uf812'+chr(0xf803+offset)+'\uf811','gui.advancements':'Advancements','gui.stats':'Statistics','menu.options':'Options ...','menu.returnToMenu':'Leave'})
   updates[key]=json.dumps(data,ensure_ascii=False,indent=2).encode()
  with zipfile.ZipFile(temp,'w',zipfile.ZIP_DEFLATED) as new:
   for info in old.infolist():

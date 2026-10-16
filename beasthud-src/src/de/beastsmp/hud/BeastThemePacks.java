@@ -15,10 +15,11 @@ import java.util.zip.*;
 
 /** Hosts one complete, theme-specific resource pack per player on the existing pack port. */
 final class BeastThemePacks implements Listener {
-    private static final UUID PACK_ID=UUID.fromString("8a7dcfd0-1ae2-39e5-8584-9b418a8ad21f");
+    private final Map<UUID,UUID> packIds=new HashMap<>();
     private record Pack(String hash,byte[] sha,byte[] bytes) {}
     private final BeastHudPlugin plugin;
     private final Map<UUID,String> sent=new HashMap<>();
+    private final Map<UUID,Long> pending=new HashMap<>();
     private volatile Map<BeastHudPlugin.Theme,Pack> current=Map.of();
     private volatile Map<String,Pack> hosted=Map.of();
     private HttpServer server;
@@ -49,20 +50,24 @@ final class BeastThemePacks implements Listener {
             plugin.getLogger().info("Seasonal complete resource packs hosted on port 8163.");
         }catch(IOException e){throw new IllegalStateException("Cannot open BeastSMP resource pack server",e);}
     }
-    void disable(){closed=true;if(server!=null)server.stop(0);if(executor!=null)executor.shutdownNow();sent.clear();}
-    void forget(Player p){sent.remove(p.getUniqueId());}
+    void disable(){closed=true;if(server!=null)server.stop(0);if(executor!=null)executor.shutdownNow();sent.clear();pending.clear();packIds.clear();}
+    void forget(Player p){sent.remove(p.getUniqueId());pending.remove(p.getUniqueId());packIds.remove(p.getUniqueId());}
     void send(Player p){
         if(!p.isOnline()||BeastHudPlugin.isSimulated(p))return;Pack pack=current.get(plugin.profile(p.getUniqueId()).theme);if(pack==null)return;
         if(pack.hash.equals(sent.get(p.getUniqueId())))return;
         sent.put(p.getUniqueId(),pack.hash);
-        p.setResourcePack(PACK_ID,"http://82.165.71.206:8163/"+pack.hash+".zip",pack.sha,"BeastSMP: HUD, Menüs und ESC-Design",false);
+        long ticket=System.nanoTime();pending.put(p.getUniqueId(),ticket);
+        Bukkit.getScheduler().runTaskLater(plugin,()->{if(p.isOnline()&&Objects.equals(pending.get(p.getUniqueId()),ticket)){pending.remove(p.getUniqueId());p.kick(net.kyori.adventure.text.Component.text("The BeastSMP resource pack is required. Enable server resource packs and reconnect."));}},2400L);
+        UUID packId=UUID.nameUUIDFromBytes(pack.sha);packIds.put(p.getUniqueId(),packId);
+        p.setResourcePack(packId,"http://82.165.71.206:8163/"+pack.hash+".zip",pack.sha,"Install the required BeastSMP resource pack to play (HUD, menus and seasonal designs).",true);
         plugin.getLogger().info("Theme pack sent: "+p.getName()+" theme="+plugin.profile(p.getUniqueId()).theme+" sha1="+pack.hash);
     }
     @EventHandler public void status(PlayerResourcePackStatusEvent event){
-        if(!event.getID().equals(PACK_ID))return;
+        if(!event.getID().equals(packIds.get(event.getPlayer().getUniqueId())))return;
         plugin.getLogger().info("Theme pack status: "+event.getPlayer().getName()+" "+event.getStatus());
         switch(event.getStatus()){
-            case FAILED_DOWNLOAD,FAILED_RELOAD,INVALID_URL->{sent.remove(event.getPlayer().getUniqueId());event.getPlayer().sendMessage("§cDas BeastSMP-Paket konnte nicht geladen werden. Versuche /design erneut.");}
+            case SUCCESSFULLY_LOADED->pending.remove(event.getPlayer().getUniqueId());
+            case DECLINED,FAILED_DOWNLOAD,FAILED_RELOAD,INVALID_URL,DISCARDED->{forget(event.getPlayer());event.getPlayer().kick(net.kyori.adventure.text.Component.text("The BeastSMP resource pack is required to play. Enable server resource packs and reconnect."));}
             default->{}
         }
     }

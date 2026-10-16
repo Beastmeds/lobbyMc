@@ -7,27 +7,28 @@ author: BeastSMP
 description: Personal HUD designs, seasonal greetings and the lobby pumpkin hunt.
 commands:
   design:
-    description: Wähle dein BeastSMP-Design
+    description: Choose your BeastSMP design
     aliases: [huddesign, designs]
   kuerbisse:
-    description: Fortschritt und Hilfe zur Halloween-Kürbissuche
+    description: Halloween pumpkin hunt progress and help
     aliases: [pumpkins, kuerbissuche]
   beasthud:
     description: BeastHUD administration
     permission: beasthud.admin
   beast:
-    description: BeastSMP Lobby-Menü
+    description: BeastSMP Lobby menu
     aliases: [menu, lobbymenu]
   serverauswahl:
-    description: BeastSMP Serverauswahl
+    description: BeastSMP Server selection
     aliases: [servers, navigator]
   events:
     description: BeastSMP Events
   effekte:
-    description: Persönliche Lobby-Effekte
+    description: Personal lobby effects
     aliases: [effects]
   lobbyeffekte:
-    description: Lobby-Effekte serverweit verwalten
+    aliases: [lobbyeffects]
+    description: Manage server-wide lobby effects
     permission: beasthud.admin
 permissions:
   beasthud.admin:

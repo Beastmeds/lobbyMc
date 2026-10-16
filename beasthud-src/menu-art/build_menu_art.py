@@ -29,7 +29,7 @@ def logo(theme):
  f={'halloween':'beast_halloween_header.png','standard':'beast_standard_header.png','winter':'beast_winter_header.png'}[theme]
  im=Image.open(assets/f).convert('RGBA');return im.crop(im.getbbox())
 for season,(theme,accent,light) in enumerate([('halloween','#a72cdd','#f5b041'),('standard','#29a7ef','#9ff3ff'),('winter','#75dce9','#edffff')]):
- for kind,heading in enumerate(['LOBBY','SERVER','EVENTS','EFFEKTE','DESIGNS']):
+ for kind,heading in enumerate(['LOBBY','SERVER','EVENTS','EFFECTS','DESIGNS']):
   base=Image.new('RGBA',(256,256));d=ImageDraw.Draw(base)
   d.rectangle((0,0,175,221),fill='#090c16');d.rectangle((1,1,174,220),outline=accent,width=2);d.rectangle((4,4,171,129),fill='#111323',outline='#37344c')
   d.line((7,130,168,130),fill=light)
@@ -41,13 +41,13 @@ for season,(theme,accent,light) in enumerate([('halloween','#a72cdd','#f5b041'),
   # Illustrated cards: generous image area, restrained frame, captions with native pixel lettering.
   layouts=[]
   if kind in [0,3]:
-   labels=['SERVER','DESIGNS','EVENTS','EFFEKTE'] if kind==0 else ['AUTO','SCHNEE','NEBEL','AUS']
+   labels=['SERVER','DESIGNS','EVENTS','EFFECTS'] if kind==0 else ['AUTO','SNOW','FOG','OFF']
    for i,label in enumerate(labels):
     x=8 if i%2==0 else 98;y=38 if i<2 else 74;w=70;h=32
     d.rectangle((x-1,y-1,x+w,y+h),fill='#050710');d.rectangle((x,y,x+w-1,y+h-1),fill='#1a1b31',outline=accent);d.line((x+2,y+1,x+w-3,y+1),fill=light)
     text(d,label,x+49,y+14,'#ffffff');layouts.append((i,(x+2,y+2,30,28)))
   else:
-   labels={1:['BEASTSMP','SMP','LOBBY'],2:['KUERBISSE','DESIGNS','WINTER'],4:['HALLOWEEN','STANDARD','WINTER']}[kind]
+   labels={1:['BEASTSMP','SMP','LOBBY'],2:['PUMPKINS','DESIGNS','WINTER'],4:['HALLOWEEN','STANDARD','WINTER']}[kind]
    for i,label in enumerate(labels):
     x=8+i*55;y=40;w=50;h=66
     d.rectangle((x-1,y-1,x+w,y+h),fill='#050710');d.rectangle((x,y,x+w-1,y+h-1),fill='#1a1b31',outline=accent);d.line((x+2,y+1,x+w-3,y+1),fill=light)

@@ -68,7 +68,7 @@ beastsmp_panel:
   texts:
     1:
       name: beast_font
-      pattern: <white>Geld <#55ff22>—
+      pattern: <white>Money <#55ff22>—
       x: -131
       y: -63
       scale: 0.5
@@ -96,14 +96,14 @@ beastsmp_panel:
       layer: 12
     5:
       name: beast_font
-      pattern: <white>Tode <red>[papi:statistic_deaths]
+      pattern: <white>Deaths <red>[papi:statistic_deaths]
       x: -131
       y: -11
       scale: 0.5
       layer: 12
     6:
       name: beast_font
-      pattern: <white>Clan <yellow>Keiner
+      pattern: <white>Clan <yellow>None
       x: -131
       y: 2
       scale: 0.5
@@ -117,14 +117,14 @@ beastsmp_panel:
       layer: 12
     8:
       name: beast_font
-      pattern: <white>Kürbisse <gold>[papi:beast_quest_progress]
+      pattern: <white>Pumpkins <gold>[papi:beast_quest_progress]
       x: -131
       y: 28
       scale: 0.5
       layer: 12
     9:
       name: beast_font
-      pattern: <white>Spielzeit <#35f222>[papi:statistic_time_played]
+      pattern: <white>Playtime <#35f222>[papi:statistic_time_played]
       x: -131
       y: 41
       scale: 0.5
@@ -198,22 +198,16 @@ beastsmp_standard_panel:
       y: 15
       scale: 0.3
       layer: 12
-    10:
-      name: pumpkin
-      x: -146
-      y: 28
-      scale: 0.3
-      layer: 12
     11:
       name: clock
       x: -146
-      y: 41
+      y: 28
       scale: 0.3
       layer: 12
   texts:
     1:
       name: beast_font
-      pattern: <white>Geld <#55ff22>—
+      pattern: <white>Money <#55ff22>—
       x: -131
       y: -63
       scale: 0.5
@@ -241,14 +235,14 @@ beastsmp_standard_panel:
       layer: 12
     5:
       name: beast_font
-      pattern: <white>Tode <red>[papi:statistic_deaths]
+      pattern: <white>Deaths <red>[papi:statistic_deaths]
       x: -131
       y: -11
       scale: 0.5
       layer: 12
     6:
       name: beast_font
-      pattern: <white>Clan <yellow>Keiner
+      pattern: <white>Clan <yellow>None
       x: -131
       y: 2
       scale: 0.5
@@ -260,18 +254,11 @@ beastsmp_standard_panel:
       y: 15
       scale: 0.5
       layer: 12
-    8:
-      name: beast_font
-      pattern: <white>Kürbisse <gold>[papi:beast_quest_progress]
-      x: -131
-      y: 28
-      scale: 0.5
-      layer: 12
     9:
       name: beast_font
-      pattern: <white>Spielzeit <#35f222>[papi:statistic_time_played]
+      pattern: <white>Playtime <#35f222>[papi:statistic_time_played]
       x: -131
-      y: 41
+      y: 28
       scale: 0.5
       layer: 12
     20:
@@ -343,22 +330,16 @@ beastsmp_winter_panel:
       y: 15
       scale: 0.3
       layer: 12
-    10:
-      name: pumpkin
-      x: -146
-      y: 28
-      scale: 0.3
-      layer: 12
     11:
       name: clock
       x: -146
-      y: 41
+      y: 28
       scale: 0.3
       layer: 12
   texts:
     1:
       name: beast_font
-      pattern: <white>Geld <#55ff22>—
+      pattern: <white>Money <#55ff22>—
       x: -131
       y: -63
       scale: 0.5
@@ -386,14 +367,14 @@ beastsmp_winter_panel:
       layer: 12
     5:
       name: beast_font
-      pattern: <white>Tode <red>[papi:statistic_deaths]
+      pattern: <white>Deaths <red>[papi:statistic_deaths]
       x: -131
       y: -11
       scale: 0.5
       layer: 12
     6:
       name: beast_font
-      pattern: <white>Clan <yellow>Keiner
+      pattern: <white>Clan <yellow>None
       x: -131
       y: 2
       scale: 0.5
@@ -405,18 +386,11 @@ beastsmp_winter_panel:
       y: 15
       scale: 0.5
       layer: 12
-    8:
-      name: beast_font
-      pattern: <white>Kürbisse <gold>[papi:beast_quest_progress]
-      x: -131
-      y: 28
-      scale: 0.5
-      layer: 12
     9:
       name: beast_font
-      pattern: <white>Spielzeit <#35f222>[papi:statistic_time_played]
+      pattern: <white>Playtime <#35f222>[papi:statistic_time_played]
       x: -131
-      y: 41
+      y: 28
       scale: 0.5
       layer: 12
     20:

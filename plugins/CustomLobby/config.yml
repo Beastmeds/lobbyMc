@@ -5,7 +5,7 @@
 general:
   server-name: BeastSMP Network
   lobby-world: world
-  language: de
+  language: en
   debug: false
   bungee-mode: true
   velocity-mode: false
