@@ -47,3 +47,7 @@ Server availability uses bounded asynchronous TCP checks every 20 seconds. Playe
 `/settings` opens a themed English/German selector. `/settings en` and `/settings de` also work. English is the default; the choice is stored per UUID. HUD labels, custom menu art, tooltips, greetings, quest messages and ESC artwork follow the selection. Third-party plugin messages and client-owned interface language retain their own settings. The full required pack updates when changing language.
 
 For menu generation, run `menu-art/build_menu_art.py` with `--language en --overlay plugins/BeastHudThemes/languages/en-menu.zip`, then with `de` and `de-menu.zip`. Run `esc-menu/build_esc_menu.py` afterward to produce the final language overlays.
+
+## Larger menu artwork
+
+Pass `--client-jar /path/to/26.2.jar` to each menu-art build to use Minecraft-native caption lettering. The outer menu frame is now 208 GUI pixels wide, while slot coordinates are preserved by a matching -24 starting advance. Home has Settings instead of Effects, no back shortcut, and a clear X close control. Home cards suppress obstructive tooltips. Effects remain reachable inside Settings.

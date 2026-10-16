@@ -135,13 +135,13 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         Menu m=new Menu(kind);m.inventory=Bukkit.createInventory(m,54,menuTitle(p,kind));
         ItemStack filler=invisible(item(p,Material.PAPER," ",NamedTextColor.WHITE),false);
         for(int slot=0;slot<54;slot++)m.inventory.setItem(slot,filler.clone());
-        put(m,45,invisible(item(p,Material.PAPER,"Back to the Beast menu",NamedTextColor.WHITE),true),()->openHome(p));
+        if(kind!=Kind.HOME)put(m,45,invisible(item(p,Material.PAPER,"Back to the Beast menu",NamedTextColor.WHITE),true),()->openHome(p));
         put(m,49,invisible(item(p,Material.PAPER,"Close",NamedTextColor.RED),true),()->p.closeInventory());
-        put(m,53,invisible(item(p,Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),true),()->openEffects(p));
+        if(kind!=Kind.HOME&&kind!=Kind.SETTINGS)put(m,53,invisible(item(p,Material.PAPER,"Settings",theme(p).color),true),()->openSettings(p));
         return m;
     }
     private void put(Menu m,int slot,ItemStack item,Runnable action){m.inventory.setItem(slot,item);m.actions.put(slot,action);}
-    private void card(Menu m,int[] slots,ItemStack stack,Runnable action){for(int slot:slots)put(m,slot,invisible(stack.clone(),true),action);}
+    private void card(Menu m,int[] slots,ItemStack stack,Runnable action){for(int slot:slots)put(m,slot,invisible(stack.clone(),m.kind!=Kind.HOME),action);}
     private int[] four(int card){
         int row=card/2==0?1:3,col=card%2==0?0:5;int[] result=new int[8];int i=0;
         for(int r=row;r<row+2;r++)for(int c=col;c<col+4;c++)result[i++]=r*9+c;return result;
@@ -151,7 +151,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         Menu m=newMenu(p,Kind.SETTINGS,"Settings");
         card(m,three(0),item(p,Material.PAPER,"English",NamedTextColor.AQUA,plugin.language(p).equals("en")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"en");openSettings(p);});
         card(m,three(1),item(p,Material.PAPER,"German",NamedTextColor.GOLD,plugin.language(p).equals("de")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"de");openSettings(p);});
-        card(m,three(2),item(p,Material.PAPER,"Back to lobby",NamedTextColor.WHITE),()->openHome(p));
+        card(m,three(2),item(p,Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),()->openEffects(p));
         p.openInventory(m.inventory);
     }
     void openHome(Player p){
@@ -159,7 +159,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         card(m,four(0),item(p,Material.PAPER,"Server selection",theme(p).color,"Choose your destination on BeastSMP","With live server status"),()->openServers(p));
         card(m,four(1),item(p,Material.PAPER,"Your design",theme(p).color,"Halloween · Standard · Christmas","Current: "+theme(p).label),()->openDesigns(p));
         card(m,four(2),item(p,Material.PAPER,"Events",theme(p).color,"Pumpkin hunt and seasonal events","Your progress is saved"),()->openEvents(p));
-        card(m,four(3),item(p,Material.PAPER,"Atmosphere",theme(p).color,"Snow, particle fog or quiet","Active: "+effectName(effective(p))),()->openEffects(p));
+        card(m,four(3),item(p,Material.PAPER,"Settings",theme(p).color,"Choose your lobby language","Lobby effects"),()->openSettings(p));
         p.openInventory(m.inventory);
     }
     void openDesigns(Player p){
