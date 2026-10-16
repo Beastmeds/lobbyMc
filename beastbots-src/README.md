@@ -67,7 +67,7 @@ The configured cap is now 40, with a pool of 40 names and skin sources. The curr
 
 ## Schedule and admin menu
 
-`/settings bots` (OP / `beastbots.admin`) opens the schedule, manual/day/night amount and start-time controls. Click adds 10 players or one hour; shift-click subtracts. Manual amount disables scheduling.
+`/settings bots` (OP only) opens the schedule, manual/day/night amount and start-time controls. Click adds 10 players or one hour; shift-click subtracts. Manual amount disables scheduling.
 
 `/beastbots schedule on|off|status`, `schedule day 08:00 40`, `schedule night 20:00 10`, `schedule timezone Europe/Vienna` and `schedule preview 21:00` configure or inspect the plan. The defaults use 40 during 08–20 and 10 otherwise, with Vienna daylight saving time. Creation remains limited to one per second.
 

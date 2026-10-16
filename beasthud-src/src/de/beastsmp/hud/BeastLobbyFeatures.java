@@ -131,7 +131,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         int c=0xe100+season*40+kind.ordinal()*4;
         String glyph="\ue000"+(char)c+"\ue010"+(char)(c+1)+"\ue011"+(char)(c+2)+"\ue010"+(char)(c+3);
         if(kind==Kind.CHAT||kind==Kind.DISPLAY){int mask=(plugin.profile(p.getUniqueId()).preferences>>(kind==Kind.DISPLAY?4:0))&15;int status=0xe600+mask*4;glyph+="\ue011"+(char)status+"\ue010"+(char)(status+1)+"\ue011"+(char)(status+2)+"\ue010"+(char)(status+3);}
-        if(kind==Kind.SETTINGS&&p.hasPermission("beastbots.admin"))glyph+="\ue011"+tiles(0xe700);
+        if(kind==Kind.SETTINGS&&p.isOp())glyph+="\ue011"+tiles(0xe700);
         if(kind==Kind.BOTS){var bot=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");glyph+="\ue011"+tiles(0xe710+(bot!=null&&bot.getConfig().getBoolean("schedule.enabled",false)?4:0));}
         return plugin.component(p,glyph,NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:lobby_menu"));
     }
@@ -159,7 +159,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         card(m,four(1),item(p,Material.PAPER,"Chat settings",theme(p).color,"Choose which messages you see"),()->openPreferences(p,Kind.CHAT));
         card(m,four(2),item(p,Material.PAPER,"Appearance",theme(p).color,"HUD, animations, sounds and welcome title"),()->openPreferences(p,Kind.DISPLAY));
         card(m,four(3),item(p,Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),()->openEffects(p));
-        if(p.hasPermission("beastbots.admin"))card(m,new int[]{51,52,53},item(p,Material.PAPER,"Bot settings",theme(p).color),()->openBots(p));
+        if(p.isOp())card(m,new int[]{51,52,53},item(p,Material.PAPER,"Bot settings",theme(p).color),()->openBots(p));
         p.openInventory(m.inventory);
     }
     void openLanguages(Player p){
@@ -175,20 +175,20 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         }p.openInventory(m.inventory);
     }
     private int[] six(int card){int[] slots=new int[6];int k=0;for(int row=card<3?1:3;row<=(card<3?2:4);row++)for(int col=(card%3)*3;col<(card%3)*3+3;col++)slots[k++]=row*9+col;return slots;}
-    private void botCommand(Player p,String value){if(!p.hasPermission("beastbots.admin"))return;Bukkit.dispatchCommand(p,"beastbots "+value);openBots(p);}
+    private void botCommand(Player p,String value){if(!p.isOp())return;Bukkit.dispatchCommand(p,"beastbots "+value);openBots(p);}
     private void botAmount(Player p,Menu m,String key){
-        var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null||!p.hasPermission("beastbots.admin"))return;var cfg=bots.getConfig();
+        var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null||!p.isOp())return;var cfg=bots.getConfig();
         int value=Math.max(0,Math.min(cfg.getInt("performance.max-active-players",250),cfg.getInt(key.equals("manual")?"bots.amount":"schedule."+key+"-amount",10)+(m.shifted?-10:10)));
         botCommand(p,key.equals("manual")?"setamount "+value:"schedule "+key+" "+cfg.getString("schedule."+key+"-at",key.equals("day")?"08:00":"20:00")+" "+value);
     }
     private void botTime(Player p,Menu m,String key){
-        var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null||!p.hasPermission("beastbots.admin"))return;var cfg=bots.getConfig();
+        var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null||!p.isOp())return;var cfg=bots.getConfig();
         java.time.LocalTime time=java.time.LocalTime.parse(cfg.getString("schedule."+key+"-at",key.equals("day")?"08:00":"20:00")).plusHours(m.shifted?-1:1);
         if(time.equals(java.time.LocalTime.parse(cfg.getString("schedule."+(key.equals("day")?"night":"day")+"-at",key.equals("day")?"20:00":"08:00"))))time=time.plusHours(m.shifted?-1:1);
         botCommand(p,"schedule "+key+" "+time+" "+cfg.getInt("schedule."+key+"-amount",10));
     }
     void openBots(Player p){
-        if(!p.hasPermission("beastbots.admin"))return;var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null)return;var cfg=bots.getConfig();
+        if(!p.isOp())return;var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null)return;var cfg=bots.getConfig();
         Menu m=newMenu(p,Kind.BOTS,"Bot settings");String adjust="Click: +10 | Shift-click: -10";String time="Click: +1 hour | Shift-click: -1 hour";
         card(m,six(0),item(p,Material.PAPER,"Schedule",theme(p).color,cfg.getBoolean("schedule.enabled",false)?"ON":"OFF",cfg.getString("schedule.timezone","Europe/Vienna"),"Click to toggle"),()->botCommand(p,"schedule "+(cfg.getBoolean("schedule.enabled",false)?"off":"on")));
         card(m,six(1),item(p,Material.PAPER,"Manual amount",theme(p).color,"Current: "+cfg.getInt("bots.amount",40),adjust,"Disables the schedule"),()->botAmount(p,m,"manual"));
@@ -306,7 +306,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         return true;
     }
     @Override public List<String> onTabComplete(CommandSender sender,Command c,String label,String[] args){
-        if(c.getName().equals("settings")&&args.length==1)return List.of("en","de","language","chat","display","bots");
+        if(c.getName().equals("settings")&&args.length==1)return sender.isOp()?List.of("en","de","language","chat","display","bots"):List.of("en","de","language","chat","display");
         if((c.getName().equals("effekte")||c.getName().equals("lobbyeffekte"))&&args.length==1)return List.of("on","off","auto","winter","halloween","status").stream().filter(s->s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();return List.of();
     }
 }
