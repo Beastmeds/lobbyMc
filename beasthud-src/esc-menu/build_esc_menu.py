@@ -20,7 +20,7 @@ def put_png(name,im):
  b=io.BytesIO();im.save(b,format='PNG');updates[name]=b.getvalue()
 logo=Image.open(a.repo/'plugins/BetterHud/assets/beast_halloween_header.png').convert('RGBA');logo=logo.crop(logo.getbbox());ratio=min(216/logo.width,64/logo.height);logo=logo.resize((round(logo.width*ratio),round(logo.height*ratio)),Image.Resampling.NEAREST)
 header=Image.new('RGBA',(256,64));header.alpha_composite(logo,((256-logo.width)//2,(64-logo.height)//2));header.putpixel((255,63),(1,1,1,1));put_png('assets/beastsmp/textures/font/esc_logo.png',header)
-art=Image.open(root/'farewell-art.png').convert('RGBA');art=art.crop(art.getbbox());art.thumbnail((256,86),Image.Resampling.LANCZOS)
+art=Image.open(root/'farewell-art.png').convert('RGBA');art=art.crop(art.getbbox());art.thumbnail((256,86),Image.Resampling.NEAREST)
 for lang,label,line1,line2 in [('de_de','Bis bald!','DANKE FUERS SPIELEN!','BIS BALD AUF BEASTSMP'),('en_us','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP')]:
  im=Image.new('RGBA',(256,128));text(im,label,128,6,'white');im.alpha_composite(art,((256-art.width)//2,25));text(im,line1,140,51,'#f4eaff');text(im,line2,140,63,'#f4eaff');text(im,'MC.BEASTSMP.DE',140,75,'#f5b041');im.putpixel((255,127),(1,1,1,1));put_png(f'assets/beastsmp/textures/font/esc_farewell_{lang}.png',im);im.resize((1024,512),Image.Resampling.NEAREST).save(out/f'farewell_{lang}.png')
 for name,accent,fill in [('button','#9c45ce','#252039'),('button_highlighted','#f0aaff','#44315e'),('button_disabled','#534360','#1b1824')]:
