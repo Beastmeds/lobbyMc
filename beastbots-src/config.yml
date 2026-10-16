@@ -1,0 +1,28 @@
+enabled: true
+bots:
+  amount: 10
+  invisible: true
+  use-skins: true
+  names: [CedarVale, LumaFox, NoxRaven, SkyMarlow, EmberOak, PixelFinn, NovaBirch, FrostKian, MiloQuartz, RiverRune]
+tab:
+  enabled: true
+performance:
+  max-active-players: 10
+  player-view-distance: 2
+spawn:
+  world: world
+  x: -139.91855815080723
+  y: -56.0
+  z: -25.980154437064236
+# Minecraft profile names used only as skin sources, not as displayed player names.
+skins:
+  CedarVale: MHF_Steve
+  LumaFox: MHF_Alex
+  NoxRaven: MHF_Steve
+  SkyMarlow: MHF_Alex
+  EmberOak: MHF_Steve
+  PixelFinn: MHF_Alex
+  NovaBirch: MHF_Steve
+  FrostKian: MHF_Alex
+  MiloQuartz: MHF_Steve
+  RiverRune: MHF_Alex

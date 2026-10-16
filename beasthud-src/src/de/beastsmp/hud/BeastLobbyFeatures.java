@@ -99,6 +99,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         try{data.save(preferencesFile);}catch(IOException ex){plugin.getLogger().log(java.util.logging.Level.SEVERE,"Could not save lobby effect preferences",ex);}
     }
     private void atmosphere(Player p){
+        if(BeastHudPlugin.isSimulated(p))return;
         if(!p.getWorld().getName().equals(plugin.getConfig().getString("world","world")))return;
         Effect effect=effective(p);if(effect==Effect.AUS)return;
         Location l=p.getLocation();double dx=l.getX()-plugin.getConfig().getDouble("spawn.x"),dz=l.getZ()-plugin.getConfig().getDouble("spawn.z");
@@ -192,6 +193,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     }
     void refreshHotbar(Player p){giveHotbar(p);}
     private void giveHotbar(Player p){
+        if(BeastHudPlugin.isSimulated(p))return;
         if(!p.getWorld().getName().equals(plugin.getConfig().getString("world","world")))return;
         for(Object[] spec:List.of(new Object[]{0,Material.COMPASS,"Serverauswahl","servers"},new Object[]{4,Material.NETHER_STAR,"BeastSMP · Lobby-Menü","home"},new Object[]{8,Material.COMPARATOR,"Lobby-Effekte","effects"})){
             ItemStack stack=item((Material)spec[1],(String)spec[2],theme(p).color,"Rechtsklick zum Öffnen");ItemMeta meta=stack.getItemMeta();meta.getPersistentDataContainer().set(menuKey,PersistentDataType.STRING,(String)spec[3]);stack.setItemMeta(meta);p.getInventory().setItem((Integer)spec[0],stack);
@@ -209,7 +211,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     }
     @EventHandler public void drag(InventoryDragEvent e){if(e.getView().getTopInventory().getHolder() instanceof Menu)e.setCancelled(true);}
     private void requestCounts(){
-        Player carrier=Bukkit.getOnlinePlayers().stream().findFirst().orElse(null);if(carrier==null)return;
+        Player carrier=Bukkit.getOnlinePlayers().stream().filter(p->!BeastHudPlugin.isSimulated(p)).findFirst().orElse(null);if(carrier==null)return;
         for(Destination d:destinations)send(carrier,"PlayerCount",d.name);
     }
     private void send(Player carrier,String action,String argument){

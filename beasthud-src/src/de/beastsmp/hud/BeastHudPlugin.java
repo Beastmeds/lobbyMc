@@ -87,6 +87,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         getServer().getScheduler().runTaskTimer(this,()->{
             long now=System.currentTimeMillis();
             for(Player p:Bukkit.getOnlinePlayers()){
+                if(isSimulated(p))continue;
                 Profile data=profile(p.getUniqueId());
                 if(now>=data.nextEffect){showEffect(p);data.nextEffect=now+ThreadLocalRandom.current().nextLong(25000,45001);}
             }
@@ -109,7 +110,9 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         try{storage.save(storageFile);}catch(IOException ex){getLogger().log(java.util.logging.Level.SEVERE,"Could not save HUD profiles",ex);}
     }
     private HudPlayer hudPlayer(Player p){return BetterHud.getInstance().getPlayerManager().getHudPlayer(p.getUniqueId());}
+    static boolean isSimulated(Player p){return p.hasMetadata("beastbot");}
     private void apply(Player p,boolean welcome){
+        if(isSimulated(p))return;
         HudPlayer hp=hudPlayer(p);if(hp==null){getLogger().warning("HUD player not ready: "+p.getName());return;}
         Profile data=profile(p.getUniqueId());
         for(Theme t:Theme.values()){
@@ -126,11 +129,13 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         if(welcome)greet(p);
     }
     private void showEffect(Player p){
+        if(isSimulated(p))return;
         HudPlayer hp=hudPlayer(p);if(hp==null)return;
         var popup=BetterHud.getInstance().getPopupManager().getPopup(profile(p.getUniqueId()).theme.effect);
         if(popup!=null)popup.show(UpdateEvent.EMPTY,hp);
     }
     private void greet(Player p){
+        if(isSimulated(p))return;
         Theme t=profile(p.getUniqueId()).theme;
         p.showTitle(Title.title(Component.text("Willkommen zurück",t.color),Component.text(p.getName()+"!",NamedTextColor.WHITE),Title.Times.times(Duration.ofMillis(400),Duration.ofSeconds(3),Duration.ofMillis(700))));
         p.sendMessage(Component.text("Willkommen zurück, "+p.getName()+"!",t.color));
@@ -140,6 +145,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     }
     @EventHandler public void reloaded(PluginReloadedEvent event){getServer().getScheduler().runTask(this,()->{if(themePacks!=null)themePacks.rebuild();});getServer().getScheduler().runTaskLater(this,()->{for(Player p:Bukkit.getOnlinePlayers())apply(p,false);},20L);}
     @EventHandler public void join(PlayerJoinEvent e){
+        if(isSimulated(e.getPlayer()))return;
         profile(e.getPlayer().getUniqueId());
         getServer().getScheduler().runTaskLater(this,()->{if(e.getPlayer().isOnline())apply(e.getPlayer(),true);},70L);
     }

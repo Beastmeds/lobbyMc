@@ -1,0 +1,94 @@
+version: 25
+i18n:
+  locale: en
+server-limit: 10
+player-limit: 10
+detect-ip: false
+name-template: ''
+name-prefix: ''
+name-pattern: ^[a-zA-Z0-9_]+$
+name-style: white
+lifespan: 0
+persistent-data: false
+restore-on-start: false
+follow-quiting: false
+follow-quiting-force: false
+follow-quiting-force-delay: 3
+drop-inventory-on-quiting: false
+kick-on-dead: true
+prevent-kicking: NEVER
+forced-execution: false
+kale-tps: 0
+pre-spawn-commands:
+- ''
+- ''
+post-spawn-commands:
+- ''
+- ''
+after-spawn-commands:
+- ''
+- ''
+self-commands:
+- ''
+- ''
+post-quit-commands:
+- ''
+- ''
+after-quit-commands:
+- ''
+- ''
+default-features:
+  collidable: false
+  pickup_items: false
+  skin: false
+  look_at_entity: false
+  invulnerable: true
+  replenish: false
+  replace_tools: false
+  autofish: false
+  wolverine: false
+replenish:
+  tools:
+    durability-threshold: 0
+tool-replacement:
+  remaining-durability-threshold: 10
+invsee-implement: AUTO
+allow-non-op-open-inv: false
+custom-ping: 35,85
+custom-ping-dynamic: true
+custom-ping-dynamic-interval: 200
+auto-login: false
+register: /reg %password% %password%
+login: /login %password%
+random-password: ''
+random-password-length: 12
+change-password: /changepassword %oldpassword% %newpassword% %newpassword%
+check-for-updates: true
+http-admin:
+  enabled: false
+  host: 0.0.0.0
+  port: 3253
+  token: ''
+  allow-get: true
+  allowed-hosts: []
+  rate-limit:
+    requests-per-minute: 120
+    auth-failures: 10
+    lockout-seconds: 60
+  interface:
+    list: true
+    status: true
+    info: true
+    spawn: true
+    kick: true
+    kill: true
+    respawn: true
+    action: true
+    stop: true
+    say: true
+    teleport: true
+    look: true
+    hold: true
+    swap: true
+    cmd: true
+    batch: true

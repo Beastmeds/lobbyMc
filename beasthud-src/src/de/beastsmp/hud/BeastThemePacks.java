@@ -52,7 +52,7 @@ final class BeastThemePacks implements Listener {
     void disable(){closed=true;if(server!=null)server.stop(0);if(executor!=null)executor.shutdownNow();sent.clear();}
     void forget(Player p){sent.remove(p.getUniqueId());}
     void send(Player p){
-        if(!p.isOnline())return;Pack pack=current.get(plugin.profile(p.getUniqueId()).theme);if(pack==null)return;
+        if(!p.isOnline()||BeastHudPlugin.isSimulated(p))return;Pack pack=current.get(plugin.profile(p.getUniqueId()).theme);if(pack==null)return;
         if(pack.hash.equals(sent.get(p.getUniqueId())))return;
         sent.put(p.getUniqueId(),pack.hash);
         p.setResourcePack(PACK_ID,"http://82.165.71.206:8163/"+pack.hash+".zip",pack.sha,"BeastSMP: HUD, Menüs und ESC-Design",false);

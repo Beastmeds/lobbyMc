@@ -1,0 +1,7 @@
+config.tmpl.yml
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+data/
+serverid
