@@ -10,7 +10,10 @@ import com.fernsehheft.customlobby.CustomLobby;
 import java.nio.file.*;
 import com.google.gson.Gson;
 import java.net.http.*;
-import java.time.Duration;
+import java.time.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
+import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -52,10 +55,16 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
             try{Files.move(tmp,file,StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);}catch(AtomicMoveNotSupportedException e){Files.move(tmp,file,StandardCopyOption.REPLACE_EXISTING);}
         }catch(Exception e){getLogger().warning("Could not publish presence: "+e.getMessage());}
     }
-    private int maximum(){return Math.max(0,Math.min(40,getConfig().getInt("performance.max-active-players",10)));}
+    private int maximum(){return Math.max(0,Math.min(250,getConfig().getInt("performance.max-active-players",250)));}
     private List<String> names(){return getConfig().getStringList("bots.names").stream().filter(n->n.matches("[A-Za-z0-9_]{3,16}")).distinct().toList();}
+    private int scheduled(LocalTime time){return BotSchedule.target(time,LocalTime.parse(getConfig().getString("schedule.day-at","08:00")),LocalTime.parse(getConfig().getString("schedule.night-at","20:00")),getConfig().getInt("schedule.day-amount",40),getConfig().getInt("schedule.night-amount",10));}
+    private int target(){
+        int amount=getConfig().getInt("bots.amount",10);
+        if(getConfig().getBoolean("schedule.enabled",false))try{amount=scheduled(LocalTime.now(ZoneId.of(getConfig().getString("schedule.timezone","Europe/Vienna"))));}catch(Exception e){getLogger().warning("Invalid schedule; using manual amount: "+e.getMessage());}
+        return Math.max(0,Math.min(maximum(),amount));
+    }
     private void updateDesired(){
-        int amount=Math.max(0,Math.min(maximum(),getConfig().getInt("bots.amount",10)));
+        int amount=target();
         Set<String> next=new LinkedHashSet<>();if(getConfig().getBoolean("enabled",true))for(String n:names().stream().limit(amount).toList())next.add(n.toLowerCase(Locale.ROOT));desired=Set.copyOf(next);
     }
     private List<Player> ours(){return manager.getAll().stream().filter(Player::isOnline).filter(p->managed.contains(p.getUniqueId())||desired.contains(p.getName().toLowerCase(Locale.ROOT))).toList();}
@@ -70,18 +79,19 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
         if(Bukkit.getPluginManager().isPluginEnabled("CustomLobby"))CustomLobby.getInstance().getAfkManager().setAFK(p,false);
         p.setViewDistance(Math.max(2,Math.min(4,getConfig().getInt("performance.player-view-distance",2))));p.setSendViewDistance(Math.max(2,Math.min(4,getConfig().getInt("performance.player-view-distance",2))));p.setSimulationDistance(2);p.setMetadata("beastbot",new FixedMetadataValue(this,true));p.setMetadata("NPC",new FixedMetadataValue(this,true));managed.add(p.getUniqueId());}
     private void configure(Player p){
-        mark(p);p.setPersistent(false);p.setInvulnerable(true);p.setCollidable(false);p.setCanPickupItems(false);p.setInvisible(getConfig().getBoolean("bots.invisible",true));p.setGravity(false);p.setAllowFlight(true);p.setFlying(true);p.setGameMode(GameMode.ADVENTURE);p.getInventory().clear();
+        mark(p);p.teleport(spawn(p.getName()));p.setPersistent(false);p.setInvulnerable(true);p.setCollidable(false);p.setCanPickupItems(false);p.setInvisible(getConfig().getBoolean("bots.invisible",true));p.setGravity(false);p.setAllowFlight(true);p.setFlying(true);p.setGameMode(GameMode.ADVENTURE);p.getInventory().clear();
         p.playerListName(Component.text(p.getName()));
         for(Player viewer:Bukkit.getOnlinePlayers())if(!manager.isFake(viewer)){
             if(getConfig().getBoolean("tab.enabled",true))viewer.listPlayer(p);else viewer.unlistPlayer(p);
         }
     }
-    private Location spawn(){
+    private Location spawn(String name){
         World world=Bukkit.getWorld(getConfig().getString("spawn.world","world"));if(world==null)throw new IllegalStateException("Configured lobby world is missing");
-        return new Location(world,getConfig().getDouble("spawn.x",world.getSpawnLocation().getX()),getConfig().getDouble("spawn.y",world.getSpawnLocation().getY()),getConfig().getDouble("spawn.z",world.getSpawnLocation().getZ()));
+        int index=Math.max(0,names().indexOf(name));double offset=Math.max(1024,getConfig().getDouble("spawn.parking-distance",4096));
+        return new Location(world,getConfig().getDouble("spawn.x")+offset+(index%10)*3,Math.min(world.getMaxHeight()-16,Math.max(world.getMinHeight()+32,getConfig().getDouble("spawn.y")+128)),getConfig().getDouble("spawn.z")+offset+(index/10)*3);
     }
     private void reconcile(){
-        if(closing)return;
+        if(closing)return;updateDesired();
         for(Player p:new ArrayList<>(ours()))if(!desired.contains(p.getName().toLowerCase(Locale.ROOT))){managed.remove(p.getUniqueId());safeRemove(p.getName(),"BeastBots amount changed");}
         for(Player p:ours())if(!p.hasMetadata("beastbot"))configure(p);
         for(String name:names()){
@@ -89,7 +99,7 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
             if(Main.getInjector().getInstance(io.github.hello09x.fakeplayer.core.manager.naming.NameManager.class).isRealPlayerUUID(Bukkit.getOfflinePlayer(name).getUniqueId())){reserved.add(key);getLogger().warning("Skipping name with existing real-player data: "+name);continue;}
             spawning.add(key);
             try{
-                manager.spawnAsync(Bukkit.getConsoleSender(),name,spawn(),0).whenComplete((p,error)->{
+                manager.spawnAsync(Bukkit.getConsoleSender(),name,spawn(name),0).whenComplete((p,error)->{
                     if(closing)return;
                     Bukkit.getScheduler().runTask(this,()->{
                         spawning.remove(key);
@@ -130,7 +140,13 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
             });
         });
     }
-    @EventHandler(priority=EventPriority.LOWEST)public void joining(PlayerJoinEvent e){if(ours(e.getPlayer())){mark(e.getPlayer());e.getPlayer().setInvisible(getConfig().getBoolean("bots.invisible",true));}}
+    @EventHandler(priority=EventPriority.LOWEST)public void joining(PlayerJoinEvent e){if(ours(e.getPlayer())){mark(e.getPlayer());e.getPlayer().setCollidable(false);e.getPlayer().setInvulnerable(true);e.getPlayer().setInvisible(getConfig().getBoolean("bots.invisible",true));}}
+    @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false)public void keepParked(PlayerTeleportEvent e){
+        if(!ours(e.getPlayer())||e.getTo()==null)return;Location park=spawn(e.getPlayer().getName());
+        if(e.getTo().getWorld()!=park.getWorld()||e.getTo().distanceSquared(park)>64)e.setCancelled(true);
+    }
+    @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false)public void noBotKnockback(EntityKnockbackEvent e){if(e instanceof EntityPushedByEntityAttackEvent attack&&attack.getPushedBy() instanceof Player p&&ours(p)||e.getEntity() instanceof Player victim&&ours(victim))e.setCancelled(true);}
+    @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false)public void noBotDamage(EntityDamageByEntityEvent e){if(e.getDamager() instanceof Player p&&ours(p)||e.getEntity() instanceof Player victim&&ours(victim))e.setCancelled(true);}
     @EventHandler(priority=EventPriority.HIGHEST)public void joined(PlayerJoinEvent e){
         if(ours(e.getPlayer()))e.joinMessage(null);
         else Bukkit.getScheduler().runTaskLater(this,()->{if(e.getPlayer().isOnline())for(Player p:ours())if(getConfig().getBoolean("tab.enabled",true))e.getPlayer().listPlayer(p);else e.getPlayer().unlistPlayer(p);},30L);
@@ -155,16 +171,32 @@ public final class BeastBots extends JavaPlugin implements Listener,CommandExecu
         if(!sender.hasPermission("beastbots.admin")){sender.sendMessage("No permission.");return true;}
         String sub=args.length==0?"help":args[0].toLowerCase(Locale.ROOT);
         switch(sub){
+            case "schedule"->{
+                try{
+                    String action=args.length>1?args[1].toLowerCase(Locale.ROOT):"status";
+                    switch(action){
+                        case "on"->getConfig().set("schedule.enabled",true);
+                        case "off"->{getConfig().set("bots.amount",target());getConfig().set("schedule.enabled",false);}
+                        case "day","night"->{if(args.length!=4)throw new IllegalArgumentException("Use /beastbots schedule "+action+" <HH:mm> <amount>");LocalTime time=LocalTime.parse(args[2]);int amount=Integer.parseInt(args[3]);if(amount<0||amount>maximum())throw new IllegalArgumentException("Amount must be 0-"+maximum());String other=getConfig().getString("schedule."+(action.equals("day")?"night":"day")+"-at",action.equals("day")?"20:00":"08:00");if(time.equals(LocalTime.parse(other)))throw new IllegalArgumentException("Day and night must start at different times");getConfig().set("schedule."+action+"-at",time.toString());getConfig().set("schedule."+action+"-amount",amount);}
+                        case "timezone"->{if(args.length!=3)throw new IllegalArgumentException("Use /beastbots schedule timezone <Area/City>");getConfig().set("schedule.timezone",ZoneId.of(args[2]).getId());}
+                        case "preview"->{if(args.length!=3)throw new IllegalArgumentException("Use /beastbots schedule preview <HH:mm>");sender.sendMessage("Scheduled target at "+args[2]+": "+Math.min(maximum(),scheduled(LocalTime.parse(args[2]))));return true;}
+                        case "status"->{}
+                        default->throw new IllegalArgumentException("/beastbots schedule on|off|status|day|night|preview|timezone");
+                    }
+                    saveConfig();updateDesired();reconcile();
+                    sender.sendMessage("Schedule "+(getConfig().getBoolean("schedule.enabled",false)?"ON":"OFF")+" ["+getConfig().getString("schedule.timezone","Europe/Vienna")+"] day "+getConfig().getString("schedule.day-at","08:00")+" -> "+getConfig().getInt("schedule.day-amount",40)+", night "+getConfig().getString("schedule.night-at","20:00")+" -> "+getConfig().getInt("schedule.night-amount",10)+"; current target="+target());
+                }catch(Exception e){sender.sendMessage("Schedule: "+e.getMessage());}return true;
+            }
             case "on","off","toggle"->{boolean enabled=sub.equals("toggle")?!getConfig().getBoolean("enabled",true):sub.equals("on");getConfig().set("enabled",enabled);saveConfig();updateDesired();reconcile();publishPresence();sender.sendMessage("BeastBots "+(enabled?"enabled (players appear over the next few seconds).":"disabled."));}
-            case "help"->sender.sendMessage("/beastbots on | off | toggle | add <Name> | remove <Name> | setamount <0-"+maximum()+"> | list | reload | status");
-            case "status"->{sender.sendMessage("BeastBots: simulated="+ours().size()+" desired="+desired.size()+" real backend players="+Bukkit.getOnlinePlayers().stream().filter(p->!manager.isFake(p)).count()+" invisible="+getConfig().getBoolean("bots.invisible",true));for(Player p:ours())sender.sendMessage(p.getName()+" UUID="+p.getUniqueId()+" online="+p.isOnline()+" invisible="+p.isInvisible()+" op="+p.isOp()+" view="+p.getViewDistance()+" simulation="+p.getSimulationDistance()+" afkExempt="+p.hasPermission("customlobby.afk.exempt")+" skin="+p.getPlayerProfile().getProperties().stream().anyMatch(v->v.getName().equals("textures")));}
+            case "help"->sender.sendMessage("/beastbots schedule on|off|status|day|night|preview|timezone | on | off | toggle | add <Name> | remove <Name> | setamount <0-"+maximum()+"> | list | reload | status");
+            case "status"->{sender.sendMessage("BeastBots: simulated="+ours().size()+" desired="+desired.size()+" real backend players="+Bukkit.getOnlinePlayers().stream().filter(p->!manager.isFake(p)).count()+" invisible="+getConfig().getBoolean("bots.invisible",true));for(Player p:ours())sender.sendMessage(p.getName()+" UUID="+p.getUniqueId()+" online="+p.isOnline()+" invisible="+p.isInvisible()+" collidable="+p.isCollidable()+" parked="+Math.round(p.getLocation().distance(spawn(p.getName())))+" op="+p.isOp()+" view="+p.getViewDistance()+" simulation="+p.getSimulationDistance()+" afkExempt="+p.hasPermission("customlobby.afk.exempt")+" skin="+p.getPlayerProfile().getProperties().stream().anyMatch(v->v.getName().equals("textures")));}
             case "list"->sender.sendMessage("Simulated players: "+String.join(", ",ours().stream().map(Player::getName).toList()));
             case "reload"->{reloadConfig();reserved.clear();updateDesired();for(Player p:ours())configure(p);reconcile();sender.sendMessage("BeastBots configuration reloaded.");}
-            case "setamount"->{try{int value=Integer.parseInt(args[1]);if(value<0||value>maximum())throw new IllegalArgumentException();getConfig().set("bots.amount",value);saveConfig();updateDesired();reconcile();sender.sendMessage("Simulated players: "+value);}catch(Exception error){sender.sendMessage("/beastbots setamount <0-"+maximum()+">");}}
+            case "setamount"->{try{int value=Integer.parseInt(args[1]);if(value<0||value>maximum())throw new IllegalArgumentException();getConfig().set("bots.amount",value);getConfig().set("schedule.enabled",false);saveConfig();updateDesired();reconcile();sender.sendMessage("Manual target: "+value+". Schedule disabled; /beastbots schedule on re-enables it.");}catch(Exception error){sender.sendMessage("/beastbots setamount <0-"+maximum()+">");}}
             case "add"->{if(args.length!=2||!args[1].matches("[A-Za-z0-9_]{3,16}")){sender.sendMessage("/beastbots add <name with 3-16 characters>");break;}List<String> list=new ArrayList<>(names());if(list.stream().anyMatch(n->n.equalsIgnoreCase(args[1]))){sender.sendMessage("Name is already configured.");break;}if(desired.size()>=maximum()){sender.sendMessage("Maximum count reached.");break;}list.add(Math.min(desired.size(),list.size()),args[1]);getConfig().set("bots.names",list);getConfig().set("bots.amount",Math.min(maximum(),desired.size()+1));saveConfig();updateDesired();reconcile();sender.sendMessage("Added: "+args[1]);}
             case "remove"->{if(args.length!=2){sender.sendMessage("/beastbots remove <Name>");break;}List<String> list=new ArrayList<>(names());if(!list.removeIf(n->n.equalsIgnoreCase(args[1]))){sender.sendMessage("Name not found.");break;}getConfig().set("bots.names",list);getConfig().set("bots.amount",Math.min(Math.max(0,desired.size()-(desired.contains(args[1].toLowerCase(Locale.ROOT))?1:0)),list.size()));saveConfig();updateDesired();reconcile();sender.sendMessage("Removed: "+args[1]);}
             default->sender.sendMessage("/beastbots help");
         }return true;
     }
-    public List<String> onTabComplete(CommandSender s,Command c,String a,String[] args){if(!s.hasPermission("beastbots.admin"))return List.of();if(args.length==1)return List.of("on","off","toggle","help","add","remove","setamount","list","reload","status").stream().filter(n->n.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();if(args.length==2&&args[0].equalsIgnoreCase("remove"))return names();return List.of();}
+    public List<String> onTabComplete(CommandSender s,Command c,String a,String[] args){if(!s.hasPermission("beastbots.admin"))return List.of();if(args.length==1)return List.of("schedule","on","off","toggle","help","add","remove","setamount","list","reload","status").stream().filter(n->n.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();if(args.length==2&&args[0].equalsIgnoreCase("schedule"))return List.of("on","off","status","day","night","preview","timezone");if(args.length==2&&args[0].equalsIgnoreCase("remove"))return names();return List.of();}
 }

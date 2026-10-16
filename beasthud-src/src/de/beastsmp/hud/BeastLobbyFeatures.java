@@ -22,11 +22,12 @@ import java.util.concurrent.ConcurrentHashMap;
 /** Lobby-only, per-player atmosphere, themed menus and BungeeCord navigation. */
 public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabCompleter, PluginMessageListener {
     enum Effect { AUTO, WINTER, HALLOWEEN, AUS }
-    enum Kind { HOME, SERVERS, EVENTS, EFFECTS, DESIGNS, SETTINGS }
+    enum Kind { HOME, SERVERS, EVENTS, EFFECTS, DESIGNS, SETTINGS, LANGUAGE, CHAT, DISPLAY, BOTS }
     static final class Menu implements InventoryHolder {
         final Kind kind;
         final Map<Integer,Runnable> actions = new HashMap<>();
         Inventory inventory;
+        boolean shifted;
         Menu(Kind kind){this.kind=kind;}
         public Inventory getInventory(){return inventory;}
     }
@@ -92,7 +93,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         preferences.put(p.getUniqueId(),effect);savePreferences();
         p.sendMessage(plugin.component(p,"Lobby effects: "+effectName(effect)+(effect==Effect.AUTO?" → "+effectName(effective(p)):""),theme(p).color));
         if(!globalEnabled&&effect!=Effect.AUS)p.sendMessage(plugin.component(p,"Lobby effects are currently disabled server-wide.",NamedTextColor.GRAY));
-        p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.25f,1.1f);
+        plugin.sound(p,Sound.UI_BUTTON_CLICK,.25f,1.1f);
     }
     private void savePreferences(){
         YamlConfiguration data=new YamlConfiguration();preferences.forEach((id,e)->data.set(id.toString(),e.name()));
@@ -127,21 +128,26 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     }
     private Component menuTitle(Player p,Kind kind){
         int season=switch(theme(p)){case HALLOWEEN->0;case STANDARD->1;case WEIHNACHTEN->2;};
-        int c=0xe100+season*24+kind.ordinal()*4;
+        int c=0xe100+season*40+kind.ordinal()*4;
         String glyph="\ue000"+(char)c+"\ue010"+(char)(c+1)+"\ue011"+(char)(c+2)+"\ue010"+(char)(c+3);
+        if(kind==Kind.CHAT||kind==Kind.DISPLAY){int mask=(plugin.profile(p.getUniqueId()).preferences>>(kind==Kind.DISPLAY?4:0))&15;int status=0xe600+mask*4;glyph+="\ue011"+(char)status+"\ue010"+(char)(status+1)+"\ue011"+(char)(status+2)+"\ue010"+(char)(status+3);}
+        if(kind==Kind.SETTINGS&&p.hasPermission("beastbots.admin"))glyph+="\ue011"+tiles(0xe700);
+        if(kind==Kind.BOTS){var bot=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");glyph+="\ue011"+tiles(0xe710+(bot!=null&&bot.getConfig().getBoolean("schedule.enabled",false)?4:0));}
         return plugin.component(p,glyph,NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:lobby_menu"));
     }
+    private String tiles(int c){return ""+(char)c+"\ue010"+(char)(c+1)+"\ue011"+(char)(c+2)+"\ue010"+(char)(c+3);}
     private Menu newMenu(Player p,Kind kind,String heading){
         Menu m=new Menu(kind);m.inventory=Bukkit.createInventory(m,54,menuTitle(p,kind));
         ItemStack filler=invisible(item(p,Material.PAPER," ",NamedTextColor.WHITE),false);
         for(int slot=0;slot<54;slot++)m.inventory.setItem(slot,filler.clone());
-        if(kind!=Kind.HOME)put(m,45,invisible(item(p,Material.PAPER,"Back to the Beast menu",NamedTextColor.WHITE),true),()->openHome(p));
+        if(kind==Kind.HOME)card(m,new int[]{45,46,47},item(p,Material.PAPER,"Events",theme(p).color),()->openEvents(p));
+        else put(m,45,invisible(item(p,Material.PAPER,"Back",NamedTextColor.WHITE),true),()->{if(Set.of(Kind.LANGUAGE,Kind.CHAT,Kind.DISPLAY,Kind.EFFECTS,Kind.BOTS).contains(kind))openSettings(p);else openHome(p);});
         put(m,49,invisible(item(p,Material.PAPER,"Close",NamedTextColor.RED),true),()->p.closeInventory());
-        if(kind!=Kind.HOME&&kind!=Kind.SETTINGS)put(m,53,invisible(item(p,Material.PAPER,"Settings",theme(p).color),true),()->openSettings(p));
+        if(Set.of(Kind.SERVERS,Kind.EVENTS,Kind.DESIGNS).contains(kind))put(m,53,invisible(item(p,Material.PAPER,"Settings",theme(p).color),true),()->openSettings(p));
         return m;
     }
     private void put(Menu m,int slot,ItemStack item,Runnable action){m.inventory.setItem(slot,item);m.actions.put(slot,action);}
-    private void card(Menu m,int[] slots,ItemStack stack,Runnable action){for(int slot:slots)put(m,slot,invisible(stack.clone(),m.kind!=Kind.HOME),action);}
+    private void card(Menu m,int[] slots,ItemStack stack,Runnable action){for(int slot:slots)put(m,slot,invisible(stack.clone(),!Set.of(Kind.HOME,Kind.SETTINGS,Kind.CHAT,Kind.DISPLAY).contains(m.kind)),action);}
     private int[] four(int card){
         int row=card/2==0?1:3,col=card%2==0?0:5;int[] result=new int[8];int i=0;
         for(int r=row;r<row+2;r++)for(int c=col;c<col+4;c++)result[i++]=r*9+c;return result;
@@ -149,17 +155,53 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     private int[] three(int card){int[] result=new int[12];int i=0;for(int r=1;r<=4;r++)for(int c=card*3;c<card*3+3;c++)result[i++]=r*9+c;return result;}
     void openSettings(Player p){
         Menu m=newMenu(p,Kind.SETTINGS,"Settings");
-        card(m,three(0),item(p,Material.PAPER,"English",NamedTextColor.AQUA,plugin.language(p).equals("en")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"en");openSettings(p);});
-        card(m,three(1),item(p,Material.PAPER,"German",NamedTextColor.GOLD,plugin.language(p).equals("de")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"de");openSettings(p);});
-        card(m,three(2),item(p,Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),()->openEffects(p));
+        card(m,four(0),item(p,Material.PAPER,"Language",theme(p).color,"English / German"),()->openLanguages(p));
+        card(m,four(1),item(p,Material.PAPER,"Chat settings",theme(p).color,"Choose which messages you see"),()->openPreferences(p,Kind.CHAT));
+        card(m,four(2),item(p,Material.PAPER,"Appearance",theme(p).color,"HUD, animations, sounds and welcome title"),()->openPreferences(p,Kind.DISPLAY));
+        card(m,four(3),item(p,Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),()->openEffects(p));
+        if(p.hasPermission("beastbots.admin"))card(m,new int[]{51,52,53},item(p,Material.PAPER,"Bot settings",theme(p).color),()->openBots(p));
         p.openInventory(m.inventory);
+    }
+    void openLanguages(Player p){
+        Menu m=newMenu(p,Kind.LANGUAGE,"Language");
+        card(m,three(0),item(p,Material.PAPER,"English",NamedTextColor.AQUA,plugin.language(p).equals("en")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"en");openLanguages(p);});
+        card(m,three(1),item(p,Material.PAPER,"German",NamedTextColor.GOLD,plugin.language(p).equals("de")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"de");openLanguages(p);});
+        card(m,three(2),item(p,Material.PAPER,"Back",NamedTextColor.WHITE),()->openSettings(p));p.openInventory(m.inventory);
+    }
+    void openPreferences(Player p,Kind kind){
+        Menu m=newMenu(p,kind,"Settings");int start=kind==Kind.CHAT?0:4;
+        for(int i=0;i<4;i++){PlayerSetting setting=PlayerSetting.values()[start+i];
+            card(m,four(i),item(p,Material.PAPER,setting.label,theme(p).color,plugin.enabled(p,setting)?"ON":"OFF","Click to toggle"),()->{plugin.toggle(p,setting);openPreferences(p,kind);});
+        }p.openInventory(m.inventory);
+    }
+    private int[] six(int card){int[] slots=new int[6];int k=0;for(int row=card<3?1:3;row<=(card<3?2:4);row++)for(int col=(card%3)*3;col<(card%3)*3+3;col++)slots[k++]=row*9+col;return slots;}
+    private void botCommand(Player p,String value){if(!p.hasPermission("beastbots.admin"))return;Bukkit.dispatchCommand(p,"beastbots "+value);openBots(p);}
+    private void botAmount(Player p,Menu m,String key){
+        var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null||!p.hasPermission("beastbots.admin"))return;var cfg=bots.getConfig();
+        int value=Math.max(0,Math.min(cfg.getInt("performance.max-active-players",250),cfg.getInt(key.equals("manual")?"bots.amount":"schedule."+key+"-amount",10)+(m.shifted?-10:10)));
+        botCommand(p,key.equals("manual")?"setamount "+value:"schedule "+key+" "+cfg.getString("schedule."+key+"-at",key.equals("day")?"08:00":"20:00")+" "+value);
+    }
+    private void botTime(Player p,Menu m,String key){
+        var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null||!p.hasPermission("beastbots.admin"))return;var cfg=bots.getConfig();
+        java.time.LocalTime time=java.time.LocalTime.parse(cfg.getString("schedule."+key+"-at",key.equals("day")?"08:00":"20:00")).plusHours(m.shifted?-1:1);
+        if(time.equals(java.time.LocalTime.parse(cfg.getString("schedule."+(key.equals("day")?"night":"day")+"-at",key.equals("day")?"20:00":"08:00"))))time=time.plusHours(m.shifted?-1:1);
+        botCommand(p,"schedule "+key+" "+time+" "+cfg.getInt("schedule."+key+"-amount",10));
+    }
+    void openBots(Player p){
+        if(!p.hasPermission("beastbots.admin"))return;var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null)return;var cfg=bots.getConfig();
+        Menu m=newMenu(p,Kind.BOTS,"Bot settings");String adjust="Click: +10 | Shift-click: -10";String time="Click: +1 hour | Shift-click: -1 hour";
+        card(m,six(0),item(p,Material.PAPER,"Schedule",theme(p).color,cfg.getBoolean("schedule.enabled",false)?"ON":"OFF",cfg.getString("schedule.timezone","Europe/Vienna"),"Click to toggle"),()->botCommand(p,"schedule "+(cfg.getBoolean("schedule.enabled",false)?"off":"on")));
+        card(m,six(1),item(p,Material.PAPER,"Manual amount",theme(p).color,"Current: "+cfg.getInt("bots.amount",40),adjust,"Disables the schedule"),()->botAmount(p,m,"manual"));
+        card(m,six(2),item(p,Material.PAPER,"Day amount",theme(p).color,"Current: "+cfg.getInt("schedule.day-amount",40),adjust),()->botAmount(p,m,"day"));
+        card(m,six(3),item(p,Material.PAPER,"Night amount",theme(p).color,"Current: "+cfg.getInt("schedule.night-amount",10),adjust),()->botAmount(p,m,"night"));
+        card(m,six(4),item(p,Material.PAPER,"Day starts",theme(p).color,cfg.getString("schedule.day-at","08:00"),time),()->botTime(p,m,"day"));
+        card(m,six(5),item(p,Material.PAPER,"Night starts",theme(p).color,cfg.getString("schedule.night-at","20:00"),time),()->botTime(p,m,"night"));p.openInventory(m.inventory);
     }
     void openHome(Player p){
         Menu m=newMenu(p,Kind.HOME,"Lobby menu");
-        card(m,four(0),item(p,Material.PAPER,"Server selection",theme(p).color,"Choose your destination on BeastSMP","With live server status"),()->openServers(p));
-        card(m,four(1),item(p,Material.PAPER,"Your design",theme(p).color,"Halloween · Standard · Christmas","Current: "+theme(p).label),()->openDesigns(p));
-        card(m,four(2),item(p,Material.PAPER,"Events",theme(p).color,"Pumpkin hunt and seasonal events","Your progress is saved"),()->openEvents(p));
-        card(m,four(3),item(p,Material.PAPER,"Settings",theme(p).color,"Choose your lobby language","Lobby effects"),()->openSettings(p));
+        card(m,three(0),item(p,Material.PAPER,"Server selection",theme(p).color,"Choose your destination on BeastSMP","With live server status"),()->openServers(p));
+        card(m,three(1),item(p,Material.PAPER,"Your design",theme(p).color,"Halloween · Standard · Christmas","Current: "+theme(p).label),()->openDesigns(p));
+        card(m,three(2),item(p,Material.PAPER,"Settings",theme(p).color,"Choose your lobby language","Lobby effects"),()->openSettings(p));
         p.openInventory(m.inventory);
     }
     void openDesigns(Player p){
@@ -180,7 +222,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     }
     private void connect(Player p,Destination destination){
         if(destination.name.equals("Lobby")){p.sendMessage(plugin.component(p,"You are already in the lobby.",theme(p).color));return;}
-        if(!Boolean.TRUE.equals(reachable.get(destination.name))){p.sendMessage(plugin.component(p,destination.label+" is currently unavailable.",NamedTextColor.RED));p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BASS,.3f,.8f);return;}
+        if(!Boolean.TRUE.equals(reachable.get(destination.name))){p.sendMessage(plugin.component(p,destination.label+" is currently unavailable.",NamedTextColor.RED));plugin.sound(p,Sound.BLOCK_NOTE_BLOCK_BASS,.3f,.8f);return;}
         p.closeInventory();p.sendMessage(plugin.component(p,"Connecting to "+destination.label+" …",theme(p).color));send(p,"Connect",destination.name);
     }
     void openEvents(Player p){
@@ -214,7 +256,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     @EventHandler(priority=EventPriority.HIGHEST) public void drop(PlayerDropItemEvent e){ItemMeta m=e.getItemDrop().getItemStack().getItemMeta();if(m!=null&&m.getPersistentDataContainer().has(menuKey,PersistentDataType.STRING))e.setCancelled(true);}
     @EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=false) public void click(InventoryClickEvent e){
         if(!(e.getView().getTopInventory().getHolder() instanceof Menu menu))return;e.setCancelled(true);if(!(e.getWhoClicked() instanceof Player p))return;
-        Runnable action=menu.actions.get(e.getRawSlot());if(action!=null)plugin.getServer().getScheduler().runTask(plugin,()->{if(p.isOnline()){p.playSound(p.getLocation(),Sound.UI_BUTTON_CLICK,.2f,1.1f);action.run();}});
+        Runnable action=menu.actions.get(e.getRawSlot());if(action!=null)plugin.getServer().getScheduler().runTask(plugin,()->{if(p.isOnline()){plugin.sound(p,Sound.UI_BUTTON_CLICK,.2f,1.1f);menu.shifted=e.isShiftClick();action.run();}});
     }
     @EventHandler public void drag(InventoryDragEvent e){if(e.getView().getTopInventory().getHolder() instanceof Menu)e.setCancelled(true);}
     private void requestCounts(){
@@ -255,7 +297,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         }
         if(!(sender instanceof Player p)){sender.sendMessage("Use this command in-game.");return true;}
         switch(command.getName()){
-            case "settings"->{if(args.length>0&&Set.of("en","de","english","german","deutsch").contains(args[0].toLowerCase(Locale.ROOT)))plugin.chooseLanguage(p,Set.of("de","german","deutsch").contains(args[0].toLowerCase(Locale.ROOT))?"de":"en");else openSettings(p);}
+            case "settings"->{if(args.length>0&&Set.of("chat","display","language","bots").contains(args[0].toLowerCase(Locale.ROOT))){switch(args[0].toLowerCase(Locale.ROOT)){case "chat"->openPreferences(p,Kind.CHAT);case "display"->openPreferences(p,Kind.DISPLAY);case "bots"->openBots(p);default->openLanguages(p);}return true;}if(args.length>0&&Set.of("en","de","english","german","deutsch").contains(args[0].toLowerCase(Locale.ROOT)))plugin.chooseLanguage(p,Set.of("de","german","deutsch").contains(args[0].toLowerCase(Locale.ROOT))?"de":"en");else openSettings(p);}
             case "beast"->openHome(p);
             case "serverauswahl"->openServers(p);
             case "events"->openEvents(p);
@@ -264,7 +306,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         return true;
     }
     @Override public List<String> onTabComplete(CommandSender sender,Command c,String label,String[] args){
-        if(c.getName().equals("settings")&&args.length==1)return List.of("en","de");
+        if(c.getName().equals("settings")&&args.length==1)return List.of("en","de","language","chat","display","bots");
         if((c.getName().equals("effekte")||c.getName().equals("lobbyeffekte"))&&args.length==1)return List.of("on","off","auto","winter","halloween","status").stream().filter(s->s.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();return List.of();
     }
 }

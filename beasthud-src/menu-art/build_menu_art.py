@@ -6,7 +6,7 @@ parser=argparse.ArgumentParser();parser.add_argument('repo',type=Path);parser.ad
 assets=repo/'plugins/BetterHud/assets'; out=Path(__file__).parent/'generated';out.mkdir(exist_ok=True)
 # A small pixel alphabet keeps menu labels legible at Minecraft's native GUI scale.
 glyphs={
-'A':['010','101','111','101','101'],'B':['110','101','110','101','110'],'C':['011','100','100','100','011'],'D':['110','101','101','101','110'],'E':['111','100','110','100','111'],'F':['111','100','110','100','100'],'G':['011','100','101','101','011'],'H':['101','101','111','101','101'],'I':['111','010','010','010','111'],'K':['101','101','110','101','101'],'L':['100','100','100','100','111'],'M':['10001','11011','10101','10101','10001'],'N':['1001','1101','1011','1001','1001'],'O':['010','101','101','101','010'],'P':['110','101','110','100','100'],'R':['110','101','110','101','101'],'S':['011','100','010','001','110'],'T':['111','010','010','010','010'],'U':['101','101','101','101','111'],'V':['101','101','101','101','010'],'W':['10101','10101','10101','11011','10001'],'X':['101','101','010','101','101'],'Y':['101','101','010','010','010'],'Z':['111','001','010','100','111'],' ':['00']*5}
+'A':['010','101','111','101','101'],'B':['110','101','110','101','110'],'C':['011','100','100','100','011'],'D':['110','101','101','101','110'],'E':['111','100','110','100','111'],'F':['111','100','110','100','100'],'G':['011','100','101','101','011'],'H':['101','101','111','101','101'],'I':['111','010','010','010','111'],'J':['001','001','001','101','010'],'K':['101','101','110','101','101'],'L':['100','100','100','100','111'],'M':['10001','11011','10101','10101','10001'],'N':['1001','1101','1011','1001','1001'],'O':['010','101','101','101','010'],'P':['110','101','110','100','100'],'R':['110','101','110','101','101'],'S':['011','100','010','001','110'],'T':['111','010','010','010','010'],'U':['101','101','101','101','111'],'V':['101','101','101','101','010'],'W':['10101','10101','10101','11011','10001'],'X':['101','101','010','101','101'],'Y':['101','101','010','010','010'],'Z':['111','001','010','100','111'],' ':['00']*5}
 native={}
 if args.client_jar:
  with zipfile.ZipFile(args.client_jar) as jar:
@@ -46,7 +46,7 @@ def logo(theme):
  f={'halloween':'beast_halloween_header.png','standard':'beast_standard_header.png','winter':'beast_winter_header.png'}[theme]
  im=Image.open(assets/f).convert('RGBA');return im.crop(im.getbbox())
 for season,(theme,accent,light) in enumerate([('halloween','#a72cdd','#f5b041'),('standard','#29a7ef','#9ff3ff'),('winter','#75dce9','#edffff')]):
- for kind,heading in enumerate(['LOBBY','SERVER','EVENTS','EFFECTS','DESIGNS','SETTINGS']):
+ for kind,heading in enumerate(['LOBBY','SERVER','EVENTS','EFFECTS','DESIGNS','SETTINGS','LANGUAGE','CHAT','DISPLAY','BOTS']):
   if args.language=='de':heading={'EFFECTS':'EFFEKTE','SETTINGS':'SPRACHE'}.get(heading,heading)
   base=Image.new('RGBA',(256,256));d=ImageDraw.Draw(base)
   d.rectangle((0,0,175,221),fill='#090c16');d.rectangle((4,4,171,129),fill='#111323',outline='#37344c')
@@ -58,30 +58,38 @@ for season,(theme,accent,light) in enumerate([('halloween','#a72cdd','#f5b041'),
     d.rectangle((x-1,y-1,x+16,y+16),fill='#536277');d.line((x-1,y-1,x+16,y-1),fill='#334254');d.line((x-1,y-1,x-1,y+16),fill='#334254');d.line((x,y+16,x+16,y+16),fill='#d4deeb')
   # Illustrated cards: generous image area, restrained frame, captions with native pixel lettering.
   layouts=[]
-  if kind in [0,3]:
-   labels=['SERVERS','DESIGNS','EVENTS','SETTINGS'] if kind==0 else ['AUTO','SNOW','FOG','OFF']
-   if args.language=='de':labels=[{'EFFECTS':'EFFEKTE','SNOW':'SCHNEE','FOG':'NEBEL','OFF':'AUS','PUMPKINS':'KUERBISSE','ENGLISH':'ENGLISCH','GERMAN':'DEUTSCH','BACK':'ZURUECK','SETTINGS':'OPTIONEN','SERVERS':'SERVER'}.get(v,v) for v in labels]
+  if kind==9:
+   labels=['SCHEDULE','MANUAL','DAY','NIGHT','DAYTIME','NIGHTTIME'] if args.language=='en' else ['ZEITPLAN','MANUELL','TAG','NACHT','TAGZEIT','NACHTZEIT']
    for i,label in enumerate(labels):
-    x=8 if i%2==0 else 98;y=38 if i<2 else 74;w=72;h=34
+    x=8+(i%3)*54;y=42 if i<3 else 78;w=52;h=36
     d.rectangle((x-1,y-1,x+w,y+h),fill='#050710');d.rectangle((x,y,x+w-1,y+h-1),fill='#1a1b31',outline=accent);d.line((x+2,y+1,x+w-3,y+1),fill=light)
-    caption(base,label,x+w//2,y+24,'#ffffff');layouts.append((i,(x+4,y+2,w-8,21)))
+    caption(base,label,x+w//2,y+26,'#ffffff',50);layouts.append((i,(x+2,y+2,w-4,23)))
+  elif kind in [3,5,7,8]:
+   labels={3:['AUTO','SNOW','FOG','OFF'],5:['LANGUAGE','CHAT','DISPLAY','EFFECTS'],7:['CHAT','JOINS','TIPS','WELCOME'],8:['HUD','SYMBOLS','SOUNDS','TITLE']}[kind]
+   if args.language=='de':labels=[{'EFFECTS':'EFFEKTE','SNOW':'SCHNEE','FOG':'NEBEL','OFF':'AUS','PUMPKINS':'KUERBISSE','ENGLISH':'ENGLISCH','GERMAN':'DEUTSCH','BACK':'ZURUECK','SETTINGS':'OPTIONEN','SERVERS':'SERVER','LANGUAGE':'SPRACHE','DISPLAY':'ANZEIGE','JOINS':'BEITRITT','TIPS':'TIPPS','WELCOME':'WILLKOMMEN','ANIMATIONS':'ANIMATION','SYMBOLS':'SYMBOLE','TITLE':'TITEL'}.get(v,v) for v in labels]
+   for i,label in enumerate(labels):
+    x=8 if i%2==0 else 98;y=42 if i<2 else 78;w=72;h=36
+    d.rectangle((x-1,y-1,x+w,y+h),fill='#050710');d.rectangle((x,y,x+w-1,y+h-1),fill='#1a1b31',outline=accent);d.line((x+2,y+1,x+w-3,y+1),fill=light)
+    caption(base,label,x+w//2,y+26,'#ffffff');layouts.append((i,(x+4,y+2,w-8,23)))
   else:
-   labels={1:['BEASTSMP','SMP','LOBBY'],2:['PUMPKINS','DESIGNS','WINTER'],4:['HALLOWEEN','STANDARD','WINTER'],5:['ENGLISH','GERMAN','EFFECTS']}[kind]
-   if args.language=='de':labels=[{'EFFECTS':'EFFEKTE','SNOW':'SCHNEE','FOG':'NEBEL','OFF':'AUS','PUMPKINS':'KUERBISSE','ENGLISH':'ENGLISCH','GERMAN':'DEUTSCH','BACK':'ZURUECK','SETTINGS':'OPTIONEN','SERVERS':'SERVER'}.get(v,v) for v in labels]
+   labels={0:['SERVERS','DESIGNS','SETTINGS'],1:['BEASTSMP','SMP','LOBBY'],2:['PUMPKINS','DESIGNS','WINTER'],4:['HALLOWEEN','STANDARD','WINTER'],6:['ENGLISH','GERMAN','BACK']}[kind]
+   if args.language=='de':labels=[{'EFFECTS':'EFFEKTE','SNOW':'SCHNEE','FOG':'NEBEL','OFF':'AUS','PUMPKINS':'KUERBISSE','ENGLISH':'ENGLISCH','GERMAN':'DEUTSCH','BACK':'ZURUECK','SETTINGS':'OPTIONEN','SERVERS':'SERVER','LANGUAGE':'SPRACHE','DISPLAY':'ANZEIGE','JOINS':'BEITRITT','TIPS':'TIPPS','WELCOME':'WILLKOMMEN','ANIMATIONS':'ANIMATION','SYMBOLS':'SYMBOLE','TITLE':'TITEL'}.get(v,v) for v in labels]
    for i,label in enumerate(labels):
-    x=8+i*55;y=40;w=50;h=66
+    x=8+i*54;y=42;w=52;h=72
     d.rectangle((x-1,y-1,x+w,y+h),fill='#050710');d.rectangle((x,y,x+w-1,y+h-1),fill='#1a1b31',outline=accent);d.line((x+2,y+1,x+w-3,y+1),fill=light)
-    caption(base,label,x+25,94,'#ffffff',46);layouts.append((i,(x+2,44,w-4,47)))
-  # Visible controls and inventory slots use the same coordinates.
-  if kind!=0:
-   d.rectangle((7,110,24,127),fill='#222039',outline=accent);d.line([(18,114),(12,119),(18,124)],fill=light,width=2);d.line((12,119,21,119),fill=light)
-  d.rectangle((79,110,97,127),fill='#4d1529',outline='#ef6388');caption(base,'X',88,115,'#ffffff')
-  if kind not in [0,5]:
-   d.rectangle((151,110,168,127),fill='#222039',outline=accent);caption(base,'S',160,115,light)
+    caption(base,label,x+26,104,'#ffffff',48);layouts.append((i,(x+2,44,w-4,52)))
+  # Home keeps Events; preference pages keep a real Back control.
+  if kind==0:
+   d.rectangle((7,114,61,130),fill='#222039',outline=accent);caption(base,'EVENTS',34,118,light)
+  else:
+   d.rectangle((7,114,24,130),fill='#222039',outline=accent);d.line([(18,118),(12,123),(18,128)],fill=light,width=2);d.line((12,123,21,123),fill=light)
+  d.rectangle((79,114,97,130),fill='#4d1529',outline='#ef6388');caption(base,'X',88,118,'#ffffff')
+  if kind in [1,2,4]:
+   d.rectangle((151,114,168,130),fill='#222039',outline=accent);caption(base,'S',160,118,light)
   shifted=Image.new('RGBA',(256,256));shifted.alpha_composite(base,(0,20));q=ImageDraw.Draw(shifted);q.rectangle((0,0,175,23),fill='#090c16');q.rectangle((4,4,171,25),fill='#111323');q.rectangle((3,22,172,25),fill='#111323');im=shifted.resize((512,512),Image.Resampling.NEAREST)
   for i,box in layouts:
    box=(box[0],box[1]+20,box[2],box[3])
-   if kind==0:src=motif(season,i if i<3 else 1)
+   if kind==0:src=motif(season,[0,1,3][i])
    elif kind==1:src=motif(season,0)
    elif kind==2:src=motif(0,2) if i==0 else motif(season,1) if i==1 else motif(2,2)
    elif kind==4:src=motif([0,1,2][i],0)
@@ -97,7 +105,29 @@ for season,(theme,accent,light) in enumerate([('halloween','#a72cdd','#f5b041'),
   for tile in range(4):
    tx=tile%2;ty=tile//2;part=im.crop((tx*256,ty*256,(tx+1)*256,(ty+1)*256));part.putpixel((255,255),(1,1,1,1))
    path=f'assets/beastsmp/textures/font/menu_{name}_{tile}.png';buf=io.BytesIO();part.save(buf,format='PNG');updates[path]=buf.getvalue()
-   providers.append({'type':'bitmap','file':f'beastsmp:font/menu_{name}_{tile}.png','height':128,'ascent':33-ty*128,'chars':[chr(0xe100+season*24+kind*4+tile)]})
+   providers.append({'type':'bitmap','file':f'beastsmp:font/menu_{name}_{tile}.png','height':128,'ascent':33-ty*128,'chars':[chr(0xe100+season*40+kind*4+tile)]})
+# Per-player ON/OFF badges overlay the four preference cards without changing click slots.
+for mask in range(16):
+ badge=Image.new('RGBA',(256,256));d=ImageDraw.Draw(badge)
+ for i in range(4):
+  x=16+(8 if i%2==0 else 98)+51;y=20+(42 if i<2 else 78)+3;on=bool(mask&(1<<i));label=('AN' if on else 'AUS') if args.language=='de' else ('ON' if on else 'OFF')
+  d.rectangle((x,y,x+19,y+10),fill='#205e3c' if on else '#6a2036',outline='#8aefb0' if on else '#ff9eb1');caption(badge,label,x+10,y+1,'#ffffff',18)
+ badge=badge.resize((512,512),Image.Resampling.NEAREST)
+ for tile in range(4):
+  tx=tile%2;ty=tile//2;part=badge.crop((tx*256,ty*256,(tx+1)*256,(ty+1)*256));part.putpixel((255,255),(1,1,1,1));buf=io.BytesIO();part.save(buf,format='PNG');path=f'assets/beastsmp/textures/font/menu_state_{mask}_{tile}.png';updates[path]=buf.getvalue()
+  providers.append({'type':'bitmap','file':f'beastsmp:font/menu_state_{mask}_{tile}.png','height':128,'ascent':33-ty*128,'chars':[chr(0xe600+mask*4+tile)]})
+# Admin-only footer and schedule indicator use transparent overlays.
+for name,code,state in [('admin',0xe700,None),('schedule_off',0xe710,False),('schedule_on',0xe714,True)]:
+ badge=Image.new('RGBA',(256,256));d=ImageDraw.Draw(badge)
+ if state is None:
+  d.rectangle((131,134,184,150),fill='#222039',outline='#ae73ec');caption(badge,'BOTS',158,138,'#ffffff')
+ else:
+  x=55;y=65;label=('AN' if state else 'AUS') if args.language=='de' else ('ON' if state else 'OFF')
+  d.rectangle((x,y,x+19,y+10),fill='#205e3c' if state else '#6a2036',outline='#8aefb0' if state else '#ff9eb1');caption(badge,label,x+10,y+1,'#ffffff',18)
+ badge=badge.resize((512,512),Image.Resampling.NEAREST)
+ for tile in range(4):
+  tx=tile%2;ty=tile//2;part=badge.crop((tx*256,ty*256,(tx+1)*256,(ty+1)*256));part.putpixel((255,255),(1,1,1,1));buf=io.BytesIO();part.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/menu_{name}_{tile}.png']=buf.getvalue()
+  providers.append({'type':'bitmap','file':f'beastsmp:font/menu_{name}_{tile}.png','height':128,'ascent':33-ty*128,'chars':[chr(code+tile)]})
 updates['assets/beastsmp/font/lobby_menu.json']=json.dumps({'providers':providers},ensure_ascii=False,indent=2).encode()
 blank=Image.new('RGBA',(16,16));buf=io.BytesIO();blank.save(buf,format='PNG')
 updates.update({'assets/beastsmp/textures/item/menu_blank.png':buf.getvalue(),'assets/beastsmp/models/item/menu_blank.json':json.dumps({'parent':'minecraft:item/generated','textures':{'layer0':'beastsmp:item/menu_blank'}}).encode(),'assets/beastsmp/items/menu_blank.json':json.dumps({'model':{'type':'minecraft:model','model':'beastsmp:item/menu_blank'}}).encode()})

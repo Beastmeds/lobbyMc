@@ -1,10 +1,10 @@
 # BeastBots 1.0.0
 
-Manages ten server-side players in the Lobby using FakePlayer-CE build14 and CommandAPI 12.1.0 Paper.
+Manages up to 250 configurable server-side players in the Lobby using FakePlayer-CE build14 and CommandAPI 12.1.0 Paper.
 Names are ordinary configurable aliases; entities are invisible, non-colliding, invulnerable and cannot
 pick up items. They have no OP rights, do not send chat, and do not mine, place blocks or run player commands.
 `Bukkit.getOnlinePlayers()` includes these simulated players. No Minecraft accounts or Bungee connections
-are created. Bungee's external online count remains the actual connected count.
+are created. BeastPresence adds the active simulated count to Bungee's real connections in the server list and HUD.
 
 ## Commands and configuration
 
@@ -13,13 +13,13 @@ All `/beastbots` commands require `beastbots.admin` (default OP; console allowed
 - `help`: usage.
 - `add <name>`: configure and activate a name (3–16 letters/digits/underscores).
 - `remove <name>`: remove it from the pool and reduce the active count when applicable.
-- `setamount <0–10>`: change active count; zero disables all managed players.
+- `setamount <0–250>`: change active count; zero disables all managed players.
 - `list`: active simulated players.
 - `reload`: reread configuration, update invisibility/TAB/range and reconcile the active set. Skin source changes apply on the next bot spawn.
 - `status`: show actual/simulated counts and online, invisible, OP and skin diagnostics.
 
 Runtime config: `plugins/BeastBots/config.yml`. All listed options are implemented.
-The configured maximum is hard-capped at 40 for bounded processing. Bots use two chunks of view/send/simulation distance; genuine players retain the server settings. Names used by existing real player
+The configured maximum is hard-capped at 250 for bounded processing. Bots use two chunks of view/send/simulation distance; genuine players retain the server settings. Names used by existing real player
 data are skipped. A real player connecting with a simulated name takes priority; the bot is removed.
 Skin sources are Minecraft profile names, independently configurable for each alias. Signed textures
 are fetched from Mojang and cached per source during a server run; failure leaves the default skin.
@@ -64,3 +64,11 @@ is unchanged; no proxy restart is needed.
 ## Current limits and AFK handling
 
 The configured cap is now 40, with a pool of 40 names and skin sources. The current amount remains ten. Managed bots receive only `customlobby.afk.exempt`; existing AFK state is cleared during configuration. Real-player AFK detection remains enabled.
+
+## Schedule and admin menu
+
+`/settings bots` (OP / `beastbots.admin`) opens the schedule, manual/day/night amount and start-time controls. Click adds 10 players or one hour; shift-click subtracts. Manual amount disables scheduling.
+
+`/beastbots schedule on|off|status`, `schedule day 08:00 40`, `schedule night 20:00 10`, `schedule timezone Europe/Vienna` and `schedule preview 21:00` configure or inspect the plan. The defaults use 40 during 08–20 and 10 otherwise, with Vienna daylight saving time. Creation remains limited to one per second.
+
+Managed players are parked 4096 blocks away on both horizontal axes; spawn teleports, collisions, damage and attack knockback are blocked for them. The 250-player cap is a configurable upper bound, not a benchmark of 250 simultaneously active players.

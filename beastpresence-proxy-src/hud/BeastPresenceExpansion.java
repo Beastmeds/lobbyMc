@@ -17,7 +17,7 @@ public final class BeastPresenceExpansion extends PlaceholderExpansion {
         try{
             var json=JsonParser.parseString(Files.readString(getPlaceholderAPI().getDataFolder().toPath().resolveSibling("BeastBots").resolve("presence.json"))).getAsJsonObject();
             long age=now-json.get("updated").getAsLong();
-            if(age>=0&&age<=15000)bots=Math.min(40,json.getAsJsonArray("players").size());
+            if(age>=0&&age<=15000)bots=Math.min(250,json.getAsJsonArray("players").size());
         }catch(Exception ignored){}
         return bots;
     }

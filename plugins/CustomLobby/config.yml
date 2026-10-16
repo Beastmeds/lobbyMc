@@ -130,7 +130,7 @@ afk:
 #   "&eType [&a/help](!/help) for all commands."
 #   "&7[&eClick here](/spawn :: &7Return to spawn!) to go back."
 announcements:
-  enabled: true
+  enabled: false
   interval: 300
   random: false
   prefix: '&8[&6Announcement&8] &r'
@@ -266,7 +266,7 @@ join-quit:
     message: '&8[&a+&8] &7{player}'
     broadcast: true
     title:
-      enabled: true
+      enabled: false
       title: '&6Welcome back!'
       subtitle: '&e{player}'
       fade-in: 20

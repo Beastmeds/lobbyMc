@@ -27,7 +27,7 @@ public final class BeastPresence extends Plugin implements Listener {
             long updated=json.get("updated").getAsLong();List<ServerPing.PlayerInfo> players=new ArrayList<>();Set<UUID> seen=new HashSet<>();
             for(JsonElement item:json.getAsJsonArray("players")){
                 var p=item.getAsJsonObject();String name=p.get("name").getAsString();UUID id=UUID.fromString(p.get("uuid").getAsString());
-                if(name.matches("[A-Za-z0-9_]{3,16}")&&seen.add(id)&&players.size()<40)players.add(new ServerPing.PlayerInfo(name,id));
+                if(name.matches("[A-Za-z0-9_]{3,16}")&&seen.add(id)&&players.size()<250)players.add(new ServerPing.PlayerInfo(name,id));
             }
             snapshot=new Snapshot(updated,List.copyOf(players));
         }catch(Exception e){snapshot=new Snapshot(0,List.of());}
