@@ -8,3 +8,7 @@ Build with Java 25: `bash build.sh` (uses `/root/Bungeecord/BungeeCord.jar`). In
 `/beastbots on`, `/beastbots off`, and `/beastbots toggle` require `beastbots.admin` (operators by default). They persist `enabled`, preserve the configured amount and names, and update the public count. Creation runs at most one player per second. `setamount`, `add`, `remove`, `reload`, `list` and `status` remain available.
 
 Validation: isolated Bungee ping with ten fixture players, expired/empty snapshot returning zero; production public ping with one real connection showed 11 → 1 → 11 after off/on.
+
+## HUD player count
+
+The standalone PlaceholderAPI expansion in `hud/BeastPresenceExpansion.java` provides `%beastpresence_online%` (real proxy connections plus active managed bots) and `%beastpresence_bots%`. It uses the same one-second cached, atomic presence snapshot and rejects data older than 15 seconds. Build with `bash build-hud.sh`, install `dist/Expansion-BeastPresence.jar` in `plugins/PlaceholderAPI/expansions/`, then run `/papi reload`. All three HUD layouts use the combined count. Live validation: one real connection with ten bots returned 11, with nine bots returned 10, and back to ten returned 11.
