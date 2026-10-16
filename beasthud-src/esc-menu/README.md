@@ -1,19 +1,25 @@
-# BeastSMP ESC menu
+# BeastSMP seasonal ESC menu
 
-The resource pack reskins vanilla button sprites and overrides `menu.game` and `menu.disconnect`
-with bitmap glyphs. The normal Minecraft button actions remain intact. The default design is Halloween.
-The farewell art is original generated artwork. German and English text is rendered with the client's
-native ASCII font, extracted only during generation.
+All three variants follow the saved `/design` selection: Halloween, Standard and Weihnachten.
+Each farewell graphic has 512x172 source pixels at a displayed width of 256 GUI pixels.
+The image uses two 256px font tiles at half scale, providing four times as many image pixels
+as the previous version. German and English labels remain at their normal displayed size.
 
-Regenerate from the repository root with Pillow:
+Generate with Pillow from the repository root:
 
 ```
 python3 beasthud-src/esc-menu/build_esc_menu.py . --client-jar /path/to/26.2.jar
 ```
 
-This updates `plugins/BetterHud/beastsmp-base.zip`, merged by BetterHUD into its hosted pack.
-The standalone `server.properties` resource pack URL is deliberately empty to avoid a second download.
-Reload BetterHUD after regeneration; restart the server when changing server.properties.
+Outputs:
+- `plugins/BetterHud/beastsmp-base.zip`: shared font definitions and default Halloween skin.
+- `plugins/BeastHudThemes/esc-themes/*.zip`: theme-specific image and button overrides.
 
-Menu labels are images, so their visual language is supplied in German and English. Other languages
-fall back to English. Vanilla buttons and all inventory menus share the purple widget texture.
+BetterHUD still builds `plugins/BetterHud/build.zip`, but `enable-self-host: false` disables
+its own sender and HTTP listener. `BeastThemePacks` merges that build with each skin and hosts
+complete hashed packs on port 8163. Only the chosen complete pack is sent, using a stable pack UUID.
+The legacy standalone `server.properties` pack URL stays empty. Switching design necessarily
+reloads Minecraft's resources; declined packs are not repeatedly requested during the session.
+
+On a BetterHUD reload the theme packs are rebuilt automatically. Restart the Lobby when changing
+Java code or the host configuration. Generated full packs live only in memory and are not committed.

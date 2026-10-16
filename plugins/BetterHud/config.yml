@@ -15,7 +15,7 @@ disable-to-bedrock-player: true
 build-folder-location: BetterHud/build
 pack-type: zip
 enable-protection: false
-enable-self-host: true
+enable-self-host: false
 force-update: false
 self-host-ip: 82.165.71.206
 self-host-port: 8163

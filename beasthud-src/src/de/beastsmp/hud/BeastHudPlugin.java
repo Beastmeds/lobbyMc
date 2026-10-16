@@ -60,6 +60,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     private PlaceholderExpansion expansion;
     private int questTotal=10;
     private BeastLobbyFeatures lobbyFeatures;
+    private BeastThemePacks themePacks;
 
     @Override public void onEnable(){
         saveDefaultConfig(); questTotal=getConfig().getInt("quest-count",10);
@@ -79,6 +80,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
             }
         };expansion.register();
         lobbyFeatures=new BeastLobbyFeatures(this);lobbyFeatures.enable();
+        themePacks=new BeastThemePacks(this);themePacks.enable();
         getServer().getScheduler().runTaskLater(this,()->{
             createQuest();for(Player p:Bukkit.getOnlinePlayers())apply(p,false);
         },40L);
@@ -92,6 +94,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         getLogger().info("Three HUD designs, personal greetings and a "+questTotal+"-pumpkin quest enabled.");
     }
     @Override public void onDisable(){
+        if(themePacks!=null)themePacks.disable();
         if(lobbyFeatures!=null)lobbyFeatures.disable();
         savePlayers();bars.values().forEach(BossBar::removeAll);bars.clear();
         for(Pumpkin p:pumpkins){p.display.remove();p.hitbox.remove();}pumpkins.clear();
@@ -119,6 +122,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         BossBar bar=Bukkit.createBossBar("BeastSMP",data.theme.bar,BarStyle.SOLID);bar.setProgress(1.0);bar.setVisible(false);bar.addPlayer(p);bars.put(p.getUniqueId(),bar);
         data.nextEffect=System.currentTimeMillis()+ThreadLocalRandom.current().nextLong(18000,30001);
         updateVisibility(p);
+        if(themePacks!=null)themePacks.send(p);
         if(welcome)greet(p);
     }
     private void showEffect(Player p){
@@ -134,12 +138,13 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         showEffect(p);
         p.playSound(p.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_CHIME,.35f,1.2f);
     }
-    @EventHandler public void reloaded(PluginReloadedEvent event){getServer().getScheduler().runTaskLater(this,()->{for(Player p:Bukkit.getOnlinePlayers())apply(p,false);},20L);}
+    @EventHandler public void reloaded(PluginReloadedEvent event){getServer().getScheduler().runTask(this,()->{if(themePacks!=null)themePacks.rebuild();});getServer().getScheduler().runTaskLater(this,()->{for(Player p:Bukkit.getOnlinePlayers())apply(p,false);},20L);}
     @EventHandler public void join(PlayerJoinEvent e){
         profile(e.getPlayer().getUniqueId());
         getServer().getScheduler().runTaskLater(this,()->{if(e.getPlayer().isOnline())apply(e.getPlayer(),true);},70L);
     }
     @EventHandler public void quit(PlayerQuitEvent e){
+        if(themePacks!=null)themePacks.forget(e.getPlayer());
         BossBar b=bars.remove(e.getPlayer().getUniqueId());if(b!=null)b.removeAll();savePlayers();
     }
     void menu(Player p){lobbyFeatures.openDesigns(p);}
