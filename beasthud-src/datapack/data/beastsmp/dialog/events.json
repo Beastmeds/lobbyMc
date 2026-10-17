@@ -22,11 +22,11 @@
       ]
     }
   },
-  "columns": 3,
+  "columns": 2,
   "actions": [
     {
       "label": {
-        "text": "",
+        "text": "",
         "font": "beastsmp:dialog_menu",
         "extra": [
           {
@@ -34,21 +34,21 @@
             "font": "minecraft:default"
           },
           {
-            "translate": "beastsmp.menu.pumpkins",
-            "font": "beastsmp:dialog_text",
+            "translate": "beastsmp.menu.servers",
+            "font": "minecraft:default",
             "color": "white"
           }
         ]
       },
-      "width": 140,
+      "width": 210,
       "action": {
-        "type": "minecraft:custom",
-        "id": "beastsmp:events/pumpkins"
+        "type": "minecraft:run_command",
+        "command": "/serverauswahl"
       }
     },
     {
       "label": {
-        "text": "",
+        "text": "",
         "font": "beastsmp:dialog_menu",
         "extra": [
           {
@@ -56,21 +56,21 @@
             "font": "minecraft:default"
           },
           {
-            "translate": "beastsmp.menu.designs",
-            "font": "beastsmp:dialog_text",
+            "translate": "beastsmp.menu.your_design",
+            "font": "minecraft:default",
             "color": "white"
           }
         ]
       },
-      "width": 140,
+      "width": 210,
       "action": {
-        "type": "minecraft:custom",
-        "id": "beastsmp:events/designs"
+        "type": "minecraft:run_command",
+        "command": "/design"
       }
     },
     {
       "label": {
-        "text": "",
+        "text": "",
         "font": "beastsmp:dialog_menu",
         "extra": [
           {
@@ -78,16 +78,38 @@
             "font": "minecraft:default"
           },
           {
-            "translate": "beastsmp.menu.christmas",
-            "font": "beastsmp:dialog_text",
+            "translate": "beastsmp.menu.settings",
+            "font": "minecraft:default",
             "color": "white"
           }
         ]
       },
-      "width": 140,
+      "width": 210,
       "action": {
-        "type": "minecraft:custom",
-        "id": "beastsmp:events/christmas"
+        "type": "minecraft:run_command",
+        "command": "/settings"
+      }
+    },
+    {
+      "label": {
+        "text": "",
+        "font": "beastsmp:dialog_menu",
+        "extra": [
+          {
+            "text": "  ",
+            "font": "minecraft:default"
+          },
+          {
+            "translate": "beastsmp.menu.event_list",
+            "font": "minecraft:default",
+            "color": "white"
+          }
+        ]
+      },
+      "width": 210,
+      "action": {
+        "type": "minecraft:run_command",
+        "command": "/events"
       }
     }
   ],
