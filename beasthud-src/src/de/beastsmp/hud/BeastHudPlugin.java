@@ -63,6 +63,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
     private int questTotal=10;
     private BeastLobbyFeatures lobbyFeatures;
     private BeastThemePacks themePacks;
+    BeastSocialFeatures social;
 
     @Override public void onEnable(){
         saveDefaultConfig(); questTotal=getConfig().getInt("quest-count",10);
@@ -85,6 +86,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
             }
         };expansion.register();
         lobbyFeatures=new BeastLobbyFeatures(this);lobbyFeatures.enable();new BeastChatPreferences(this).enable();
+        social=new BeastSocialFeatures(this);social.enable();
         themePacks=new BeastThemePacks(this);themePacks.enable();
         getServer().getScheduler().runTaskLater(this,()->{
             createQuest();for(Player p:Bukkit.getOnlinePlayers())apply(p,false);
@@ -100,6 +102,7 @@ public final class BeastHudPlugin extends JavaPlugin implements Listener, Comman
         getLogger().info("Three HUD designs, personal greetings and a "+questTotal+"-pumpkin quest enabled.");
     }
     @Override public void onDisable(){
+        if(social!=null)social.disable();
         if(themePacks!=null)themePacks.disable();
         if(lobbyFeatures!=null)lobbyFeatures.disable();
         savePlayers();bars.values().forEach(BossBar::removeAll);bars.clear();

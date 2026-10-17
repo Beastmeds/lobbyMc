@@ -6,6 +6,12 @@ depend: [BetterHud, PlaceholderAPI]
 author: BeastSMP
 description: Personal HUD designs, seasonal greetings and the lobby pumpkin hunt.
 commands:
+  profile:
+    description: Your BeastSMP player profile
+    aliases: [profil, spielerprofil]
+  pet:
+    description: Choose your visible lobby companion
+    aliases: [companion, companions, begleiter, pets]
   settings:
     description: Personal BeastSMP language settings
   design:

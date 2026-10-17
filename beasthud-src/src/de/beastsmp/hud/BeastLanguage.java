@@ -2,6 +2,8 @@ package de.beastsmp.hud;
 import java.util.*;
 final class BeastLanguage {
     private static final Map<String,String> DE=Map.ofEntries(
+        Map.entry("Player profile","Spielerprofil"),
+        Map.entry("Companions","Begleiter"),
         Map.entry("Bot settings","Bot-Einstellungen"),
         Map.entry("Decrease values (−10 / −1 hour)","Werte verringern (−10 / −1 Stunde)"),
         Map.entry("Click: +10 | Decrease values: -10","Klick: +10 | Werte verringern: -10"),

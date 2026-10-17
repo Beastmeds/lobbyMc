@@ -144,6 +144,10 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         for(int slot=0;slot<54;slot++)m.inventory.setItem(slot,filler.clone());
         if(kind==Kind.HOME)card(m,new int[]{45,46,47},item(p,Material.PAPER,"Events",theme(p).color),()->openEvents(p));
         else put(m,45,invisible(item(p,Material.PAPER,"Back",NamedTextColor.WHITE),true),()->{if(Set.of(Kind.LANGUAGE,Kind.CHAT,Kind.DISPLAY,Kind.EFFECTS,Kind.BOTS).contains(kind))openSettings(p);else openHome(p);});
+        if(kind==Kind.HOME){
+            put(m,46,item(p,Material.PAPER,"Player profile",NamedTextColor.WHITE),()->plugin.social.profile(p));
+            put(m,47,item(p,Material.PAPER,"Companions",NamedTextColor.WHITE),()->plugin.social.pets(p));
+        }
         put(m,49,invisible(item(p,Material.PAPER,"Close",NamedTextColor.RED),true),()->p.closeInventory());
         if(Set.of(Kind.SERVERS,Kind.EVENTS,Kind.DESIGNS).contains(kind))put(m,53,invisible(item(p,Material.PAPER,"Settings",theme(p).color),true),()->openSettings(p));
         return m;

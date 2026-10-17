@@ -111,6 +111,28 @@
         "type": "minecraft:run_command",
         "command": "/events"
       }
+    },
+    {
+      "label": {
+        "translate": "beastsmp.menu.profile",
+        "color": "white"
+      },
+      "width": 210,
+      "action": {
+        "type": "minecraft:run_command",
+        "command": "/profile"
+      }
+    },
+    {
+      "label": {
+        "translate": "beastsmp.menu.companions",
+        "color": "white"
+      },
+      "width": 210,
+      "action": {
+        "type": "minecraft:run_command",
+        "command": "/pet"
+      }
     }
   ],
   "exit_action": {
