@@ -60,6 +60,6 @@ Menus now use Paper dialogs, with a wide seasonal Beast banner, illustrated acti
 
 ## Compact layout and Events access
 
-Home uses four equal 210-pixel buttons in two columns: Servers/Designs above Settings/Events, placing Events at the bottom right. Other two-column menus use 210 pixels, three-column menus 140. Text uses the native Minecraft font size; icons use integer pixel scaling. The seasonal banner is 384×88 GUI pixels. Button textures are neutral charcoal without purple outlines or stripes.
+Home uses four equal 210-pixel buttons in two columns: Servers/Designs above Settings/Events, placing Events at the bottom right. Other two-column menus use 210 pixels, three-column menus 140. Text uses the native Minecraft font size; buttons use small 10-pixel server/palette/gear symbols instead of illustrations. The seasonal banner is 384×88 GUI pixels without the yellow bottom line. Button textures are neutral charcoal without purple outlines or stripes.
 
 The bundled `datapack/` also registers `beastsmp:events` in `minecraft:pause_screen_additions`. Install its contents in `world/datapacks/beastsmp-menu/` before restarting. Minecraft chooses the ESC entry position. Event handlers accept only the exact public identifiers. Required packs supply the selected theme and English/German captions. `/events` remains available.
