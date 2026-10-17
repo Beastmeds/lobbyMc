@@ -10,13 +10,13 @@
   "after_action": "close",
   "body": {
     "type": "minecraft:plain_message",
-    "width": 560,
+    "width": 440,
     "contents": {
       "text": "",
       "font": "beastsmp:dialog_menu",
       "extra": [
         {
-          "text": "\n\n\n\n\n\n\n\n\n\n\n\n",
+          "text": "\n\n\n\n\n\n\n\n\n\n",
           "font": "minecraft:default"
         }
       ]
@@ -40,7 +40,7 @@
           }
         ]
       },
-      "width": 184,
+      "width": 140,
       "action": {
         "type": "minecraft:custom",
         "id": "beastsmp:events/pumpkins"
@@ -62,7 +62,7 @@
           }
         ]
       },
-      "width": 184,
+      "width": 140,
       "action": {
         "type": "minecraft:custom",
         "id": "beastsmp:events/designs"
@@ -84,7 +84,7 @@
           }
         ]
       },
-      "width": 184,
+      "width": 140,
       "action": {
         "type": "minecraft:custom",
         "id": "beastsmp:events/christmas"
@@ -96,6 +96,6 @@
       "translate": "beastsmp.menu.close",
       "color": "red"
     },
-    "width": 184
+    "width": 140
   }
 }

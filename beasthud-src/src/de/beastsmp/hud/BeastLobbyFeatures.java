@@ -152,19 +152,19 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         if(!plugin.getConfig().getBoolean("menus.dialog",true)){p.openInventory(menu.inventory);return;}
         if(menu.kind==Kind.BOTS&&!p.isOp())return;
         dialogs.put(p.getUniqueId(),menu);
-        int columns=Set.of(Kind.EFFECTS,Kind.SETTINGS,Kind.CHAT,Kind.DISPLAY).contains(menu.kind)?2:3;
-        int width=columns==2?276:184;
+        int columns=Set.of(Kind.HOME,Kind.EFFECTS,Kind.SETTINGS,Kind.CHAT,Kind.DISPLAY).contains(menu.kind)?2:3;
+        int width=columns==2?210:140;
         List<io.papermc.paper.registry.data.dialog.ActionButton> buttons=new ArrayList<>();
         Set<Runnable> seen=Collections.newSetFromMap(new IdentityHashMap<>());
         for(var entry:menu.actions.entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()){
-            int slot=entry.getKey();Runnable action=entry.getValue();if(slot==49||menu.kind==Kind.HOME&&slot>=45||menu.kind==Kind.LANGUAGE&&slot==45||!seen.add(action))continue;
+            int slot=entry.getKey();Runnable action=entry.getValue();if(slot==49||menu.kind==Kind.LANGUAGE&&slot==45||!seen.add(action))continue;
             ItemStack stack=menu.inventory.getItem(slot);if(stack==null)continue;ItemMeta meta=stack.getItemMeta();
-            Component label=(meta.displayName()==null?Component.empty():meta.displayName()).color(NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:dialog_text"));
+            Component label=(meta.displayName()==null?Component.empty():meta.displayName()).color(NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("minecraft:default"));
             List<Component> lore=meta.lore();Component tooltip=Component.empty();
             if(lore!=null)for(Component line:lore)tooltip=tooltip.append(line).append(Component.newline());
             if(slot<45&&(menu.kind==Kind.CHAT||menu.kind==Kind.DISPLAY)){int index=(slot<27?0:2)+(slot%9>=5?1:0)+(menu.kind==Kind.DISPLAY?4:0);boolean on=plugin.enabled(p,PlayerSetting.values()[index]);label=label.append(Component.text(on?"  ● ON":"  ○ OFF",on?NamedTextColor.GREEN:NamedTextColor.RED));}
             int seasonIcon=switch(theme(p)){case HALLOWEEN->0;case STANDARD->1;case WEIHNACHTEN->2;};
-            if(slot<45){int icon=(slot%9)/3;label=Component.text(""+(char)(0xe900+seasonIcon*4+icon),NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:dialog_menu")).append(Component.text("  ").font(net.kyori.adventure.key.Key.key("minecraft:default"))).append(label.font(net.kyori.adventure.key.Key.key("beastsmp:dialog_text")));}
+            if(slot<45){int icon=(slot%9)/3;label=Component.text(""+(char)(0xe900+seasonIcon*4+icon),NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:dialog_menu")).append(Component.text("  ").font(net.kyori.adventure.key.Key.key("minecraft:default"))).append(label.font(net.kyori.adventure.key.Key.key("minecraft:default")));}
             if(menu.kind==Kind.BOTS&&slot<45){var bot=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bot!=null){var cfg=bot.getConfig();String value=switch(slot){case 9->cfg.getBoolean("schedule.enabled")?"ON":"OFF";case 12->""+cfg.getInt("bots.amount");case 15->""+cfg.getInt("schedule.day-amount");case 27->""+cfg.getInt("schedule.night-amount");case 30->cfg.getString("schedule.day-at");case 33->cfg.getString("schedule.night-at");default->"";};label=label.append(Component.text(" · "+value,NamedTextColor.GOLD).font(net.kyori.adventure.key.Key.key("minecraft:default")));}}
             final Runnable selected=action;
             buttons.add(io.papermc.paper.registry.data.dialog.ActionButton.builder(label).width(width).tooltip(tooltip)
@@ -177,12 +177,12 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         int season=switch(theme(p)){case HALLOWEEN->0;case STANDARD->1;case WEIHNACHTEN->2;};
         Component banner=Component.text(""+(char)(0xe800+season*4)+"\ue010"+(char)(0xe801+season*4)+"\ue010"+(char)(0xe802+season*4)+"\ue010"+(char)(0xe803+season*4),NamedTextColor.WHITE)
             .font(net.kyori.adventure.key.Key.key("beastsmp:dialog_menu"));
-        Component art=banner.append(Component.text("\n".repeat(12)).font(net.kyori.adventure.key.Key.key("minecraft:default")));
+        Component art=banner.append(Component.text("\n".repeat(10)).font(net.kyori.adventure.key.Key.key("minecraft:default")));
         var base=io.papermc.paper.registry.data.dialog.DialogBase.builder(plugin.component(p,menu.kind==Kind.HOME?"Lobby menu":switch(menu.kind){case BOTS->"Bot settings";case SERVERS->"Server selection";default->menu.kind.name().charAt(0)+menu.kind.name().substring(1).toLowerCase(Locale.ROOT);},theme(p).color))
             .canCloseWithEscape(true).afterAction(io.papermc.paper.registry.data.dialog.DialogBase.DialogAfterAction.CLOSE)
-            .body(List.of(io.papermc.paper.registry.data.dialog.body.DialogBody.plainMessage(art,560)));
+            .body(List.of(io.papermc.paper.registry.data.dialog.body.DialogBody.plainMessage(art,440)));
         if(menu.kind==Kind.BOTS)base.inputs(List.of(io.papermc.paper.registry.data.dialog.input.DialogInput.bool("decrease",plugin.component(p,"Decrease values (−10 / −1 hour)",NamedTextColor.GRAY)).build()));
-        var close=io.papermc.paper.registry.data.dialog.ActionButton.builder(Component.text("✕  ",NamedTextColor.RED).append(plugin.component(p,"Close",NamedTextColor.RED))).width(184).build();
+        var close=io.papermc.paper.registry.data.dialog.ActionButton.builder(Component.text("✕  ",NamedTextColor.RED).append(plugin.component(p,"Close",NamedTextColor.RED))).width(140).build();
         var dialog=io.papermc.paper.dialog.Dialog.create(builder->builder.empty().base(base.build()).type(io.papermc.paper.registry.data.dialog.type.DialogType.multiAction(buttons).columns(columns).exitAction(close).build()));
         p.closeInventory();p.showDialog(dialog);
     }

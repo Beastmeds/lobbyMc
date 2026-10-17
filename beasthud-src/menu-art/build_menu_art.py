@@ -38,7 +38,7 @@ providers=[{'type':'space','advances':{'\ue000':-24,'\ue010':-1,'\ue011':-257}}]
 updates={}
 atlas=Image.open(Path(__file__).parent/'menu-motifs.png').convert('RGBA')
 def paste_hd(im,src,box):
- src=src.copy();ratio=min(box[2]*2/src.width,box[3]*2/src.height);src=src.resize((max(1,round(src.width*ratio)),max(1,round(src.height*ratio))),Image.Resampling.LANCZOS)
+ src=src.copy();ratio=min(box[2]*2/src.width,box[3]*2/src.height);src=src.resize((max(1,round(src.width*ratio)),max(1,round(src.height*ratio))),Image.Resampling.NEAREST)
  im.alpha_composite(src,(box[0]*2+(box[2]*2-src.width)//2,box[1]*2+(box[3]*2-src.height)//2))
 def motif(row,col):
  return atlas.crop((col*384,row*1024//3,(col+1)*384,(row+1)*1024//3))
@@ -131,34 +131,32 @@ for name,code,state in [('admin',0xe700,None),('schedule_off',0xe710,False),('sc
 # Wide, inventory-free dialog header; each tile stays within Minecraft bitmap limits.
 dialog_providers=[{'type':'space','advances':{'\ue010':-1}}]
 for season,(theme,accent,light) in enumerate([('halloween','#aa52dd','#f2bc62'),('standard','#3baee6','#b0edff'),('winter','#86cfdf','#eefaff')]):
- banner=Image.new('RGBA',(960,220));d=ImageDraw.Draw(banner)
- for y in range(10,210):
-  t=(y-10)/200;d.line((12,y,947,y),fill=(round(16-6*t),round(21-7*t),round(34-10*t),252))
- d.rounded_rectangle((6,8,953,211),radius=24,outline=accent,width=2)
- d.line((34,207,925,207),fill=light,width=1)
- d.line((34,12,925,12),fill='#344055',width=1)
- paste_hd(banner,motif(season,2),(9,14,74,80));paste_hd(banner,motif(season,2),(397,14,74,80))
- paste_hd(banner,logo(theme),(91,4,298,94))
- for x in [179,225,735,781]:d.polygon([(x,190),(x+3,193),(x,196),(x-3,193)],fill=light)
+ banner=Image.new('RGBA',(768,176));d=ImageDraw.Draw(banner)
+ for y in range(8,168):
+  t=(y-8)/160;d.line((10,y,757,y),fill=(round(16-6*t),round(21-7*t),round(34-10*t),252))
+ d.rounded_rectangle((5,6,762,169),radius=18,outline='#536174',width=1)
+ d.line((28,165,739,165),fill=light,width=1)
+ paste_hd(banner,motif(season,2),(8,10,64,64));paste_hd(banner,motif(season,2),(312,10,64,64))
+ paste_hd(banner,logo(theme),(78,4,228,68))
  banner.save(out/f'{theme}_dialog_banner.png')
  for tile in range(4):
-  part=banner.crop((tile*240,0,(tile+1)*240,220));part.putpixel((239,219),(1,1,1,1));buf=io.BytesIO();part.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/dialog_{theme}_{tile}.png']=buf.getvalue()
-  dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_{theme}_{tile}.png','height':110,'ascent':8,'chars':[chr(0xe800+season*4+tile)]})
+  part=banner.crop((tile*192,0,(tile+1)*192,176));part.putpixel((191,175),(1,1,1,1));buf=io.BytesIO();part.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/dialog_{theme}_{tile}.png']=buf.getvalue()
+  dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_{theme}_{tile}.png','height':88,'ascent':8,'chars':[chr(0xe800+season*4+tile)]})
 for season in range(3):
  for icon in range(4):
-  src=motif(season,icon);src.thumbnail((32,32),Image.Resampling.LANCZOS);im=Image.new('RGBA',(32,32));im.alpha_composite(src,((32-src.width)//2,(32-src.height)//2));buf=io.BytesIO();im.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/dialog_icon_{season}_{icon}.png']=buf.getvalue()
-  dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_icon_{season}_{icon}.png','height':18,'ascent':13,'chars':[chr(0xe900+season*4+icon)]})
+  src=motif(season,icon);src.thumbnail((32,32),Image.Resampling.NEAREST);im=Image.new('RGBA',(32,32));im.alpha_composite(src,((32-src.width)//2,(32-src.height)//2));buf=io.BytesIO();im.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/dialog_icon_{season}_{icon}.png']=buf.getvalue()
+  dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_icon_{season}_{icon}.png','height':16,'ascent':12,'chars':[chr(0xe900+season*4+icon)]})
 for tile in range(4):
  updates[f'assets/beastsmp/textures/font/dialog_active_{tile}.png']=updates[f'assets/beastsmp/textures/font/dialog_halloween_{tile}.png']
- dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_active_{tile}.png','height':110,'ascent':8,'chars':[chr(0xe8f0+tile)]})
+ dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_active_{tile}.png','height':88,'ascent':8,'chars':[chr(0xe8f0+tile)]})
 for icon in range(3):
  updates[f'assets/beastsmp/textures/font/dialog_active_icon_{icon}.png']=updates[f'assets/beastsmp/textures/font/dialog_icon_0_{icon}.png']
- dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_active_icon_{icon}.png','height':18,'ascent':13,'chars':[chr(0xea00+icon)]})
+ dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_active_icon_{icon}.png','height':16,'ascent':12,'chars':[chr(0xea00+icon)]})
 if args.client_jar:
  with zipfile.ZipFile(args.client_jar) as jar:
   spec=next(v for v in json.loads(jar.read('assets/minecraft/font/include/default.json'))['providers'] if v.get('file')=='minecraft:font/ascii.png')
   updates['assets/beastsmp/textures/font/dialog_text_ascii.png']=jar.read('assets/minecraft/textures/font/ascii.png')
- updates['assets/beastsmp/font/dialog_text.json']=json.dumps({'providers':[{'type':'bitmap','file':'beastsmp:font/dialog_text_ascii.png','height':11,'ascent':9,'chars':spec['chars']},{'type':'reference','id':'minecraft:default'}]},ensure_ascii=False,indent=2).encode()
+ updates['assets/beastsmp/font/dialog_text.json']=json.dumps({'providers':[{'type':'bitmap','file':'beastsmp:font/dialog_text_ascii.png','height':8,'ascent':7,'chars':spec['chars']},{'type':'reference','id':'minecraft:default'}]},ensure_ascii=False,indent=2).encode()
 updates['assets/beastsmp/font/dialog_menu.json']=json.dumps({'providers':dialog_providers},ensure_ascii=False,indent=2).encode()
 updates['assets/beastsmp/font/lobby_menu.json']=json.dumps({'providers':providers},ensure_ascii=False,indent=2).encode()
 blank=Image.new('RGBA',(16,16));buf=io.BytesIO();blank.save(buf,format='PNG')

@@ -28,7 +28,7 @@ for theme,accent,fill,highlight in [('halloween','#9c45ce','#252039','#f0aaff'),
   part=header.crop((tile*256,0,(tile+1)*256,128));part.putpixel((255,127),(1,1,1,1));skin[f'assets/beastsmp/textures/font/esc_logo_{tile}.png']=png(part)
  dialog_banner=Image.open(a.repo/f'beasthud-src/menu-art/generated/{theme}_dialog_banner.png').convert('RGBA')
  for tile in range(4):
-  part=dialog_banner.crop((tile*240,0,(tile+1)*240,220));part.putpixel((239,219),(1,1,1,1));skin[f'assets/beastsmp/textures/font/dialog_active_{tile}.png']=png(part)
+  part=dialog_banner.crop((tile*192,0,(tile+1)*192,176));part.putpixel((191,175),(1,1,1,1));skin[f'assets/beastsmp/textures/font/dialog_active_{tile}.png']=png(part)
  with zipfile.ZipFile(a.repo/'plugins/BetterHud/beastsmp-base.zip') as basepack:
   for icon in range(3):skin[f'assets/beastsmp/textures/font/dialog_active_icon_{icon}.png']=basepack.read(f'assets/beastsmp/textures/font/dialog_icon_{["halloween","standard","winter"].index(theme)}_{icon}.png')
  source=root/('farewell-art.png' if theme=='halloween' else f'farewell-{theme}.png')
@@ -40,12 +40,12 @@ for theme,accent,fill,highlight in [('halloween','#9c45ce','#252039','#f0aaff'),
    part=im.crop((tile*256,0,(tile+1)*256,256));part.putpixel((255,255),(1,1,1,1));skin[f'assets/beastsmp/textures/font/esc_farewell_{lang}_{tile}.png']=png(part)
   im.save(out/f'farewell_{theme}_{lang}.png')
  for name in ['button','button_highlighted','button_disabled']:
-  color=highlight if name=='button_highlighted' else '#4a5661' if name=='button_disabled' else accent
+  color='#8b97a8' if name=='button_highlighted' else '#303743' if name=='button_disabled' else '#424b5a'
   im=Image.new('RGBA',(400,40));d=ImageDraw.Draw(im)
   for y in range(40):
    t=y/39;d.line((0,y,399,y),fill=(round(26-10*t),round(32-12*t),round(47-16*t),255))
   d.rectangle((0,0,399,39),outline='#050812',width=2);d.rectangle((2,2,397,37),outline=color,width=2)
-  d.line((5,4,394,4),fill=highlight if name=='button_highlighted' else '#58637a',width=1)
+  d.line((5,4,394,4),fill='#a8b2c0' if name=='button_highlighted' else '#586170',width=1)
   d.line((5,35,394,35),fill='#0a0e18',width=1)
   skin[f'assets/minecraft/textures/gui/sprites/widget/{name}.png']=png(im)
   skin[f'assets/minecraft/textures/gui/sprites/widget/{name}.png.mcmeta']=json.dumps({'gui':{'scaling':{'type':'nine_slice','width':400,'height':40,'border':4}}}).encode()

@@ -58,8 +58,8 @@ Personal chat/display preferences persist per UUID, with eight independent ON/OF
 
 Menus now use Paper dialogs, with a wide seasonal Beast banner, illustrated action labels, wider two-/three-column layouts and a dedicated Close control. Main action order is preserved. Operators retain exclusive access to Bot Settings; callbacks recheck OP status. Bot dialogs expose a Decrease values checkbox instead of shift-click. The existing inventory renderer remains available with `menus.dialog: false` for compatibility. Modern Java clients supporting dialogs are required for the default mode.
 
-## Refined dialog layout and pause-menu Events
+## Compact layout and Events access
 
-Main actions use 184-pixel buttons in three columns (276 pixels in two-column settings), a larger 11-pixel caption font, 18-pixel icons and a 480×110 seasonal banner. Native dialog button height remains controlled by Minecraft. Widget textures use restrained gradients and higher resolution outlines.
+Home uses four equal 210-pixel buttons in two columns: Servers/Designs above Settings/Events, placing Events at the bottom right. Other two-column menus use 210 pixels, three-column menus 140. Text uses the native Minecraft font size; icons use integer pixel scaling. The seasonal banner is 384×88 GUI pixels. Button textures are neutral charcoal without purple outlines or stripes.
 
-Home has only the three main actions; Events is registered through the bundled `datapack/` as `beastsmp:events` in `minecraft:pause_screen_additions`. Install its contents in `world/datapacks/beastsmp-menu/` before restarting. The native client chooses the ESC button position. Event actions use exact public custom identifiers and resolve on the server; no arbitrary commands or administrative actions are accepted. Per-player required packs supply the selected theme and English/German captions. `/events` remains available.
+The bundled `datapack/` also registers `beastsmp:events` in `minecraft:pause_screen_additions`. Install its contents in `world/datapacks/beastsmp-menu/` before restarting. Minecraft chooses the ESC entry position. Event handlers accept only the exact public identifiers. Required packs supply the selected theme and English/German captions. `/events` remains available.
