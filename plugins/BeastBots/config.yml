@@ -1,6 +1,6 @@
-enabled: true
+enabled: false
 bots:
-  amount: 40
+  amount: 0
   invisible: true
   use-skins: true
   names:
@@ -277,7 +277,7 @@ skins:
   FrostKian: MHF_Alex
   MiloQuartz: MHF_Steve
   RiverRune: MHF_Alex
-
+  
   AshenBrook: MHF_Steve
   EchoWren: MHF_Alex
   IvyCrest: MHF_Steve
@@ -308,7 +308,7 @@ skins:
   LyraVale: MHF_Alex
   MossNolan: MHF_Steve
   OpalSkye: MHF_Alex
-
+  
   AmberBrook: MHF_Steve
   AmberCrest: MHF_Alex
   AmberVale: MHF_Steve
@@ -369,7 +369,7 @@ skins:
   FernMoss: MHF_Alex
   FernRune: MHF_Steve
   FernPine: MHF_Alex
-
+  
   AmberDawn: MHF_Steve
   AmberFox: MHF_Alex
   AmberLake: MHF_Steve
@@ -522,7 +522,7 @@ skins:
   MarbleReed: MHF_Alex
 
 schedule:
-  enabled: true
+  enabled: false
   timezone: Europe/Vienna
   day-at: 08:00
   day-amount: 40

@@ -1,274 +1,390 @@
-[17:46:40] [ServerMain/INFO]: [bootstrap] Running Java 25 (OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu; Ubuntu null) on Linux 6.8.0-139-generic (amd64)
-[17:46:40] [ServerMain/INFO]: [bootstrap] Loading Paper 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) for Minecraft 1.21.11
-[17:46:41] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
-[17:46:41] [ServerMain/INFO]: [PluginInitializerManager] Initialized 8 plugins
-[17:46:41] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (8):
- - BetterHud (2.0.0), CustomLobby (1.0.0), Geyser-Spigot (2.11.3-SNAPSHOT), PlaceholderAPI (2.12.3), ServerSelector (1.8), ViaBackwards (5.12.1-SNAPSHOT), ViaVersion (5.12.1-SNAPSHOT), floodgate (2.2.5-SNAPSHOT (b141-81b65cc))
-[17:46:44] [ServerMain/WARN]: Failed to parse resource pack prompt '§6Dieser Server benötigt ein Ressourcenpaket!'
-com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Use JsonReader.setStrictness(Strictness.LENIENT) to accept malformed JSON at line 1 column 1 path $
-See https://github.com/google/gson/blob/main/Troubleshooting.md#malformed-json
-	at com.google.gson.internal.Streams.parse(Streams.java:58) ~[gson-2.13.2.jar:?]
-	at com.google.gson.JsonParser.parseReader(JsonParser.java:144) ~[gson-2.13.2.jar:?]
-	at net.minecraft.util.StrictJsonParser.parse(StrictJsonParser.java:20) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.util.StrictJsonParser.parse(StrictJsonParser.java:34) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.parseResourcePackPrompt(DedicatedServerProperties.java:177) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.getServerPackInfo(DedicatedServerProperties.java:217) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.<init>(DedicatedServerProperties.java:145) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.fromFile(DedicatedServerProperties.java:165) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerSettings.<init>(DedicatedServerSettings.java:13) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.Main.main(Main.java:113) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at io.papermc.paper.PaperBootstrap.boot(PaperBootstrap.java:21) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at org.bukkit.craftbukkit.Main.main(Main.java:204) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at io.papermc.paperclip.Paperclip.lambda$main$0(Paperclip.java:42) ~[?:?]
-	at java.base/java.lang.Thread.run(Thread.java:1474) ~[?:?]
-Caused by: com.google.gson.stream.MalformedJsonException: Use JsonReader.setStrictness(Strictness.LENIENT) to accept malformed JSON at line 1 column 1 path $
-See https://github.com/google/gson/blob/main/Troubleshooting.md#malformed-json
-	at com.google.gson.stream.JsonReader.syntaxError(JsonReader.java:1817) ~[gson-2.13.2.jar:?]
-	at com.google.gson.stream.JsonReader.checkLenient(JsonReader.java:1613) ~[gson-2.13.2.jar:?]
-	at com.google.gson.stream.JsonReader.doPeek(JsonReader.java:729) ~[gson-2.13.2.jar:?]
-	at com.google.gson.stream.JsonReader.peek(JsonReader.java:547) ~[gson-2.13.2.jar:?]
-	at com.google.gson.internal.Streams.parse(Streams.java:44) ~[gson-2.13.2.jar:?]
-	... 13 more
-[17:46:44] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
-[17:46:44] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
-[17:46:44] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 238.3ms
-[17:46:45] [ServerMain/INFO]: Loaded 1470 recipes
-[17:46:45] [ServerMain/INFO]: Loaded 1584 advancements
-[17:46:45] [ServerMain/WARN]: Failed to parse resource pack prompt '§6Dieser Server benötigt ein Ressourcenpaket!'
-com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Use JsonReader.setStrictness(Strictness.LENIENT) to accept malformed JSON at line 1 column 1 path $
-See https://github.com/google/gson/blob/main/Troubleshooting.md#malformed-json
-	at com.google.gson.internal.Streams.parse(Streams.java:58) ~[gson-2.13.2.jar:?]
-	at com.google.gson.JsonParser.parseReader(JsonParser.java:144) ~[gson-2.13.2.jar:?]
-	at net.minecraft.util.StrictJsonParser.parse(StrictJsonParser.java:20) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.util.StrictJsonParser.parse(StrictJsonParser.java:34) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.parseResourcePackPrompt(DedicatedServerProperties.java:177) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.getServerPackInfo(DedicatedServerProperties.java:217) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.<init>(DedicatedServerProperties.java:145) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.reload(DedicatedServerProperties.java:170) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerProperties.reload(DedicatedServerProperties.java:49) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.Settings$MutableValue.update(Settings.java:274) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServer.lambda$setMotd$16(DedicatedServer.java:740) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServerSettings.update(DedicatedServerSettings.java:26) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServer.setMotd(DedicatedServer.java:740) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.dedicated.DedicatedServer.<init>(DedicatedServer.java:109) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.Main.lambda$main$2(Main.java:314) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.MinecraftServer.spin(MinecraftServer.java:395) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at net.minecraft.server.Main.main(Main.java:303) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at io.papermc.paper.PaperBootstrap.boot(PaperBootstrap.java:21) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at org.bukkit.craftbukkit.Main.main(Main.java:204) ~[paper-1.21.11.jar:1.21.11-132-c5eb079]
-	at io.papermc.paperclip.Paperclip.lambda$main$0(Paperclip.java:42) ~[?:?]
-	at java.base/java.lang.Thread.run(Thread.java:1474) ~[?:?]
-Caused by: com.google.gson.stream.MalformedJsonException: Use JsonReader.setStrictness(Strictness.LENIENT) to accept malformed JSON at line 1 column 1 path $
-See https://github.com/google/gson/blob/main/Troubleshooting.md#malformed-json
-	at com.google.gson.stream.JsonReader.syntaxError(JsonReader.java:1817) ~[gson-2.13.2.jar:?]
-	at com.google.gson.stream.JsonReader.checkLenient(JsonReader.java:1613) ~[gson-2.13.2.jar:?]
-	at com.google.gson.stream.JsonReader.doPeek(JsonReader.java:729) ~[gson-2.13.2.jar:?]
-	at com.google.gson.stream.JsonReader.peek(JsonReader.java:547) ~[gson-2.13.2.jar:?]
-	at com.google.gson.internal.Streams.parse(Streams.java:44) ~[gson-2.13.2.jar:?]
-	... 20 more
-[17:46:45] [Server thread/INFO]: Starting minecraft server version 1.21.11
-[17:46:45] [Server thread/WARN]: ****************************
-[17:46:45] [Server thread/WARN]: YOU ARE RUNNING THIS SERVER AS AN ADMINISTRATIVE OR ROOT USER. THIS IS NOT ADVISED.
-[17:46:45] [Server thread/WARN]: YOU ARE OPENING YOURSELF UP TO POTENTIAL RISKS WHEN DOING THIS.
-[17:46:45] [Server thread/WARN]: FOR MORE INFORMATION, SEE https://madelinemiller.dev/blog/root-minecraft-server/
-[17:46:45] [Server thread/WARN]: ****************************
-[17:46:45] [Server thread/INFO]: Loading properties
-[17:46:45] [Server thread/INFO]: This server is running Paper version 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) (Implementing API version 1.21.11-R0.1-SNAPSHOT)
-[17:46:45] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
-[17:46:45] [Server thread/INFO]: Server Ping Player Sample Count: 12
-[17:46:45] [Server thread/INFO]: Using 4 threads for Netty based IO
-[17:46:46] [Server thread/INFO]: [MoonriseCommon] Paper is using 1 worker threads, 1 I/O threads
-[17:46:46] [Server thread/INFO]: Default game type: SURVIVAL
-[17:46:46] [Server thread/INFO]: Generating keypair
-[17:46:46] [Server thread/INFO]: Starting Minecraft server on *:25567
-[17:46:46] [Server thread/INFO]: Paper: Using libdeflate (Linux x86_64) compression from Velocity.
-[17:46:46] [Server thread/INFO]: Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.
-[17:46:47] [Server thread/INFO]: [floodgate] Loading server plugin floodgate v2.2.5-SNAPSHOT (b141-81b65cc)
-[17:46:47] [Server thread/WARN]: [floodgate] en_ is not a supported Floodgate language.
-[17:46:47] [Server thread/INFO]: [floodgate] Took 448ms to boot Floodgate
-[17:46:47] [Server thread/INFO]: [ViaVersion] Loading server plugin ViaVersion v5.12.1-SNAPSHOT
-[17:46:47] [Server thread/INFO]: [ViaVersion] ViaVersion 5.12.1-SNAPSHOT is now loaded. Registering protocol transformers and injecting...
-[17:46:48] [Server thread/INFO]: [ViaBackwards] Loading translations...
-[17:46:48] [Server thread/INFO]: [ViaBackwards] Registering protocols...
-[17:46:48] [Server thread/INFO]: [PlaceholderAPI] Loading server plugin PlaceholderAPI v2.12.3
-[17:46:48] [Server thread/INFO]: [Geyser-Spigot] Loading server plugin Geyser-Spigot v2.11.3-SNAPSHOT
-[17:46:48] [Server thread/WARN]: [Geyser-Spigot] *********************************************
-[17:46:48] [Server thread/WARN]: [Geyser-Spigot] 
-[17:46:48] [Server thread/WARN]: [Geyser-Spigot] This server appears to be running behind a BungeeCord proxy! Remove the Geyser plugin from this server and install Geyser only on your proxy.
-[17:46:48] [Server thread/WARN]: [Geyser-Spigot] Please visit the setup guide for help with configuring Geyser: https://geysermc.org/wiki/geyser/setup/
-[17:46:48] [Server thread/WARN]: [Geyser-Spigot] 
-[17:46:48] [Server thread/WARN]: [Geyser-Spigot] *********************************************
-[17:46:48] [Server thread/INFO]: [CustomLobby] Loading server plugin CustomLobby v1.0.0
-[17:46:48] [Server thread/INFO]: [ViaBackwards] Loading server plugin ViaBackwards v5.12.1-SNAPSHOT
-[17:46:48] [Server thread/INFO]: [ServerSelector] Loading server plugin ServerSelector v1.8
-[17:46:48] [Server thread/INFO]: [BetterHud] Loading server plugin BetterHud v2.0.0
-[17:46:48] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
-[17:46:48] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[17:46:48] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[17:46:48] [Server thread/WARN]: Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.
-[17:46:48] [Server thread/WARN]: Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.
-[17:46:48] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[17:46:48] [Server thread/INFO]: Preparing level "world"
-[17:46:48] [Server thread/INFO]: [ca.spottedleaf.moonrise.common.util.MoonriseConstants] NUMA enable flag is not set; however there is NUMA interaction support for this OS.
-[17:46:48] [Server thread/INFO]: [ca.spottedleaf.moonrise.common.util.MoonriseConstants] Detected 1 NUMA nodes.
-[17:46:48] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:overworld'...
-[17:46:48] [Server thread/INFO]: Prepared spawn area in 1 ms
-[17:46:48] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_nether'...
-[17:46:48] [Server thread/INFO]: Prepared spawn area in 0 ms
-[17:46:48] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_end'...
-[17:46:48] [Server thread/INFO]: Prepared spawn area in 0 ms
-[17:46:48] [Server thread/INFO]: Done preparing level "world" (0.264s)
-[17:46:48] [Server thread/INFO]: [floodgate] Enabling floodgate v2.2.5-SNAPSHOT (b141-81b65cc)
-[17:46:49] [Server thread/INFO]: [ViaVersion] Enabling ViaVersion v5.12.1-SNAPSHOT
-[17:46:49] [Server thread/INFO]: [ViaVersion] ViaVersion detected server version: 1.21.11 (774)
-[17:46:49] [Server thread/INFO]: [PlaceholderAPI] Enabling PlaceholderAPI v2.12.3
-[17:46:49] [Server thread/INFO]: [PlaceholderAPI] Fetching available expansion information...
-[17:46:49] [Server thread/INFO]: [Geyser-Spigot] Enabling Geyser-Spigot v2.11.3-SNAPSHOT
-[17:46:49] [Server thread/INFO]: [Geyser-Spigot] Disabling Geyser-Spigot v2.11.3-SNAPSHOT
-[17:46:49] [Server thread/INFO]: [CustomLobby] Enabling CustomLobby v1.0.0
-[17:46:49] [Server thread/INFO]: [CustomLobby] 
-[17:46:49] [Server thread/INFO]: [CustomLobby] ══════════════════════════════════════════════════════════
-[17:46:49] [Server thread/INFO]: [CustomLobby]    ██████╗██╗   ██╗███████╗████████╗██████╗ ███╗   ███╗
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ██╔════╝██║   ██║██╔════╝╚══██╔══╝██╔══██╗████╗ ████║
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ██║     ██║   ██║███████╗   ██║   ██║  ██║██╔████╔██║
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ██║     ██║   ██║╚════██║   ██║   ██║  ██║██║╚██╔╝██║
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ╚██████╗╚██████╔╝███████║   ██║   ██████╔╝██║ ╚═╝ ██║
-[17:46:49] [Server thread/INFO]: [CustomLobby]    ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═════╝ ╚═╝     ╚═╝
-[17:46:49] [Server thread/INFO]: [CustomLobby]                 L O B B Y   P L U G I N                
-[17:46:49] [Server thread/INFO]: [CustomLobby] ══════════════════════════════════════════════════════════
-[17:46:49] [Server thread/INFO]: [CustomLobby] » Version:    1.0.0
-[17:46:49] [Server thread/INFO]: [CustomLobby] » Server:     Paper/Purpur
-[17:46:49] [Server thread/INFO]: [CustomLobby] » Author:     fernsehheft
-[17:46:49] [Server thread/INFO]: [CustomLobby] » Website:    https://fhplugins.com
-[17:46:49] [Server thread/INFO]: [CustomLobby] ══════════════════════════════════════════════════════════
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ┌─ Configuration
-[17:46:49] [Server thread/INFO]: [CustomLobby] All configuration files loaded!
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ config.yml, messages.yml, holograms.yml, npcs.yml, parkour.yml
-[17:46:49] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ┌─ Metrics & Analytics
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ FastStats
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ bStats
-[17:46:49] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ┌─ Database
-[17:46:49] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Starting...
-[17:46:49] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.pool.HikariPool] CustomLobby-Pool - Added connection org.sqlite.jdbc4.JDBC4Connection@7e6be166
-[17:46:49] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Start completed.
-[17:46:49] [Server thread/INFO]: [CustomLobby] Database connected! Type: SQLite
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ Connected (SQLITE)
-[17:46:49] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ┌─ Managers & Features
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ SoundManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ SpawnManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ WorldManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ DoubleJumpManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ VanishManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ VisibilityManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ HotbarManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ NavigatorManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ CosmeticsManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ AFKManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ AnnouncementManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ BossBarManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ HologramManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ NPCManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ ParkourManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ ScoreboardManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ TabListManager
-[17:46:49] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ┌─ Commands & Tab Completers
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ 15 commands with tab completion registered
-[17:46:49] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ┌─ Event Listeners
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ 13 event listeners registered
-[17:46:49] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
-[17:46:49] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: customlobby [1.0.0]
-[17:46:49] [Server thread/INFO]: [CustomLobby] ✔ Hooked into PlaceholderAPI!
-[17:46:49] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
-[17:46:49] [Server thread/INFO]: [CustomLobby]   ✔ CustomLobby fully loaded!
-[17:46:49] [Server thread/INFO]: [CustomLobby] • Holograms:  0
-[17:46:49] [Server thread/INFO]: [CustomLobby] • NPCs:       0
-[17:46:49] [Server thread/INFO]: [CustomLobby] • Parkours:   0
-[17:46:49] [Server thread/INFO]: [CustomLobby] • Players:    0
-[17:46:49] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
-[17:46:49] [Server thread/INFO]: [ViaBackwards] Enabling ViaBackwards v5.12.1-SNAPSHOT
-[17:46:49] [Server thread/INFO]: [ServerSelector] Enabling ServerSelector v1.8
-[17:46:49] [Server thread/INFO]: [ServerSelector] PlaceholderAPI found! Dynamic placeholders enabled.
-[17:46:49] [Server thread/INFO]: [ServerSelector] Fetching player head for Dream...
-[17:46:49] [Server thread/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
-[17:46:49] [Server thread/INFO]: [ServerSelector] Auto-refresh enabled with 30 second interval
-[17:46:49] [Server thread/INFO]: [ServerSelector] Auto-refresh enabled with 30 second interval
-[17:46:49] [Server thread/INFO]: [ServerSelector] ServerGUI has been enabled!
-[17:46:49] [Server thread/INFO]: [BetterHud] Enabling BetterHud v2.0.0
-[17:46:50] [Server thread/INFO]: [spark] Starting background profiler...
-[17:46:50] [Server thread/INFO]: [PlaceholderAPI] Placeholder expansion registration initializing...
-[17:46:54] [Server thread/INFO]: [BetterHud] Zip packed: 6.719MB
-[17:46:54] [Server thread/INFO]: [BetterHud] Minecraft version: 1.21.11, NMS version: V1_21_R7
-[17:46:54] [Server thread/INFO]: [BetterHud] Platform: Paper
-[17:46:54] [Server thread/INFO]: [BetterHud] Plugin enabled.
-[17:46:54] [Server thread/INFO]: Running delayed init tasks
-[17:46:54] [Server thread/INFO]: Done (15.186s)! For help, type "help"
-[17:46:54] [Craft Scheduler Thread - 2 - ViaVersion/INFO]: [ViaVersion] Finished mapping loading, shutting down loader executor.
-[17:46:54] [Server thread/WARN]: [PlaceholderAPI] Cannot load expansion vault due to a missing plugin: Vault
-[17:46:54] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: player [2.0.9]
-[17:46:54] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: statistic [2.0.2]
-[17:46:54] [Server thread/INFO]: 2 placeholder hook(s) registered!
-[17:46:54] [Server thread/WARN]: [ViaVersion] There is a newer plugin version available: 5.12.1, you're on: 5.12.1-SNAPSHOT
-[17:46:55] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
-[17:46:55] [Paper Async Task Handler Thread - 1/WARN]: You are running the latest build for your Minecraft version (1.21.11)
-[17:46:55] [Paper Async Task Handler Thread - 1/WARN]: However, you are 6 release(s) behind the latest stable release (26.3)!
-[17:46:55] [Paper Async Task Handler Thread - 1/WARN]: It is recommended that you update as soon as possible
-[17:46:55] [Paper Async Task Handler Thread - 1/WARN]: https://papermc.io/downloads/paper
-[17:46:55] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
-[17:46:55] [Craft Scheduler Thread - 1 - CustomLobby/INFO]: [CustomLobby] ✔ [UpdateChecker] Plugin is up to date! (1.0.0)
-[17:47:08] [Server thread/INFO]:  [!] Trying to reload. please wait...
-[17:47:10] [Craft Scheduler Thread - 1 - BetterHud/INFO]:  [!] Reload successful! (2,498 ms)
-[17:47:12] [Server thread/INFO]: Stopping server
-[17:47:12] [Server thread/INFO]: [BetterHud] Disabling BetterHud v2.0.0
-[17:47:12] [Server thread/INFO]: [BetterHud] Plugin disabled.
-[17:47:12] [Server thread/INFO]: [ServerSelector] Disabling ServerSelector v1.8
-[17:47:12] [Server thread/INFO]: [ServerSelector] ServerGUI has been disabled!
-[17:47:12] [Server thread/INFO]: [ViaBackwards] Disabling ViaBackwards v5.12.1-SNAPSHOT
-[17:47:12] [Server thread/INFO]: [CustomLobby] Disabling CustomLobby v1.0.0
-[17:47:12] [Server thread/INFO]: [CustomLobby] 
-[17:47:12] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
-[17:47:12] [Server thread/INFO]: [CustomLobby]   CustomLobby is shutting down...
-[17:47:12] [Server thread/INFO]: [CustomLobby] » Saving data & cleaning up...
-[17:47:12] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
-[17:47:12] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Shutdown initiated...
-[17:47:12] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Shutdown completed.
-[17:47:12] [Server thread/INFO]: [CustomLobby] ✔ CustomLobby disabled cleanly.
-[17:47:12] [Server thread/INFO]: [PlaceholderAPI] Disabling PlaceholderAPI v2.12.3
-[17:47:12] [Server thread/INFO]: [ViaVersion] Disabling ViaVersion v5.12.1-SNAPSHOT
-[17:47:12] [Server thread/INFO]: [ViaVersion] ViaVersion has been disabled; uninjected the platform and shut down the scheduler.
-[17:47:12] [Server thread/INFO]: [floodgate] Disabling floodgate v2.2.5-SNAPSHOT (b141-81b65cc)
-[17:47:12] [Server thread/INFO]: Saving players
-[17:47:12] [Server thread/INFO]: Saving worlds
-[17:47:12] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world' in 0.00s
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world'
-[17:47:12] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_nether'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_nether'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_nether'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_nether' in 0.00s
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_nether'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_nether'
-[17:47:12] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_the_end'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_the_end'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_the_end'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_the_end' in 0.00s
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_the_end'
-[17:47:12] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_the_end'
-[17:47:12] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[17:47:12] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[17:47:12] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[17:47:12] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
-[17:47:12] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
-[17:47:12] [Server thread/INFO]: All RegionFile I/O tasks to complete
-[17:47:12] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
-[17:47:12] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...
+[13:31:57] [ServerMain/INFO]: [bootstrap] Running Java 25 (OpenJDK 64-Bit Server VM 25.0.4.1+1-1-24.04.4-Ubuntu; Ubuntu null) on Linux 6.8.0-139-generic (amd64)
+[13:31:57] [ServerMain/INFO]: [bootstrap] Loading Paper 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) for Minecraft 1.21.11
+[13:31:58] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
+[13:31:58] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Remapping plugin 'plugins/BeastHudThemes-1.0.0.jar'...
+[13:31:59] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Done remapping plugin 'plugins/BeastHudThemes-1.0.0.jar' in 398ms.
+[13:31:59] [ServerMain/INFO]: [PluginInitializerManager] Initialized 12 plugins
+[13:31:59] [ServerMain/INFO]: [PluginInitializerManager] Paper plugins (1):
+ - CommandAPI (12.1.0)
+[13:31:59] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (11):
+ - BeastBots (1.0.0), BeastHudThemes (1.0.0), BetterHud (2.2.0-SNAPSHOT-449), CustomLobby (1.0.0), FakePlayer-CE (fp.build14), Geyser-Spigot (2.11.3-SNAPSHOT), PlaceholderAPI (2.12.3), ServerSelector (1.8), ViaBackwards (5.12.1-SNAPSHOT), ViaVersion (5.12.1-SNAPSHOT), floodgate (2.2.5-SNAPSHOT (b141-81b65cc))
+[13:31:59] [ServerMain/INFO]: [CommandAPI] Loaded version PaperNMS_1_21_R7
+[13:31:59] [ServerMain/INFO]: [CommandAPI] Hooked into Spigot successfully for Chat/ChatComponents
+[13:31:59] [ServerMain/INFO]: [CommandAPI] Hooked into Adventure for AdventureChat/AdventureChatComponents
+[13:31:59] [ServerMain/INFO]: [CommandAPI] Hooked into Paper for paper-specific API implementations
+[13:31:59] [ServerMain/INFO]: [CommandAPI] Loaded platform CommandAPIPaper > CommandAPIBukkit
+[13:32:02] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[13:32:02] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
+[13:32:02] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 254.6ms
+[13:32:03] [ServerMain/INFO]: Loaded 1470 recipes
+[13:32:03] [ServerMain/INFO]: Loaded 1584 advancements
+[13:32:04] [Server thread/INFO]: Starting minecraft server version 1.21.11
+[13:32:04] [Server thread/WARN]: ****************************
+[13:32:04] [Server thread/WARN]: YOU ARE RUNNING THIS SERVER AS AN ADMINISTRATIVE OR ROOT USER. THIS IS NOT ADVISED.
+[13:32:04] [Server thread/WARN]: YOU ARE OPENING YOURSELF UP TO POTENTIAL RISKS WHEN DOING THIS.
+[13:32:04] [Server thread/WARN]: FOR MORE INFORMATION, SEE https://madelinemiller.dev/blog/root-minecraft-server/
+[13:32:04] [Server thread/WARN]: ****************************
+[13:32:04] [Server thread/INFO]: Loading properties
+[13:32:04] [Server thread/INFO]: This server is running Paper version 1.21.11-132-ver/1.21.11@c5eb079 (2026-05-11T11:43:09Z) (Implementing API version 1.21.11-R0.1-SNAPSHOT)
+[13:32:04] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[13:32:04] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[13:32:04] [Server thread/INFO]: Using 4 threads for Netty based IO
+[13:32:04] [Server thread/INFO]: [MoonriseCommon] Paper is using 1 worker threads, 1 I/O threads
+[13:32:04] [Server thread/INFO]: Default game type: SURVIVAL
+[13:32:04] [Server thread/INFO]: Generating keypair
+[13:32:04] [Server thread/INFO]: Starting Minecraft server on *:25567
+[13:32:04] [Server thread/INFO]: Paper: Using libdeflate (Linux x86_64) compression from Velocity.
+[13:32:04] [Server thread/INFO]: Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.
+[13:32:04] [Server thread/INFO]: [floodgate] Loading server plugin floodgate v2.2.5-SNAPSHOT (b141-81b65cc)
+[13:32:05] [Server thread/WARN]: [floodgate] en_ is not a supported Floodgate language.
+[13:32:05] [Server thread/INFO]: [floodgate] Took 393ms to boot Floodgate
+[13:32:05] [Server thread/INFO]: [ViaVersion] Loading server plugin ViaVersion v5.12.1-SNAPSHOT
+[13:32:05] [Server thread/INFO]: [ViaVersion] ViaVersion 5.12.1-SNAPSHOT is now loaded. Registering protocol transformers and injecting...
+[13:32:05] [Server thread/INFO]: [ViaBackwards] Loading translations...
+[13:32:05] [Server thread/INFO]: [ViaBackwards] Registering protocols...
+[13:32:05] [Server thread/INFO]: [PlaceholderAPI] Loading server plugin PlaceholderAPI v2.12.3
+[13:32:06] [Server thread/INFO]: [CommandAPI] Loading server plugin CommandAPI v12.1.0
+[13:32:06] [Server thread/INFO]: [Geyser-Spigot] Loading server plugin Geyser-Spigot v2.11.3-SNAPSHOT
+[13:32:06] [Server thread/WARN]: [Geyser-Spigot] *********************************************
+[13:32:06] [Server thread/WARN]: [Geyser-Spigot] 
+[13:32:06] [Server thread/WARN]: [Geyser-Spigot] This server appears to be running behind a BungeeCord proxy! Remove the Geyser plugin from this server and install Geyser only on your proxy.
+[13:32:06] [Server thread/WARN]: [Geyser-Spigot] Please visit the setup guide for help with configuring Geyser: https://geysermc.org/wiki/geyser/setup/
+[13:32:06] [Server thread/WARN]: [Geyser-Spigot] 
+[13:32:06] [Server thread/WARN]: [Geyser-Spigot] *********************************************
+[13:32:06] [Server thread/INFO]: [CustomLobby] Loading server plugin CustomLobby v1.0.0
+[13:32:06] [Server thread/INFO]: [FakePlayer-CE] Loading server plugin FakePlayer-CE vfp.build14
+[13:32:06] [Server thread/INFO]: [BetterHud] Loading server plugin BetterHud v2.2.0-SNAPSHOT-449
+[13:32:06] [Server thread/INFO]: [BeastBots] Loading server plugin BeastBots v1.0.0
+[13:32:06] [Server thread/INFO]: [ViaBackwards] Loading server plugin ViaBackwards v5.12.1-SNAPSHOT
+[13:32:06] [Server thread/INFO]: [ServerSelector] Loading server plugin ServerSelector v1.8
+[13:32:06] [Server thread/INFO]: [BeastHudThemes] Loading server plugin BeastHudThemes v1.0.0
+[13:32:06] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[13:32:06] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[13:32:06] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[13:32:06] [Server thread/WARN]: Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.
+[13:32:06] [Server thread/WARN]: Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.
+[13:32:06] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[13:32:06] [Server thread/INFO]: Preparing level "world"
+[13:32:06] [Server thread/INFO]: [ca.spottedleaf.moonrise.common.util.MoonriseConstants] NUMA enable flag is not set; however there is NUMA interaction support for this OS.
+[13:32:06] [Server thread/INFO]: [ca.spottedleaf.moonrise.common.util.MoonriseConstants] Detected 1 NUMA nodes.
+[13:32:06] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:overworld'...
+[13:32:06] [Server thread/INFO]: Prepared spawn area in 0 ms
+[13:32:06] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_nether'...
+[13:32:06] [Server thread/INFO]: Prepared spawn area in 0 ms
+[13:32:06] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_end'...
+[13:32:06] [Server thread/INFO]: Prepared spawn area in 0 ms
+[13:32:06] [Server thread/INFO]: Done preparing level "world" (0.267s)
+[13:32:06] [Server thread/INFO]: [floodgate] Enabling floodgate v2.2.5-SNAPSHOT (b141-81b65cc)
+[13:32:06] [Server thread/INFO]: [ViaVersion] Enabling ViaVersion v5.12.1-SNAPSHOT
+[13:32:06] [Server thread/INFO]: [ViaVersion] ViaVersion detected server version: 1.21.11 (774)
+[13:32:06] [Server thread/INFO]: [PlaceholderAPI] Enabling PlaceholderAPI v2.12.3
+[13:32:06] [Server thread/INFO]: [PlaceholderAPI] Fetching available expansion information...
+[13:32:06] [Server thread/INFO]: [CommandAPI] Enabling CommandAPI v12.1.0
+[13:32:06] [Server thread/INFO]: [CommandAPI] Hooked into Paper ServerResourcesReloadedEvent
+[13:32:06] [Server thread/INFO]: [Geyser-Spigot] Enabling Geyser-Spigot v2.11.3-SNAPSHOT
+[13:32:06] [Server thread/INFO]: [Geyser-Spigot] Disabling Geyser-Spigot v2.11.3-SNAPSHOT
+[13:32:06] [Server thread/INFO]: [CustomLobby] Enabling CustomLobby v1.0.0
+[13:32:06] [Server thread/INFO]: [CustomLobby] 
+[13:32:06] [Server thread/INFO]: [CustomLobby] ══════════════════════════════════════════════════════════
+[13:32:06] [Server thread/INFO]: [CustomLobby]    ██████╗██╗   ██╗███████╗████████╗██████╗ ███╗   ███╗
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ██╔════╝██║   ██║██╔════╝╚══██╔══╝██╔══██╗████╗ ████║
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ██║     ██║   ██║███████╗   ██║   ██║  ██║██╔████╔██║
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ██║     ██║   ██║╚════██║   ██║   ██║  ██║██║╚██╔╝██║
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ╚██████╗╚██████╔╝███████║   ██║   ██████╔╝██║ ╚═╝ ██║
+[13:32:06] [Server thread/INFO]: [CustomLobby]    ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═════╝ ╚═╝     ╚═╝
+[13:32:06] [Server thread/INFO]: [CustomLobby]                 L O B B Y   P L U G I N                
+[13:32:06] [Server thread/INFO]: [CustomLobby] ══════════════════════════════════════════════════════════
+[13:32:06] [Server thread/INFO]: [CustomLobby] » Version:    1.0.0
+[13:32:06] [Server thread/INFO]: [CustomLobby] » Server:     Paper/Purpur
+[13:32:06] [Server thread/INFO]: [CustomLobby] » Author:     fernsehheft
+[13:32:06] [Server thread/INFO]: [CustomLobby] » Website:    https://fhplugins.com
+[13:32:06] [Server thread/INFO]: [CustomLobby] ══════════════════════════════════════════════════════════
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ┌─ Configuration
+[13:32:06] [Server thread/INFO]: [CustomLobby] All configuration files loaded!
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ config.yml, messages.yml, holograms.yml, npcs.yml, parkour.yml
+[13:32:06] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ┌─ Metrics & Analytics
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ FastStats
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ bStats
+[13:32:06] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ┌─ Database
+[13:32:06] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Starting...
+[13:32:06] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.pool.HikariPool] CustomLobby-Pool - Added connection org.sqlite.jdbc4.JDBC4Connection@ab682b3
+[13:32:06] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Start completed.
+[13:32:06] [Server thread/INFO]: [CustomLobby] Database connected! Type: SQLite
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ Connected (SQLITE)
+[13:32:06] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ┌─ Managers & Features
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ SoundManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ SpawnManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ WorldManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ DoubleJumpManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ VanishManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ VisibilityManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ HotbarManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ NavigatorManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ CosmeticsManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ AFKManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ AnnouncementManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ BossBarManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ HologramManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ NPCManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ ParkourManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ ScoreboardManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ TabListManager
+[13:32:06] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ┌─ Commands & Tab Completers
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ 15 commands with tab completion registered
+[13:32:06] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ┌─ Event Listeners
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ 13 event listeners registered
+[13:32:06] [Server thread/INFO]: [CustomLobby]   └────────────────────────────────
+[13:32:06] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: customlobby [1.0.0]
+[13:32:06] [Server thread/INFO]: [CustomLobby] ✔ Hooked into PlaceholderAPI!
+[13:32:06] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
+[13:32:06] [Server thread/INFO]: [CustomLobby]   ✔ CustomLobby fully loaded!
+[13:32:06] [Server thread/INFO]: [CustomLobby] • Holograms:  0
+[13:32:06] [Server thread/INFO]: [CustomLobby] • NPCs:       0
+[13:32:06] [Server thread/INFO]: [CustomLobby] • Parkours:   0
+[13:32:06] [Server thread/INFO]: [CustomLobby] • Players:    0
+[13:32:06] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
+[13:32:06] [Server thread/INFO]: [FakePlayer-CE] Enabling FakePlayer-CE vfp.build14
+[13:32:07] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] FakePlayer-CE-datasource - Starting...
+[13:32:07] [Server thread/INFO]: [com.zaxxer.hikari.pool.HikariPool] FakePlayer-CE-datasource - Added connection org.sqlite.jdbc4.JDBC4Connection@7d6b3803
+[13:32:07] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] FakePlayer-CE-datasource - Start completed.
+[13:32:07] [Server thread/INFO]: [FakePlayer-CE] Using simple invsee implement
+[13:32:07] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: fakeplayer [1.1]
+[13:32:07] [Server thread/INFO]: [FakePlayer-CE] Successfully registered PlaceholderExpansion
+[13:32:07] [Server thread/INFO]: [FakePlayer-CE] Enabled in 1237 ms
+[13:32:07] [Server thread/INFO]: [BetterHud] Enabling BetterHud v2.2.0-SNAPSHOT-449
+[13:32:07] [Server thread/WARN]: [BetterHud] This build is dev version - be careful to use it!
+[13:32:07] [Server thread/INFO]: [BeastBots] Enabling BeastBots v1.0.0
+[13:32:07] [Server thread/INFO]: [BeastBots] BeastBots enabled; configured=0 invisible=true
+[13:32:07] [Server thread/INFO]: [ViaBackwards] Enabling ViaBackwards v5.12.1-SNAPSHOT
+[13:32:07] [Server thread/INFO]: [ServerSelector] Enabling ServerSelector v1.8
+[13:32:07] [Server thread/INFO]: [ServerSelector] PlaceholderAPI found! Dynamic placeholders enabled.
+[13:32:07] [Server thread/INFO]: [ServerSelector] Fetching player head for Dream...
+[13:32:08] [Server thread/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[13:32:08] [Server thread/INFO]: [ServerSelector] Auto-refresh enabled with 30 second interval
+[13:32:08] [Server thread/INFO]: [ServerSelector] Auto-refresh enabled with 30 second interval
+[13:32:08] [Server thread/INFO]: [ServerSelector] ServerGUI has been enabled!
+[13:32:08] [Server thread/INFO]: [BeastHudThemes] Enabling BeastHudThemes v1.0.0
+[13:32:08] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: beast [1.0.0]
+[13:32:08] [Server thread/INFO]: [BeastHudThemes] Beast lobby menus and command-controlled seasonal effects enabled.
+[13:32:08] [Server thread/INFO]: [BeastHudThemes] Seasonal complete resource packs hosted on port 8163.
+[13:32:08] [Server thread/INFO]: [BeastHudThemes] Three HUD designs, personal greetings and a 10-pumpkin quest enabled.
+[13:32:08] [Server thread/INFO]: [spark] Starting background profiler...
+[13:32:08] [Server thread/INFO]: [PlaceholderAPI] Placeholder expansion registration initializing...
+[13:32:13] [Server thread/INFO]: [BetterHud] Zip packed: 9.779MB
+[13:32:13] [Server thread/INFO]: [BetterHud] Minecraft version: 1.21.11, NMS version: V1_21_R7
+[13:32:13] [Server thread/INFO]: [BetterHud] Platform: Paper
+[13:32:13] [Server thread/INFO]: [BetterHud] Plugin enabled.
+[13:32:13] [Server thread/INFO]: Running delayed init tasks
+[13:32:13] [Server thread/INFO]: Done (15.979s)! For help, type "help"
+[13:32:13] [Craft Scheduler Thread - 2 - ViaVersion/INFO]: [ViaVersion] Finished mapping loading, shutting down loader executor.
+[13:32:13] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: beastpresence [1.0.0]
+[13:32:13] [Server thread/WARN]: [PlaceholderAPI] Cannot load expansion vault due to a missing plugin: Vault
+[13:32:13] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: bungee [2.3]
+[13:32:13] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: player [2.0.9]
+[13:32:13] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: statistic [2.0.2]
+[13:32:13] [Server thread/INFO]: 4 placeholder hook(s) registered!
+[13:32:13] [Server thread/WARN]: [ViaVersion] There is a newer plugin version available: 5.12.1, you're on: 5.12.1-SNAPSHOT
+[13:32:13] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
+[13:32:13] [Paper Async Task Handler Thread - 1/WARN]: You are running the latest build for your Minecraft version (1.21.11)
+[13:32:13] [Paper Async Task Handler Thread - 1/WARN]: However, you are 6 release(s) behind the latest stable release (26.3)!
+[13:32:13] [Paper Async Task Handler Thread - 1/WARN]: It is recommended that you update as soon as possible
+[13:32:13] [Paper Async Task Handler Thread - 1/WARN]: https://papermc.io/downloads/paper
+[13:32:13] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
+[13:32:13] [Craft Scheduler Thread - 1 - CustomLobby/INFO]: [CustomLobby] ✔ [UpdateChecker] Plugin is up to date! (1.0.0)
+[13:32:14] [Server thread/INFO]: [BeastHudThemes] Ready theme pack: HALLOWEEN_de sha1=2f4136b3046cf9517d088050f4bd0efe4cf2b0b7 bytes=10281069
+[13:32:14] [Server thread/INFO]: [BeastHudThemes] Ready theme pack: STANDARD_de sha1=67215c8556c968f802454fb4f0d65e781099edf1 bytes=10288717
+[13:32:14] [Server thread/INFO]: [BeastHudThemes] Ready theme pack: WEIHNACHTEN_en sha1=d73f229c600a7499b75a2d2c8ef087f1600e32f2 bytes=10341451
+[13:32:14] [Server thread/INFO]: [BeastHudThemes] Ready theme pack: HALLOWEEN_en sha1=d5c1b8582db501da44d94f935fefe626daf41e95 bytes=10279628
+[13:32:14] [Server thread/INFO]: [BeastHudThemes] Ready theme pack: STANDARD_en sha1=0b202aa46396eb067a534a103de3fe55628083ab bytes=10287276
+[13:32:14] [Server thread/INFO]: [BeastHudThemes] Ready theme pack: WEIHNACHTEN_de sha1=27e8f7f1e584e2358846ce305e562b99e836b10e bytes=10342892
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 1 at -151.85,-55.95,-25.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 2 at -147.85,-53.95,-11.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 3 at -135.85,-55.95,-9.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 4 at -124.85,-53.95,-19.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 5 at -120.85,-51.95,-28.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 6 at -133.85,-55.95,-42.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 7 at -153.85,-55.95,-49.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 8 at -164.85,-55.95,-37.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 9 at -167.85,-55.95,-13.85
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Pumpkin 10 at -139.85,-55.95,4.15
+[13:32:15] [Server thread/INFO]: [BeastHudThemes] Quest ready: 10 / 10 pumpkins, no world blocks changed.
+[13:32:16] [User Authenticator #0/INFO]: UUID of player XylofonHarfe195 is 2acf1b61-91bb-43be-b0d8-e010b8354b21
+[13:32:16] [Server thread/INFO]: [HorriblePlayerLoginEventHack] You have plugins listening to the PlayerLoginEvent, this will cause re-configuration APIs to be unavailable: [FakePlayer-CE, BeastBots, CustomLobby]
+[13:32:18] [Server thread/INFO]: [+] XylofonHarfe195
+[13:32:18] [Server thread/INFO]: XylofonHarfe195[/77.119.164.162:49471] logged in with entity id 21 at ([world]-139.91855815080723, -56.0, -25.980154437064236)
+[13:32:21] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: XylofonHarfe195 theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:33:49] [User Authenticator #1/INFO]: UUID of player BeastPetView is 180f6e70-2184-70d5-e641-582b6e3c3f91
+[13:33:49] [Server thread/INFO]: [+] BeastPetView
+[13:33:49] [Server thread/INFO]: BeastPetView[/127.0.0.1:53272] logged in with entity id 22 at ([world]-132.5, -59.0, -29.5)
+[13:33:53] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: BeastPetView theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:33:53] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView ACCEPTED
+[13:33:53] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView DOWNLOADED
+[13:33:53] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView SUCCESSFULLY_LOADED
+[13:33:54] [User Authenticator #1/INFO]: UUID of player BeastPackTest is d07f9cbb-ce9b-c6e7-8ee7-979ca20e526c
+[13:33:54] [Server thread/INFO]: [+] BeastPackTest
+[13:33:54] [Server thread/INFO]: BeastPackTest[/127.0.0.1:55236] logged in with entity id 23 at ([world]-139.91855815080723, -56.0, -25.980154437064236)
+[13:33:57] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: BeastPackTest theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:33:57] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest ACCEPTED
+[13:33:57] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest DOWNLOADED
+[13:33:57] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest SUCCESSFULLY_LOADED
+[13:33:59] [Server thread/INFO]: BeastPackTest issued server command: /menu
+[13:34:00] [Server thread/INFO]: BeastPackTest issued server command: /pet snowman
+[13:34:00] [Server thread/INFO]: BeastPackTest issued server command: /pet bat
+[13:34:03] [Server thread/INFO]: BeastPackTest issued server command: /pet off
+[13:34:03] [Server thread/INFO]: BeastPetView lost connection: Disconnected
+[13:34:03] [Server thread/INFO]: [-] BeastPetView
+[13:34:03] [Server thread/INFO]: BeastPackTest lost connection: Disconnected
+[13:34:03] [Server thread/INFO]: [-] BeastPackTest
+[13:34:23] [Server thread/INFO]: XylofonHarfe195 lost connection: The BeastSMP resource pack is required. Enable server resource packs and reconnect.
+[13:34:23] [Server thread/INFO]: [-] XylofonHarfe195
+[13:34:30] [User Authenticator #1/INFO]: UUID of player XylofonHarfe195 is 2acf1b61-91bb-43be-b0d8-e010b8354b21
+[13:34:30] [Server thread/INFO]: [+] XylofonHarfe195
+[13:34:30] [Server thread/INFO]: XylofonHarfe195[/77.119.164.162:56443] logged in with entity id 30 at ([world]-140.6639717532294, -56.0, -25.980154437064236)
+[13:34:34] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: XylofonHarfe195 theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:35:03] [User Authenticator #1/INFO]: UUID of player BeastPetView is 180f6e70-2184-70d5-e641-582b6e3c3f91
+[13:35:03] [Server thread/INFO]: [+] BeastPetView
+[13:35:03] [Server thread/INFO]: BeastPetView[/127.0.0.1:50328] logged in with entity id 31 at ([world]-139.91855815080723, -56.0, -25.980154437064236)
+[13:35:07] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: BeastPetView theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:35:07] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView ACCEPTED
+[13:35:07] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView DOWNLOADED
+[13:35:07] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView SUCCESSFULLY_LOADED
+[13:35:08] [User Authenticator #1/INFO]: UUID of player BeastPackTest is d07f9cbb-ce9b-c6e7-8ee7-979ca20e526c
+[13:35:08] [Server thread/INFO]: [+] BeastPackTest
+[13:35:08] [Server thread/INFO]: BeastPackTest[/127.0.0.1:41658] logged in with entity id 32 at ([world]-139.11855815080722, -56.0, -25.980154437064236)
+[13:35:11] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: BeastPackTest theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:35:11] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest ACCEPTED
+[13:35:11] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest DOWNLOADED
+[13:35:11] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest SUCCESSFULLY_LOADED
+[13:35:12] [Server thread/INFO]: BeastPackTest issued server command: /menu
+[13:35:13] [Server thread/INFO]: BeastPackTest issued server command: /pet snowman
+[13:35:13] [Server thread/INFO]: BeastPackTest issued server command: /pet bat
+[13:35:16] [Server thread/INFO]: BeastPackTest issued server command: /pet off
+[13:35:17] [Server thread/INFO]: BeastPetView lost connection: Disconnected
+[13:35:17] [Server thread/INFO]: [-] BeastPetView
+[13:35:17] [Server thread/INFO]: BeastPackTest lost connection: Disconnected
+[13:35:17] [Server thread/INFO]: [-] BeastPackTest
+[13:36:37] [Server thread/INFO]: XylofonHarfe195 lost connection: The BeastSMP resource pack is required. Enable server resource packs and reconnect.
+[13:36:37] [Server thread/INFO]: [-] XylofonHarfe195
+[13:36:44] [User Authenticator #2/INFO]: UUID of player XylofonHarfe195 is 2acf1b61-91bb-43be-b0d8-e010b8354b21
+[13:36:57] [Server thread/INFO]: [+] XylofonHarfe195
+[13:36:57] [Server thread/INFO]: XylofonHarfe195[/77.119.164.162:54845] logged in with entity id 39 at ([world]-140.76448595595346, -56.0, -25.980154437064236)
+[13:37:01] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: XylofonHarfe195 theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:37:09] [User Authenticator #2/INFO]: UUID of player BeastPetView is 180f6e70-2184-70d5-e641-582b6e3c3f91
+[13:37:09] [Server thread/INFO]: [+] BeastPetView
+[13:37:09] [Server thread/INFO]: BeastPetView[/127.0.0.1:44574] logged in with entity id 40 at ([world]-139.91855815080723, -56.0, -25.980154437064236)
+[13:37:13] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: BeastPetView theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:37:13] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView ACCEPTED
+[13:37:13] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView DOWNLOADED
+[13:37:13] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPetView SUCCESSFULLY_LOADED
+[13:37:14] [User Authenticator #2/INFO]: UUID of player BeastPackTest is d07f9cbb-ce9b-c6e7-8ee7-979ca20e526c
+[13:37:14] [Server thread/INFO]: [+] BeastPackTest
+[13:37:14] [Server thread/INFO]: BeastPackTest[/127.0.0.1:54698] logged in with entity id 41 at ([world]-139.11855815080722, -56.0, -25.980154437064236)
+[13:37:17] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: BeastPackTest theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:37:17] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest ACCEPTED
+[13:37:17] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest DOWNLOADED
+[13:37:17] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest SUCCESSFULLY_LOADED
+[13:37:19] [Server thread/INFO]: BeastPackTest issued server command: /menu
+[13:37:20] [Server thread/INFO]: BeastPackTest issued server command: /pet snowman
+[13:37:20] [Server thread/INFO]: BeastPackTest issued server command: /pet bat
+[13:37:20] [Server thread/INFO]: BeastPackTest issued server command: /profile
+[13:37:21] [Server thread/INFO]: BeastPackTest lost connection: Disconnected
+[13:37:21] [Server thread/INFO]: [-] BeastPackTest
+[13:37:22] [User Authenticator #2/INFO]: UUID of player BeastPackTest is d07f9cbb-ce9b-c6e7-8ee7-979ca20e526c
+[13:37:22] [Server thread/INFO]: [+] BeastPackTest
+[13:37:22] [Server thread/INFO]: BeastPackTest[/127.0.0.1:54714] logged in with entity id 48 at ([world]-139.11855815080722, -56.0, -25.980154437064236)
+[13:37:25] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: BeastPackTest theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:37:25] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest ACCEPTED
+[13:37:25] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest DOWNLOADED
+[13:37:25] [Server thread/INFO]: [BeastHudThemes] Theme pack status: BeastPackTest SUCCESSFULLY_LOADED
+[13:37:26] [Server thread/INFO]: BeastPackTest issued server command: /profile
+[13:37:26] [Server thread/INFO]: BeastPackTest issued server command: /pet off
+[13:37:26] [Server thread/INFO]: BeastPetView lost connection: Disconnected
+[13:37:26] [Server thread/INFO]: [-] BeastPetView
+[13:37:26] [Server thread/INFO]: BeastPackTest lost connection: Disconnected
+[13:37:26] [Server thread/INFO]: [-] BeastPackTest
+[13:39:02] [Server thread/INFO]: XylofonHarfe195 lost connection: The BeastSMP resource pack is required. Enable server resource packs and reconnect.
+[13:39:02] [Server thread/INFO]: [-] XylofonHarfe195
+[13:39:09] [User Authenticator #3/INFO]: UUID of player XylofonHarfe195 is 2acf1b61-91bb-43be-b0d8-e010b8354b21
+[13:39:10] [Server thread/INFO]: [+] XylofonHarfe195
+[13:39:10] [Server thread/INFO]: XylofonHarfe195[/77.119.164.162:49293] logged in with entity id 50 at ([world]-140.76448595595346, -56.0, -25.980154437064236)
+[13:39:13] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: XylofonHarfe195 theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:41:23] [Server thread/INFO]: XylofonHarfe195 lost connection: The BeastSMP resource pack is required. Enable server resource packs and reconnect.
+[13:41:23] [Server thread/INFO]: [-] XylofonHarfe195
+[13:41:29] [User Authenticator #4/INFO]: UUID of player XylofonHarfe195 is 2acf1b61-91bb-43be-b0d8-e010b8354b21
+[13:41:30] [Server thread/INFO]: [+] XylofonHarfe195
+[13:41:30] [Server thread/INFO]: XylofonHarfe195[/77.119.164.162:45137] logged in with entity id 51 at ([world]-139.91855815080723, -56.0, -25.980154437064236)
+[13:41:33] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: XylofonHarfe195 theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:43:34] [Server thread/INFO]: XylofonHarfe195 lost connection: The BeastSMP resource pack is required. Enable server resource packs and reconnect.
+[13:43:34] [Server thread/INFO]: [-] XylofonHarfe195
+[13:43:41] [User Authenticator #5/INFO]: UUID of player XylofonHarfe195 is 2acf1b61-91bb-43be-b0d8-e010b8354b21
+[13:43:42] [Server thread/INFO]: [+] XylofonHarfe195
+[13:43:42] [Server thread/INFO]: XylofonHarfe195[/77.119.164.162:38841] logged in with entity id 52 at ([world]-139.91855815080723, -56.0, -25.980154437064236)
+[13:43:46] [Server thread/INFO]: [BeastHudThemes] Theme pack sent: XylofonHarfe195 theme=HALLOWEEN sha1=d5c1b8582db501da44d94f935fefe626daf41e95
+[13:44:45] [Server thread/INFO]: [BeastHudThemes] Theme pack status: XylofonHarfe195 ACCEPTED
+[13:44:54] [Server thread/INFO]: [BeastHudThemes] Theme pack status: XylofonHarfe195 DOWNLOADED
+[13:44:57] [Server thread/INFO]: [BeastHudThemes] Theme pack status: XylofonHarfe195 SUCCESSFULLY_LOADED
+[13:45:02] [Server thread/INFO]: XylofonHarfe195 issued server command: /profile
+[13:45:23] [Server thread/INFO]: XylofonHarfe195 lost connection: Disconnected
+[13:45:23] [Server thread/INFO]: [-] XylofonHarfe195
+[15:20:27] [Server thread/INFO]: /176.65.149.198:61000 lost connection: If you wish to use IP forwarding, please enable it in your BungeeCord config as well!
+[15:27:17] [Server thread/INFO]: Stopping server
+[15:27:17] [Server thread/INFO]: [BeastHudThemes] Disabling BeastHudThemes v1.0.0
+[15:27:17] [Server thread/INFO]: [ServerSelector] Disabling ServerSelector v1.8
+[15:27:17] [Server thread/INFO]: [ServerSelector] ServerGUI has been disabled!
+[15:27:17] [Server thread/INFO]: [ViaBackwards] Disabling ViaBackwards v5.12.1-SNAPSHOT
+[15:27:17] [Server thread/INFO]: [BeastBots] Disabling BeastBots v1.0.0
+[15:27:17] [Server thread/INFO]: [BetterHud] Disabling BetterHud v2.2.0-SNAPSHOT-449
+[15:27:17] [Server thread/INFO]: [BetterHud] Plugin disabled.
+[15:27:17] [Server thread/INFO]: [FakePlayer-CE] Disabling FakePlayer-CE vfp.build14
+[15:27:17] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] FakePlayer-CE-datasource - Shutdown initiated...
+[15:27:17] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] FakePlayer-CE-datasource - Shutdown completed.
+[15:27:17] [Server thread/INFO]: [CustomLobby] Disabling CustomLobby v1.0.0
+[15:27:17] [Server thread/INFO]: [CustomLobby] 
+[15:27:17] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
+[15:27:17] [Server thread/INFO]: [CustomLobby]   CustomLobby is shutting down...
+[15:27:17] [Server thread/INFO]: [CustomLobby] » Saving data & cleaning up...
+[15:27:17] [Server thread/INFO]: [CustomLobby] ════════════════════════════════════════════════════
+[15:27:17] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Shutdown initiated...
+[15:27:17] [Server thread/INFO]: [com.fernsehheft.customlobby.libs.hikari.HikariDataSource] CustomLobby-Pool - Shutdown completed.
+[15:27:17] [Server thread/INFO]: [CustomLobby] ✔ CustomLobby disabled cleanly.
+[15:27:17] [Server thread/INFO]: [CommandAPI] Disabling CommandAPI v12.1.0
+[15:27:17] [Server thread/INFO]: [PlaceholderAPI] Disabling PlaceholderAPI v2.12.3
+[15:27:17] [Server thread/INFO]: [ViaVersion] Disabling ViaVersion v5.12.1-SNAPSHOT
+[15:27:17] [Server thread/INFO]: [ViaVersion] ViaVersion has been disabled; uninjected the platform and shut down the scheduler.
+[15:27:17] [Server thread/INFO]: [floodgate] Disabling floodgate v2.2.5-SNAPSHOT (b141-81b65cc)
+[15:27:17] [Server thread/INFO]: Saving players
+[15:27:17] [Server thread/INFO]: Saving worlds
+[15:27:17] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world' in 0.00s
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world'
+[15:27:17] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_nether'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_nether'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_nether'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_nether' in 0.00s
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_nether'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_nether'
+[15:27:17] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_the_end'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_the_end'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_the_end'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_the_end' in 0.00s
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_the_end'
+[15:27:17] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_the_end'
+[15:27:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[15:27:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[15:27:17] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[15:27:17] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[15:27:17] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
+[15:27:17] [Server thread/INFO]: All RegionFile I/O tasks to complete
+[15:27:17] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
+[15:27:17] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...

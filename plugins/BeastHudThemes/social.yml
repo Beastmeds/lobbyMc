@@ -1,0 +1,21 @@
+players:
+  d07f9cbb-ce9b-c6e7-8ee7-979ca20e526c:
+    name: BeastPackTest
+    pet: NONE
+    title: Animal Friend
+    achievements:
+    - first_companion
+  2acf1b61-91bb-43be-b0d8-e010b8354b21:
+    name: XylofonHarfe195
+    pet: GHOST
+    title: Pumpkin Hunter
+    achievements:
+    - all_pumpkins
+    - first_companion
+    - first_pumpkin
+    - one_hour
+  180f6e70-2184-70d5-e641-582b6e3c3f91:
+    name: BeastPetView
+    pet: NONE
+    title: Newcomer
+    achievements: []

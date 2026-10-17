@@ -38,3 +38,5 @@ expansions:
       medium: '&e'
       high: '&c'
       low: '&a'
+  bungee:
+    check_interval: 30
