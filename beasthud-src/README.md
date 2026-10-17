@@ -57,3 +57,9 @@ Personal chat/display preferences persist per UUID, with eight independent ON/OF
 ## Inventory-free menus
 
 Menus now use Paper dialogs, with a wide seasonal Beast banner, illustrated action labels, wider two-/three-column layouts and a dedicated Close control. Main action order is preserved. Operators retain exclusive access to Bot Settings; callbacks recheck OP status. Bot dialogs expose a Decrease values checkbox instead of shift-click. The existing inventory renderer remains available with `menus.dialog: false` for compatibility. Modern Java clients supporting dialogs are required for the default mode.
+
+## Refined dialog layout and pause-menu Events
+
+Main actions use 184-pixel buttons in three columns (276 pixels in two-column settings), a larger 11-pixel caption font, 18-pixel icons and a 480×110 seasonal banner. Native dialog button height remains controlled by Minecraft. Widget textures use restrained gradients and higher resolution outlines.
+
+Home has only the three main actions; Events is registered through the bundled `datapack/` as `beastsmp:events` in `minecraft:pause_screen_additions`. Install its contents in `world/datapacks/beastsmp-menu/` before restarting. The native client chooses the ESC button position. Event actions use exact public custom identifiers and resolve on the server; no arbitrary commands or administrative actions are accepted. Per-player required packs supply the selected theme and English/German captions. `/events` remains available.

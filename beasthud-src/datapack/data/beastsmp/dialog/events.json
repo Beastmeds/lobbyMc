@@ -1,0 +1,101 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "translate": "beastsmp.menu.events"
+  },
+  "external_title": {
+    "translate": "beastsmp.menu.events"
+  },
+  "can_close_with_escape": true,
+  "after_action": "close",
+  "body": {
+    "type": "minecraft:plain_message",
+    "width": 560,
+    "contents": {
+      "text": "",
+      "font": "beastsmp:dialog_menu",
+      "extra": [
+        {
+          "text": "\n\n\n\n\n\n\n\n\n\n\n\n",
+          "font": "minecraft:default"
+        }
+      ]
+    }
+  },
+  "columns": 3,
+  "actions": [
+    {
+      "label": {
+        "text": "",
+        "font": "beastsmp:dialog_menu",
+        "extra": [
+          {
+            "text": "  ",
+            "font": "minecraft:default"
+          },
+          {
+            "translate": "beastsmp.menu.pumpkins",
+            "font": "beastsmp:dialog_text",
+            "color": "white"
+          }
+        ]
+      },
+      "width": 184,
+      "action": {
+        "type": "minecraft:custom",
+        "id": "beastsmp:events/pumpkins"
+      }
+    },
+    {
+      "label": {
+        "text": "",
+        "font": "beastsmp:dialog_menu",
+        "extra": [
+          {
+            "text": "  ",
+            "font": "minecraft:default"
+          },
+          {
+            "translate": "beastsmp.menu.designs",
+            "font": "beastsmp:dialog_text",
+            "color": "white"
+          }
+        ]
+      },
+      "width": 184,
+      "action": {
+        "type": "minecraft:custom",
+        "id": "beastsmp:events/designs"
+      }
+    },
+    {
+      "label": {
+        "text": "",
+        "font": "beastsmp:dialog_menu",
+        "extra": [
+          {
+            "text": "  ",
+            "font": "minecraft:default"
+          },
+          {
+            "translate": "beastsmp.menu.christmas",
+            "font": "beastsmp:dialog_text",
+            "color": "white"
+          }
+        ]
+      },
+      "width": 184,
+      "action": {
+        "type": "minecraft:custom",
+        "id": "beastsmp:events/christmas"
+      }
+    }
+  ],
+  "exit_action": {
+    "label": {
+      "translate": "beastsmp.menu.close",
+      "color": "red"
+    },
+    "width": 184
+  }
+}

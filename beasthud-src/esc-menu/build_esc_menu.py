@@ -26,6 +26,11 @@ for theme,accent,fill,highlight in [('halloween','#9c45ce','#252039','#f0aaff'),
  header=Image.new('RGBA',(512,128));header.alpha_composite(logo,((512-logo.width)//2,(128-logo.height)//2))
  for tile in range(2):
   part=header.crop((tile*256,0,(tile+1)*256,128));part.putpixel((255,127),(1,1,1,1));skin[f'assets/beastsmp/textures/font/esc_logo_{tile}.png']=png(part)
+ dialog_banner=Image.open(a.repo/f'beasthud-src/menu-art/generated/{theme}_dialog_banner.png').convert('RGBA')
+ for tile in range(4):
+  part=dialog_banner.crop((tile*240,0,(tile+1)*240,220));part.putpixel((239,219),(1,1,1,1));skin[f'assets/beastsmp/textures/font/dialog_active_{tile}.png']=png(part)
+ with zipfile.ZipFile(a.repo/'plugins/BetterHud/beastsmp-base.zip') as basepack:
+  for icon in range(3):skin[f'assets/beastsmp/textures/font/dialog_active_icon_{icon}.png']=basepack.read(f'assets/beastsmp/textures/font/dialog_icon_{["halloween","standard","winter"].index(theme)}_{icon}.png')
  source=root/('farewell-art.png' if theme=='halloween' else f'farewell-{theme}.png')
  art=Image.open(source).convert('RGBA');art=art.crop(art.getbbox());ratio=min(512/art.width,172/art.height);art=art.resize((round(art.width*ratio),round(art.height*ratio)),Image.Resampling.NEAREST)
  for lang,label,line1,line2 in [('de_de','Bis bald!','DANKE FUERS SPIELEN!','BIS BALD AUF BEASTSMP'),('en_us','See you soon!','THANKS FOR PLAYING!','SEE YOU ON BEASTSMP')]:
@@ -36,9 +41,14 @@ for theme,accent,fill,highlight in [('halloween','#9c45ce','#252039','#f0aaff'),
   im.save(out/f'farewell_{theme}_{lang}.png')
  for name in ['button','button_highlighted','button_disabled']:
   color=highlight if name=='button_highlighted' else '#4a5661' if name=='button_disabled' else accent
-  im=Image.new('RGBA',(200,20));d=ImageDraw.Draw(im);d.rectangle((0,0,199,19),fill='#090810');d.rectangle((1,1,198,18),fill=fill,outline=color);d.line((3,2,196,2),fill=highlight);d.line((3,17,196,17),fill='#111523');d.rectangle((3,3,4,16),fill=color);d.rectangle((195,3,196,16),fill=color)
+  im=Image.new('RGBA',(400,40));d=ImageDraw.Draw(im)
+  for y in range(40):
+   t=y/39;d.line((0,y,399,y),fill=(round(26-10*t),round(32-12*t),round(47-16*t),255))
+  d.rectangle((0,0,399,39),outline='#050812',width=2);d.rectangle((2,2,397,37),outline=color,width=2)
+  d.line((5,4,394,4),fill=highlight if name=='button_highlighted' else '#58637a',width=1)
+  d.line((5,35,394,35),fill='#0a0e18',width=1)
   skin[f'assets/minecraft/textures/gui/sprites/widget/{name}.png']=png(im)
-  skin[f'assets/minecraft/textures/gui/sprites/widget/{name}.png.mcmeta']=json.dumps({'gui':{'scaling':{'type':'nine_slice','width':200,'height':20,'border':3}}}).encode()
+  skin[f'assets/minecraft/textures/gui/sprites/widget/{name}.png.mcmeta']=json.dumps({'gui':{'scaling':{'type':'nine_slice','width':400,'height':40,'border':4}}}).encode()
  skins[theme]=skin
  folder=a.repo/'plugins/BeastHudThemes/esc-themes';folder.mkdir(exist_ok=True)
  with zipfile.ZipFile(folder/f'{theme}.zip','w',zipfile.ZIP_DEFLATED) as z:
@@ -56,7 +66,7 @@ with zipfile.ZipFile(pack) as old:
  for lang in ['de_de','en_us']:
   offset=2
   key=f'assets/minecraft/lang/{lang}.json';data=json.loads(old.read(key));data.update({'menu.game':'\uf800\uf812\uf801','menu.returnToGame':'Continue playing on BeastSMP','menu.disconnect':'\uf810'+chr(0xf802+offset)+'\uf812'+chr(0xf803+offset)+'\uf811','gui.advancements':'Advancements','gui.stats':'Statistics','menu.options':'Options ...','menu.returnToMenu':'Leave'})
-  updates[key]=json.dumps(data,ensure_ascii=False,indent=2).encode()
+  data.update({'beastsmp.menu.events':'Events','beastsmp.menu.pumpkins':'Pumpkin hunt','beastsmp.menu.designs':'Seasonal designs','beastsmp.menu.christmas':'Christmas','beastsmp.menu.close':'Close'});updates[key]=json.dumps(data,ensure_ascii=False,indent=2).encode()
  with zipfile.ZipFile(temp,'w',zipfile.ZIP_DEFLATED) as new:
   for info in old.infolist():
    if info.filename not in updates and not info.filename.startswith('assets/beastsmp/textures/font/esc_') and '__MACOSX/' not in info.filename and '.DS_Store' not in info.filename:new.writestr(info,old.read(info.filename))
@@ -70,9 +80,10 @@ with zipfile.ZipFile(pack) as base:
   with zipfile.ZipFile(langdir/f'{language}.zip','w',zipfile.ZIP_DEFLATED) as overlay:
    menu=langdir/f'{language}-menu.zip'
    with zipfile.ZipFile(menu) as z:
-    for name in z.namelist():overlay.writestr(name,z.read(name))
+    for name in z.namelist():
+     if not name.startswith("assets/beastsmp/textures/font/dialog_active_"):overlay.writestr(name,z.read(name))
    for locale in ['en_us','de_de']:
     key=f'assets/minecraft/lang/{locale}.json';data=json.loads(base.read(key))
-    if language=='de':data.update({'menu.returnToGame':'Auf BeastSMP weiterspielen','menu.options':'Optionen ...','menu.returnToMenu':'Verlassen','gui.advancements':'Fortschritte','gui.stats':'Statistiken','menu.disconnect':'\uf810\uf802\uf812\uf803\uf811'})
+    if language=='de':data.update({'beastsmp.menu.events':'Events','beastsmp.menu.pumpkins':'Kürbissuche','beastsmp.menu.designs':'Saisonale Designs','beastsmp.menu.christmas':'Weihnachten','beastsmp.menu.close':'Schließen','menu.returnToGame':'Auf BeastSMP weiterspielen','menu.options':'Optionen ...','menu.returnToMenu':'Verlassen','gui.advancements':'Fortschritte','gui.stats':'Statistiken','menu.disconnect':'\uf810\uf802\uf812\uf803\uf811'})
     overlay.writestr(key,json.dumps(data,ensure_ascii=False,indent=2).encode())
 print('English and German menu/ESC language overlays built.')
