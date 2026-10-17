@@ -37,7 +37,6 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     private final Map<String,Boolean> reachable = new ConcurrentHashMap<>();
     private final Map<String,Integer> counts = new HashMap<>();
     private final List<Destination> destinations = List.of(
-        new Destination("citybuild","Citybuild",Material.GRASS_BLOCK,"127.0.0.1",25568),
         new Destination("Lobby","Lobby",Material.NETHER_STAR,"127.0.0.1",25567));
     private final Map<UUID,Menu> dialogs = new HashMap<>();
     private NamespacedKey menuKey;

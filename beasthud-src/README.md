@@ -31,7 +31,7 @@ BetterHUD resource definitions are versioned under `plugins/BetterHud/`. `/hud r
 ## Lobby menus and atmosphere
 
 - `/beast` (alias `/menu`): main menu.
-- `/serverauswahl`: live status and BungeeCord navigation for Citybuild and Lobby (Citybuild uses the private SSH tunnel on 127.0.0.1:25568). Offline destinations do not trigger a transfer.
+- `/serverauswahl`: live status and BungeeCord navigation for Lobby. Offline destinations do not trigger a transfer.
 - `/design`: themed design-selection menu, with back/effects/close controls.
 - `/events`: the live Halloween quest and a Christmas atmosphere action; no invented event timers.
 - `/effekte an|aus|auto|winter|halloween|status`: personal lobby atmosphere, saved in effects.yml. `an`/`auto` follows the selected design: Halloween particle fog, winter snow, no particles for standard.
