@@ -37,8 +37,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     private final Map<String,Boolean> reachable = new ConcurrentHashMap<>();
     private final Map<String,Integer> counts = new HashMap<>();
     private final List<Destination> destinations = List.of(
-        new Destination("BeastSMP","BeastSMP",Material.GRASS_BLOCK,"127.0.0.1",25566),
-        new Destination("SMP","SMP",Material.DIAMOND_PICKAXE,"109.69.175.92",25565),
+        new Destination("citybuild","Citybuild",Material.GRASS_BLOCK,"127.0.0.1",25568),
         new Destination("Lobby","Lobby",Material.NETHER_STAR,"127.0.0.1",25567));
     private final Map<UUID,Menu> dialogs = new HashMap<>();
     private NamespacedKey menuKey;
@@ -156,7 +155,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         if(!plugin.getConfig().getBoolean("menus.dialog",true)){p.openInventory(menu.inventory);return;}
         if(menu.kind==Kind.BOTS&&!p.isOp())return;
         dialogs.put(p.getUniqueId(),menu);
-        int columns=Set.of(Kind.HOME,Kind.EFFECTS,Kind.SETTINGS,Kind.CHAT,Kind.DISPLAY).contains(menu.kind)?2:3;
+        int columns=Set.of(Kind.HOME,Kind.SERVERS,Kind.EFFECTS,Kind.SETTINGS,Kind.CHAT,Kind.DISPLAY).contains(menu.kind)?2:3;
         int width=columns==2?210:140;
         List<io.papermc.paper.registry.data.dialog.ActionButton> buttons=new ArrayList<>();
         Set<Runnable> seen=Collections.newSetFromMap(new IdentityHashMap<>());
