@@ -3,6 +3,9 @@ import java.util.*;
 final class BeastLanguage {
     private static final Map<String,String> DE=Map.ofEntries(
         Map.entry("Bot settings","Bot-Einstellungen"),
+        Map.entry("Decrease values (−10 / −1 hour)","Werte verringern (−10 / −1 Stunde)"),
+        Map.entry("Click: +10 | Decrease values: -10","Klick: +10 | Werte verringern: -10"),
+        Map.entry("Click: +1 hour | Decrease values: -1 hour","Klick: +1 Stunde | Werte verringern: -1 Stunde"),
         Map.entry("Schedule","Zeitplan"),
         Map.entry("Manual amount","Manuelle Anzahl"),
         Map.entry("Day amount","Tagesanzahl"),

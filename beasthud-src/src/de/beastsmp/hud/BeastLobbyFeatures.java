@@ -40,6 +40,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         new Destination("BeastSMP","BeastSMP",Material.GRASS_BLOCK,"127.0.0.1",25566),
         new Destination("SMP","SMP",Material.DIAMOND_PICKAXE,"109.69.175.92",25565),
         new Destination("Lobby","Lobby",Material.NETHER_STAR,"127.0.0.1",25567));
+    private final Map<UUID,Menu> dialogs = new HashMap<>();
     private NamespacedKey menuKey;
     private File preferencesFile;
     private boolean globalEnabled;
@@ -74,7 +75,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         plugin.getServer().getScheduler().runTaskLater(plugin,()->{for(Player p:Bukkit.getOnlinePlayers())giveHotbar(p);requestCounts();},90L);
         plugin.getLogger().info("Beast lobby menus and command-controlled seasonal effects enabled.");
     }
-    void disable(){savePreferences();}
+    void disable(){dialogs.clear();savePreferences();}
     private Effect parse(String value){return switch(value.toLowerCase(Locale.ROOT)){
         case "auto","automatisch","an","on"->Effect.AUTO;
         case "winter","christmas","snow","weihnachten","schnee"->Effect.WINTER;
@@ -115,6 +116,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         }
         particleBatches++;
     }
+    @EventHandler public void quitMenu(PlayerQuitEvent event){dialogs.remove(event.getPlayer().getUniqueId());}
     @EventHandler public void join(PlayerJoinEvent event){
         plugin.getServer().getScheduler().runTaskLater(plugin,()->{if(event.getPlayer().isOnline()){giveHotbar(event.getPlayer());requestCounts();}},90L);
     }
@@ -146,6 +148,44 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         if(Set.of(Kind.SERVERS,Kind.EVENTS,Kind.DESIGNS).contains(kind))put(m,53,invisible(item(p,Material.PAPER,"Settings",theme(p).color),true),()->openSettings(p));
         return m;
     }
+    private void showMenu(Player p,Menu menu){
+        if(!plugin.getConfig().getBoolean("menus.dialog",true)){p.openInventory(menu.inventory);return;}
+        if(menu.kind==Kind.BOTS&&!p.isOp())return;
+        dialogs.put(p.getUniqueId(),menu);
+        int columns=Set.of(Kind.EFFECTS,Kind.SETTINGS,Kind.CHAT,Kind.DISPLAY).contains(menu.kind)?2:3;
+        int width=columns==2?210:140;
+        List<io.papermc.paper.registry.data.dialog.ActionButton> buttons=new ArrayList<>();
+        Set<Runnable> seen=Collections.newSetFromMap(new IdentityHashMap<>());
+        for(var entry:menu.actions.entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()){
+            int slot=entry.getKey();Runnable action=entry.getValue();if(slot==49||menu.kind==Kind.LANGUAGE&&slot==45||!seen.add(action))continue;
+            ItemStack stack=menu.inventory.getItem(slot);if(stack==null)continue;ItemMeta meta=stack.getItemMeta();
+            Component label=meta.displayName()==null?Component.empty():meta.displayName();
+            List<Component> lore=meta.lore();Component tooltip=Component.empty();
+            if(lore!=null)for(Component line:lore)tooltip=tooltip.append(line).append(Component.newline());
+            if(slot<45&&(menu.kind==Kind.CHAT||menu.kind==Kind.DISPLAY)){int index=(slot<27?0:2)+(slot%9>=5?1:0)+(menu.kind==Kind.DISPLAY?4:0);boolean on=plugin.enabled(p,PlayerSetting.values()[index]);label=label.append(Component.text(on?"  ● ON":"  ○ OFF",on?NamedTextColor.GREEN:NamedTextColor.RED));}
+            int seasonIcon=switch(theme(p)){case HALLOWEEN->0;case STANDARD->1;case WEIHNACHTEN->2;};
+            if(slot<45){int icon=(slot%9)/3;label=Component.text(""+(char)(0xe900+seasonIcon*4+icon),NamedTextColor.WHITE).font(net.kyori.adventure.key.Key.key("beastsmp:dialog_menu")).append(Component.text("  ").font(net.kyori.adventure.key.Key.key("minecraft:default"))).append(label.font(net.kyori.adventure.key.Key.key("minecraft:default")));}
+            if(menu.kind==Kind.BOTS&&slot<45){var bot=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bot!=null){var cfg=bot.getConfig();String value=switch(slot){case 9->cfg.getBoolean("schedule.enabled")?"ON":"OFF";case 12->""+cfg.getInt("bots.amount");case 15->""+cfg.getInt("schedule.day-amount");case 27->""+cfg.getInt("schedule.night-amount");case 30->cfg.getString("schedule.day-at");case 33->cfg.getString("schedule.night-at");default->"";};label=label.append(Component.text(" · "+value,NamedTextColor.GOLD).font(net.kyori.adventure.key.Key.key("minecraft:default")));}}
+            final Runnable selected=action;
+            buttons.add(io.papermc.paper.registry.data.dialog.ActionButton.builder(label).width(width).tooltip(tooltip)
+                .action(io.papermc.paper.registry.data.dialog.action.DialogAction.customClick((response,audience)->{
+                    if(!(audience instanceof Player viewer)||!viewer.getUniqueId().equals(p.getUniqueId()))return;
+                    Bukkit.getScheduler().runTask(plugin,()->{if(!p.isOnline()||dialogs.get(p.getUniqueId())!=menu||menu.kind==Kind.BOTS&&!p.isOp())return;
+                        dialogs.remove(p.getUniqueId());p.closeDialog();menu.shifted=Boolean.TRUE.equals(response.getBoolean("decrease"))||"true".equals(response.getText("decrease"));plugin.sound(p,Sound.UI_BUTTON_CLICK,.2f,1.1f);selected.run();});
+                },net.kyori.adventure.text.event.ClickCallback.Options.builder().uses(1).lifetime(java.time.Duration.ofMinutes(5)).build())).build());
+        }
+        int season=switch(theme(p)){case HALLOWEEN->0;case STANDARD->1;case WEIHNACHTEN->2;};
+        Component banner=Component.text(""+(char)(0xe800+season*3)+"\ue010"+(char)(0xe801+season*3)+"\ue010"+(char)(0xe802+season*3),NamedTextColor.WHITE)
+            .font(net.kyori.adventure.key.Key.key("beastsmp:dialog_menu"));
+        Component art=banner.append(Component.text("\n".repeat(10)).font(net.kyori.adventure.key.Key.key("minecraft:default")));
+        var base=io.papermc.paper.registry.data.dialog.DialogBase.builder(plugin.component(p,menu.kind==Kind.HOME?"Lobby menu":switch(menu.kind){case BOTS->"Bot settings";case SERVERS->"Server selection";default->menu.kind.name().charAt(0)+menu.kind.name().substring(1).toLowerCase(Locale.ROOT);},theme(p).color))
+            .canCloseWithEscape(true).afterAction(io.papermc.paper.registry.data.dialog.DialogBase.DialogAfterAction.CLOSE)
+            .body(List.of(io.papermc.paper.registry.data.dialog.body.DialogBody.plainMessage(art,440)));
+        if(menu.kind==Kind.BOTS)base.inputs(List.of(io.papermc.paper.registry.data.dialog.input.DialogInput.bool("decrease",plugin.component(p,"Decrease values (−10 / −1 hour)",NamedTextColor.GRAY)).build()));
+        var close=io.papermc.paper.registry.data.dialog.ActionButton.builder(Component.text("✕  ",NamedTextColor.RED).append(plugin.component(p,"Close",NamedTextColor.RED))).width(140).build();
+        var dialog=io.papermc.paper.dialog.Dialog.create(builder->builder.empty().base(base.build()).type(io.papermc.paper.registry.data.dialog.type.DialogType.multiAction(buttons).columns(columns).exitAction(close).build()));
+        p.closeInventory();p.showDialog(dialog);
+    }
     private void put(Menu m,int slot,ItemStack item,Runnable action){m.inventory.setItem(slot,item);m.actions.put(slot,action);}
     private void card(Menu m,int[] slots,ItemStack stack,Runnable action){for(int slot:slots)put(m,slot,invisible(stack.clone(),!Set.of(Kind.HOME,Kind.SETTINGS,Kind.CHAT,Kind.DISPLAY).contains(m.kind)),action);}
     private int[] four(int card){
@@ -160,19 +200,19 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         card(m,four(2),item(p,Material.PAPER,"Appearance",theme(p).color,"HUD, animations, sounds and welcome title"),()->openPreferences(p,Kind.DISPLAY));
         card(m,four(3),item(p,Material.PAPER,"Lobby effects",theme(p).color,"Active: "+effectName(effective(p))),()->openEffects(p));
         if(p.isOp())card(m,new int[]{51,52,53},item(p,Material.PAPER,"Bot settings",theme(p).color),()->openBots(p));
-        p.openInventory(m.inventory);
+        showMenu(p,m);
     }
     void openLanguages(Player p){
         Menu m=newMenu(p,Kind.LANGUAGE,"Language");
         card(m,three(0),item(p,Material.PAPER,"English",NamedTextColor.AQUA,plugin.language(p).equals("en")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"en");openLanguages(p);});
         card(m,three(1),item(p,Material.PAPER,"German",NamedTextColor.GOLD,plugin.language(p).equals("de")?"Selected":"Click to select"),()->{plugin.chooseLanguage(p,"de");openLanguages(p);});
-        card(m,three(2),item(p,Material.PAPER,"Back",NamedTextColor.WHITE),()->openSettings(p));p.openInventory(m.inventory);
+        card(m,three(2),item(p,Material.PAPER,"Back",NamedTextColor.WHITE),()->openSettings(p));showMenu(p,m);
     }
     void openPreferences(Player p,Kind kind){
         Menu m=newMenu(p,kind,"Settings");int start=kind==Kind.CHAT?0:4;
         for(int i=0;i<4;i++){PlayerSetting setting=PlayerSetting.values()[start+i];
             card(m,four(i),item(p,Material.PAPER,setting.label,theme(p).color,plugin.enabled(p,setting)?"ON":"OFF","Click to toggle"),()->{plugin.toggle(p,setting);openPreferences(p,kind);});
-        }p.openInventory(m.inventory);
+        }showMenu(p,m);
     }
     private int[] six(int card){int[] slots=new int[6];int k=0;for(int row=card<3?1:3;row<=(card<3?2:4);row++)for(int col=(card%3)*3;col<(card%3)*3+3;col++)slots[k++]=row*9+col;return slots;}
     private void botCommand(Player p,String value){if(!p.isOp())return;Bukkit.dispatchCommand(p,"beastbots "+value);openBots(p);}
@@ -189,27 +229,27 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
     }
     void openBots(Player p){
         if(!p.isOp())return;var bots=(org.bukkit.plugin.java.JavaPlugin)Bukkit.getPluginManager().getPlugin("BeastBots");if(bots==null)return;var cfg=bots.getConfig();
-        Menu m=newMenu(p,Kind.BOTS,"Bot settings");String adjust="Click: +10 | Shift-click: -10";String time="Click: +1 hour | Shift-click: -1 hour";
+        Menu m=newMenu(p,Kind.BOTS,"Bot settings");String adjust="Click: +10 | Decrease values: -10";String time="Click: +1 hour | Decrease values: -1 hour";
         card(m,six(0),item(p,Material.PAPER,"Schedule",theme(p).color,cfg.getBoolean("schedule.enabled",false)?"ON":"OFF",cfg.getString("schedule.timezone","Europe/Vienna"),"Click to toggle"),()->botCommand(p,"schedule "+(cfg.getBoolean("schedule.enabled",false)?"off":"on")));
         card(m,six(1),item(p,Material.PAPER,"Manual amount",theme(p).color,"Current: "+cfg.getInt("bots.amount",40),adjust,"Disables the schedule"),()->botAmount(p,m,"manual"));
         card(m,six(2),item(p,Material.PAPER,"Day amount",theme(p).color,"Current: "+cfg.getInt("schedule.day-amount",40),adjust),()->botAmount(p,m,"day"));
         card(m,six(3),item(p,Material.PAPER,"Night amount",theme(p).color,"Current: "+cfg.getInt("schedule.night-amount",10),adjust),()->botAmount(p,m,"night"));
         card(m,six(4),item(p,Material.PAPER,"Day starts",theme(p).color,cfg.getString("schedule.day-at","08:00"),time),()->botTime(p,m,"day"));
-        card(m,six(5),item(p,Material.PAPER,"Night starts",theme(p).color,cfg.getString("schedule.night-at","20:00"),time),()->botTime(p,m,"night"));p.openInventory(m.inventory);
+        card(m,six(5),item(p,Material.PAPER,"Night starts",theme(p).color,cfg.getString("schedule.night-at","20:00"),time),()->botTime(p,m,"night"));showMenu(p,m);
     }
     void openHome(Player p){
         Menu m=newMenu(p,Kind.HOME,"Lobby menu");
         card(m,three(0),item(p,Material.PAPER,"Server selection",theme(p).color,"Choose your destination on BeastSMP","With live server status"),()->openServers(p));
         card(m,three(1),item(p,Material.PAPER,"Your design",theme(p).color,"Halloween · Standard · Christmas","Current: "+theme(p).label),()->openDesigns(p));
         card(m,three(2),item(p,Material.PAPER,"Settings",theme(p).color,"Choose your lobby language","Lobby effects"),()->openSettings(p));
-        p.openInventory(m.inventory);
+        showMenu(p,m);
     }
     void openDesigns(Player p){
         Menu m=newMenu(p,Kind.DESIGNS,"Designs");int i=0;
         for(BeastHudPlugin.Theme t:BeastHudPlugin.Theme.values())card(m,three(i++),item(p,Material.PAPER,t.label,t.color,theme(p)==t?"Currently selected":"Click to select","Your design is saved"),()->{plugin.choose(p,t);openDesigns(p);});
-        p.openInventory(m.inventory);
+        showMenu(p,m);
     }
-    void openServers(Player p){requestCounts();Menu m=newMenu(p,Kind.SERVERS,"Server selection");fillServers(p,m);p.openInventory(m.inventory);}
+    void openServers(Player p){requestCounts();Menu m=newMenu(p,Kind.SERVERS,"Server selection");fillServers(p,m);showMenu(p,m);}
     private void fillServers(Player p,Menu m){
         int i=0;
         for(Destination d:destinations){
@@ -230,7 +270,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         card(m,three(0),item(p,Material.PAPER,"Halloween · Pumpkin hunt",NamedTextColor.GOLD,"Your progress: "+found+" / "+total,"Find pumpkins around the spawn","Click to enable Halloween and show help"),()->{p.closeInventory();plugin.choose(p,BeastHudPlugin.Theme.HALLOWEEN);plugin.questInfo(p);});
         card(m,three(1),item(p,Material.PAPER,"Seasonal designs",theme(p).color,"Choose your personal Beast style"),()->openDesigns(p));
         card(m,three(2),item(p,Material.PAPER,"Christmas spirit",NamedTextColor.AQUA,"Enable the Christmas design and snowfall","A personal effect just for you"),()->{plugin.choose(p,BeastHudPlugin.Theme.WEIHNACHTEN);setEffect(p,Effect.WINTER);openEvents(p);});
-        p.openInventory(m.inventory);
+        showMenu(p,m);
     }
     void openEffects(Player p){
         Menu m=newMenu(p,Kind.EFFECTS,"Lobby effects");
@@ -238,7 +278,7 @@ public final class BeastLobbyFeatures implements Listener, CommandExecutor, TabC
         card(m,four(1),item(p,Material.PAPER,"Snowfall",NamedTextColor.AQUA,"Gentle snowflakes around you","Only visible to you"),()->{setEffect(p,Effect.WINTER);openEffects(p);});
         card(m,four(2),item(p,Material.PAPER,"Halloween fog",NamedTextColor.LIGHT_PURPLE,"Low particle fog, ash and magic","Only visible to you"),()->{setEffect(p,Effect.HALLOWEEN);openEffects(p);});
         card(m,four(3),item(p,Material.PAPER,"Disable effects",NamedTextColor.RED,"Disable all extra lobby particles",globalEnabled?"Effects are enabled server-wide":"Effects are disabled server-wide"),()->{setEffect(p,Effect.AUS);openEffects(p);});
-        p.openInventory(m.inventory);
+        showMenu(p,m);
     }
     void refreshHotbar(Player p){giveHotbar(p);}
     private void giveHotbar(Player p){

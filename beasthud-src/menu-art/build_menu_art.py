@@ -128,6 +128,25 @@ for name,code,state in [('admin',0xe700,None),('schedule_off',0xe710,False),('sc
  for tile in range(4):
   tx=tile%2;ty=tile//2;part=badge.crop((tx*256,ty*256,(tx+1)*256,(ty+1)*256));part.putpixel((255,255),(1,1,1,1));buf=io.BytesIO();part.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/menu_{name}_{tile}.png']=buf.getvalue()
   providers.append({'type':'bitmap','file':f'beastsmp:font/menu_{name}_{tile}.png','height':128,'ascent':33-ty*128,'chars':[chr(code+tile)]})
+# Wide, inventory-free dialog header; each tile stays within Minecraft bitmap limits.
+dialog_providers=[{'type':'space','advances':{'\ue010':-1}}]
+for season,(theme,accent,light) in enumerate([('halloween','#a72cdd','#f5b041'),('standard','#29a7ef','#9ff3ff'),('winter','#75dce9','#edffff')]):
+ banner=Image.new('RGBA',(768,176));d=ImageDraw.Draw(banner)
+ d.rounded_rectangle((4,10,763,165),radius=25,fill='#090c19',outline=accent,width=3)
+ d.line((30,159,737,159),fill=light,width=2)
+ paste_hd(banner,motif(season,0),(6,13,75,64));paste_hd(banner,motif(season,1),(303,13,75,64))
+ paste_hd(banner,logo(theme),(78,6,228,69))
+ for x in [167,217,550,600]:
+  d.polygon([(x,146),(x+4,150),(x,154),(x-4,150)],fill=light)
+ banner.save(out/f'{theme}_dialog_banner.png')
+ for tile in range(3):
+  part=banner.crop((tile*256,0,(tile+1)*256,176));part.putpixel((255,175),(1,1,1,1));buf=io.BytesIO();part.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/dialog_{theme}_{tile}.png']=buf.getvalue()
+  dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_{theme}_{tile}.png','height':88,'ascent':8,'chars':[chr(0xe800+season*3+tile)]})
+for season in range(3):
+ for icon in range(4):
+  src=motif(season,icon);src.thumbnail((32,32),Image.Resampling.LANCZOS);im=Image.new('RGBA',(32,32));im.alpha_composite(src,((32-src.width)//2,(32-src.height)//2));buf=io.BytesIO();im.save(buf,format='PNG');updates[f'assets/beastsmp/textures/font/dialog_icon_{season}_{icon}.png']=buf.getvalue()
+  dialog_providers.append({'type':'bitmap','file':f'beastsmp:font/dialog_icon_{season}_{icon}.png','height':16,'ascent':12,'chars':[chr(0xe900+season*4+icon)]})
+updates['assets/beastsmp/font/dialog_menu.json']=json.dumps({'providers':dialog_providers},ensure_ascii=False,indent=2).encode()
 updates['assets/beastsmp/font/lobby_menu.json']=json.dumps({'providers':providers},ensure_ascii=False,indent=2).encode()
 blank=Image.new('RGBA',(16,16));buf=io.BytesIO();blank.save(buf,format='PNG')
 updates.update({'assets/beastsmp/textures/item/menu_blank.png':buf.getvalue(),'assets/beastsmp/models/item/menu_blank.json':json.dumps({'parent':'minecraft:item/generated','textures':{'layer0':'beastsmp:item/menu_blank'}}).encode(),'assets/beastsmp/items/menu_blank.json':json.dumps({'model':{'type':'minecraft:model','model':'beastsmp:item/menu_blank'}}).encode()})

@@ -53,3 +53,7 @@ For menu generation, run `menu-art/build_menu_art.py` with `--language en --over
 Pass `--client-jar /path/to/26.2.jar` to each menu-art build to use Minecraft-native caption lettering. The outer menu frame is now 208 GUI pixels wide, while slot coordinates are preserved by a matching -24 starting advance. Home has Settings instead of Effects, no back shortcut, and a clear X close control. Home cards suppress obstructive tooltips. Effects remain reachable inside Settings.
 
 Personal chat/display preferences persist per UUID, with eight independent ON/OFF switches. Chat visibility affects other player messages; own chat and administrative system messages remain visible. `/settings bots` provides OP-only scheduling controls, including day/night quantities and start times. The home menu has three taller cards and separate Events/Close controls.
+
+## Inventory-free menus
+
+Menus now use Paper dialogs, with a wide seasonal Beast banner, illustrated action labels, wider two-/three-column layouts and a dedicated Close control. Main action order is preserved. Operators retain exclusive access to Bot Settings; callbacks recheck OP status. Bot dialogs expose a Decrease values checkbox instead of shift-click. The existing inventory renderer remains available with `menus.dialog: false` for compatibility. Modern Java clients supporting dialogs are required for the default mode.
