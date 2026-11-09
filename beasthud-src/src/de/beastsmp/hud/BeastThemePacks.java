@@ -59,7 +59,9 @@ final class BeastThemePacks implements Listener {
         long ticket=System.nanoTime();pending.put(p.getUniqueId(),ticket);
         Bukkit.getScheduler().runTaskLater(plugin,()->{if(p.isOnline()&&Objects.equals(pending.get(p.getUniqueId()),ticket)){pending.remove(p.getUniqueId());p.kick(net.kyori.adventure.text.Component.text("The BeastSMP resource pack is required. Enable server resource packs and reconnect."));}},2400L);
         UUID packId=UUID.nameUUIDFromBytes(pack.sha);packIds.put(p.getUniqueId(),packId);
-        p.setResourcePack(packId,"http://82.165.71.206:8163/"+pack.hash+".zip",pack.sha,"Install the required BeastSMP resource pack to play (HUD, menus and seasonal designs).",true);
+        String packBase=plugin.getConfig().getString("resource-pack-base-url","http://82.165.71.206:8163/").trim();
+        if(!packBase.endsWith("/"))packBase+="/";
+        p.setResourcePack(packId,packBase+pack.hash+".zip",pack.sha,"Install the required BeastSMP resource pack to play (HUD, menus and seasonal designs).",true);
         plugin.getLogger().info("Theme pack sent: "+p.getName()+" theme="+plugin.profile(p.getUniqueId()).theme+" sha1="+pack.hash);
     }
     @EventHandler public void status(PlayerResourcePackStatusEvent event){

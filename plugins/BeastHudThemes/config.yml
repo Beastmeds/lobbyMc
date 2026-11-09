@@ -1,4 +1,5 @@
 quest-count: 10
+resource-pack-base-url: https://github.com/Beastmeds/lobbyMc/releases/download/plots-resource-packs-2026-11-09/
 world: world
 spawn:
   x: -139.91855815080723
